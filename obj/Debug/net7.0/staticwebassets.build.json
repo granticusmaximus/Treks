@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Z+hhf20kCTvKftBuZJfxV3Lxeagam0KYSeTCYU1a/00=",
+  "Hash": "iHRaF+hw/6V9mEc/w2yhBv7W1+dmdjshU1RFitgBuBo=",
   "Source": "Treks",
   "BasePath": "_content/Treks",
   "Mode": "Default",
@@ -1478,6 +1478,44 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/favicon.png"
+    },
+    {
+      "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/emailjs-interop.js",
+      "SourceId": "Treks",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/",
+      "BasePath": "_content/Treks",
+      "RelativePath": "js/emailjs-interop.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/emailjs-interop.js"
+    },
+    {
+      "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/registerDnD.js",
+      "SourceId": "Treks",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/",
+      "BasePath": "_content/Treks",
+      "RelativePath": "js/registerDnD.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/registerDnD.js"
     }
   ]
 }

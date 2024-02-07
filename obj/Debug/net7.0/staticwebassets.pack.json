@@ -57,6 +57,14 @@
       "PackagePath": "staticwebassets/favicon.png"
     },
     {
+      "Id": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/emailjs-interop.js",
+      "PackagePath": "staticwebassets/js/emailjs-interop.js"
+    },
+    {
+      "Id": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/registerDnD.js",
+      "PackagePath": "staticwebassets/js/registerDnD.js"
+    },
+    {
       "Id": "obj/Debug/net7.0/staticwebassets/msbuild.Treks.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
