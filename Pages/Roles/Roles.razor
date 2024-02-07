@@ -1,0 +1,39 @@
+@page "/Roles"
+@using Treks.Models
+@using Treks.Services
+@inject RoleService roleService
+@inject NavigationManager navi
+
+@if (roles == null)
+{
+    <p>Loading roles...</p>
+}
+else
+{
+    <table class="table table-responsive">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in roles)
+            {
+                <tr>
+                    <td>@role.Id</td>
+                    <td>@role.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Role> roles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        roles = await roleService.GetAllRolesAsync();
+    }
+}

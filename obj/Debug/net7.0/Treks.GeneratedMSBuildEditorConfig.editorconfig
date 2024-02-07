@@ -22,24 +22,20 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ291bnRlci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/FetchData.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRmV0Y2hEYXRhLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/grantwatson/Desktop/Development/CSharp/Treks/Shared/LoginDisplay.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL0xvZ2luRGlzcGxheS5yYXpvcg==
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Roles/AddRoles.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUm9sZXMvQWRkUm9sZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/grantwatson/Desktop/Development/CSharp/Treks/Shared/SurveyPrompt.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL1N1cnZleVByb21wdC5yYXpvcg==
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Roles/Roles.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUm9sZXMvUm9sZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Shared/LoginDisplay.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL0xvZ2luRGlzcGxheS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/grantwatson/Desktop/Development/CSharp/Treks/_Imports.razor]
