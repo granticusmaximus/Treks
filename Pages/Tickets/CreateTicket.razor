@@ -41,7 +41,7 @@
     <div class="mb-3">
         <div class="form-group">
             <label for="description">Description:</label>
-            <Editor id="description" class="form-control" @bind-Value="_ticket.Description" />
+            <InputTextArea id="description" class="form-control" @bind-Value="_ticket.Description" />
             <ValidationMessage For="@(() => _ticket.Description)" class="text-danger" />
         </div>
     </div>
