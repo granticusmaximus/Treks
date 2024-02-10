@@ -23,24 +23,27 @@
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="about">
-                <span class="oi oi-compass" aria-hidden="true"></span> About
+                <span class="oi oi-signpost" aria-hidden="true"></span> About
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="contact">
-                <span class="oi oi-envelope-open" aria-hidden="true"></span> Contact
+                <span class="oi oi-envelope-closed" aria-hidden="true"></span> Contact
             </NavLink>
         </div>
+        @if (IsAuthenticated)
+        {
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="Users">
-                    <span class="oi oi-person" aria-hidden="true"></span> Users
+                    <span class="oi oi-people" aria-hidden="true"></span> Users
                 </NavLink>
             </div>
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="Tickets">
-                    <span class="oi oi-laptop" aria-hidden="true"></span> Project Tasks
+                    <span class="oi oi-project" aria-hidden="true"></span> Project Tasks
                 </NavLink>
-        </div>
+            </div>
+        }
     </nav>
 </div>
 
