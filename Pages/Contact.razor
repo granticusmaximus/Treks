@@ -15,8 +15,10 @@
     <div class="@alertClass mt-3">@alertMessage</div>
 }
 <div class="container">
-    <h3>Contact Me</h3>
+    <hr />
     <EditForm Model="@ContactFormModel" id="contact" OnValidSubmit="HandleValidSubmit">
+        <h3>Contact Me</h3>
+        <br />
         <div class="form-group">
             <label for="Name">Name</label>
             <InputText id="Name" class="form-control" @bind-Value="ContactFormModel.Name" />
