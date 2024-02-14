@@ -9,18 +9,19 @@
 <style>
     .action-buttons button {
         padding: 0.2rem 0.4rem;
-        /* Reduces padding */
         margin-right: 0.2rem;
-        /* Reduces space between buttons */
         vertical-align: middle;
-        /* Aligns buttons vertically */
     }
 
     .action-col {
         width: 15%;
-        /* Adjust as needed to give enough space */
+    }
+
+    .action-buttons-right {
+        float: right;
     }
 </style>
+
 <center>
     <div class="col-md-6">
         <button @onclick="OpenAddNewTicketModal" class="btn btn-warning">Create New Task</button>
@@ -67,9 +68,9 @@
     <thead class="thead-dark">
         <tr class="text-center">
             <th scope="col">Title</th>
-            <th scope="col" class="col-2">Severity</th>
-            <th scope="col" class="col-1">Due Date</th>
-            <th scope="col" class="action-col"></th>
+            <th scope="col">Severity</th>
+            <th scope="col">Due Date</th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
@@ -79,9 +80,26 @@
                         <td>@task.Title</td>
                         <td class="@GetSeverityCssClass(task.Severity.ToString()) text-uppercase text-white text-center"
                             style="font-weight: 700">@task.Severity</td>
-                        <td class="text-center">@task.DueDate.ToShortDateString()</td>
+                        <td class="text-center">
+                            @task.DueDate.ToShortDateString()
+                            @{
+                                var daysDifference = (task.DueDate.Date - DateTime.Now.Date).Days;
+                                if (daysDifference < 0)
+                                {
+                                    <span style="color: red;">
+                                        (Overdue by @(-daysDifference) days)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color: green;">
+                                        (@daysDifference days until due)
+                                    </span>
+                                }
+                            }
+                        </td>
                         <td>
-                            <div class="action-buttons">
+                            <div class="action-buttons-right">
                                 <button class="btn btn-primary mb-0" @onclick="() => ViewTicketDetails(task.TicketId)">
                                     <span class="oi oi-eye" aria-hidden="true"></span>
                                 </button>
@@ -92,7 +110,6 @@
                                     <span class="oi oi-trash" aria-hidden="true"></span>
                                 </button>
                             </div>
-                        </td>
                     </tr>
                 }
             </tbody>

@@ -40,14 +40,36 @@
                     <th scope="row">@_ticket.TicketId</th>
                     <td class="@GetSeverityCssClass(_ticket.Severity.ToString()) text-uppercase text-white text-center"
                         style="font-weight: 700">@_ticket.Severity</td>
-                    <td>@_ticket.DueDate.ToShortDateString()</td>
-                    <td>@_ticket.TimeOfCreation</td>
-                    <td>@_ticket.Description</td>
-                </tr>
-            </tbody>
-        </table>
+                    <td>
+                        @_ticket.DueDate.ToShortDateString()
+                        @if (!_ticket.isComplete)
+                            {
+                                var daysDifference = (_ticket.DueDate.Date - DateTime.Now.Date).Days;
+                                if (daysDifference < 0)
+                                {
+                                    <span style="color: red;">
+                                        (Overdue by @(-daysDifference) days)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color: green;">
+                                        (@daysDifference days until due)
+                                    </span>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @_ticket.TimeOfCreation
+                        </td>
+                        <td>
+                            @_ticket.Description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
     <hr />
 
     <div class="card">
@@ -115,7 +137,6 @@ else if (!string.IsNullOrEmpty(message))
 {
     <div class="alert alert-info mt-3">@message</div>
 }
-
 
 @code {
     [Parameter]
