@@ -197,7 +197,9 @@
     private void CloseAddNewTicketModal()
     {
         showAddNewTicketModal = false;
+        _ = LoadTickets(); // Asynchronously reload tickets to update the UI
     }
+
 
     public enum TicketField
     {
