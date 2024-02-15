@@ -166,7 +166,6 @@
                                 <button class="btn btn-primary mb-0" @onclick="() => ViewTicketDetails(task.TicketId)">
                                     <span class="oi oi-eye" aria-hidden="true"></span>
                                 </button>
-                                <!-- Add buttons for actions related to completed tasks here -->
                             </div>
                         </td>
                     </tr>
@@ -205,8 +204,10 @@
     private bool showAddNewTicketModal = false;
 
     private bool showInProgressTasks = true; // Added for collapsible section
-    private bool showCompletedTasks = true; // Added for collapsible section
+    private bool showCompletedTasks = false; // Added for collapsible section
 
+
+    //Open and Close Add New Ticket Modal
     private void OpenAddNewTicketModal()
     {
         showAddNewTicketModal = true;
