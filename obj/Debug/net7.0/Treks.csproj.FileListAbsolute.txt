@@ -1,7 +1,6 @@
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/appsettings.Development.json
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/appsettings.json
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Treks.staticwebassets.runtime.json
-/Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/app.db
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Treks
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Treks.deps.json
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Treks.runtimeconfig.json

@@ -71,42 +71,33 @@
         </div>
     </div>
     <hr />
+    @if (_ticket.TicketTechNotes != null && _ticket.TicketTechNotes.Any())
+    {
+        @foreach (var ticketTechNote in _ticket.TicketTechNotes)
+        {
+            <div class="card">
+                <div class="card-header">
+                    @* Display the user's full name and profile picture here *@
+                    <h5 class="card-title">
+                        @* <img src="@($"data:image/jpeg;base64,{Convert.ToBase64String(ticketTechNote.TechNote.User.ProfilePicture)}")"
+                            style="width: 30px; height: 30px; border-radius: 50%;" alt="User Image"> *@
+                        @ticketTechNote.TechNote.Username 
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p>@ticketTechNote.TechNote.Notes</p>
+                    <button class="btn btn-sm btn-danger" @onclick="@(() => DeleteTechNote(ticketTechNote.TechNote.Id))">
+                        <span class="oi oi-trash" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No ticket notes available.</p>
+    }
 
-    <div class="card">
-    <div class="card-body">
-        <p><strong>Ticket Comments:</strong></p>
-        @if (_ticket.TicketTechNotes != null && _ticket.TicketTechNotes.Any())
-            {
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Comments:</th>
-                            <th scope="col">Made By:</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var ticketTechNote in _ticket.TicketTechNotes)
-                        {
-                            <tr>
-                                <td>@ticketTechNote.TechNote.Notes</td>
-                                <td>@ticketTechNote.TechNote.Username</td>
-                                <td>
-                                    <button class="btn btn-sm btn-danger"
-                                        @onclick="@(() => DeleteTechNote(ticketTechNote.TechNote.Id))"><span class="oi oi-trash"
-                                            aria-hidden="true"></span></button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p>No ticket notes available.</p>
-            }
-        </div>
-    </div>
 
     <button class="btn btn-primary mt-3" @onclick="OpenModal">Add Comment</button>
 
