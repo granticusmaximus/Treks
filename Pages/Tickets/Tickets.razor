@@ -34,6 +34,8 @@
             class="btn btn-primary filter-button">Severity</button>
         <button @onclick="(() => SortTickets(TicketField.DueDate))" class="btn btn-primary filter-button">Due
             Date</button>
+        <button @onclick="(() => SortTickets(TicketField.AssignedUserId))"
+            class="btn btn-primary filter-button">Assigned User</button>
     </div>
 </center>
 
@@ -69,6 +71,7 @@
         <tr class="text-center">
             <th scope="col">Title</th>
             <th scope="col">Severity</th>
+            <th scope="col">Assigned</th>
             <th scope="col">Due Date</th>
             <th scope="col"></th>
         </tr>
@@ -80,6 +83,12 @@
                         <td>@task.Title</td>
                         <td class="@GetSeverityCssClass(task.Severity.ToString()) text-uppercase text-white text-center"
                             style="font-weight: 700">@task.Severity</td>
+                        <td>
+                            <center>
+                                @task.AssignedUser.FullName
+                            </center>
+
+                        </td>
                         <td class="text-center">
                             @task.DueDate.ToShortDateString()
                             @{
@@ -223,7 +232,7 @@
     public enum TicketField
     {
         TicketID,
-        Title,
+        AssignedUserId,
         Severity,
         DueDate
     }
@@ -264,8 +273,9 @@
     {
         switch (column)
         {
-            case TicketField.Title:
-                return descending ? ticketList.OrderByDescending(t => t.Title).ToList() : ticketList.OrderBy(t => t.Title).ToList();
+            case TicketField.AssignedUserId:
+                return descending ? ticketList.OrderByDescending(t => t.AssignedUser.FullName).ToList() : ticketList.OrderBy(t =>
+                t.AssignedUser.FullName).ToList();
             case TicketField.Severity:
                 return descending ? ticketList.OrderByDescending(t => t.Severity).ToList() : ticketList.OrderBy(t =>
                 t.Severity).ToList();

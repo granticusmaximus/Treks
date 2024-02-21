@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Treks.Data;
 
@@ -10,9 +11,11 @@ using Treks.Data;
 namespace Treks.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240217194413_AddUserToTicket")]
+    partial class AddUserToTicket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -305,6 +308,7 @@ namespace Treks.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AssignedUserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
@@ -432,7 +436,9 @@ namespace Treks.Data.Migrations
                 {
                     b.HasOne("Treks.Models.ApplicationUser", "AssignedUser")
                         .WithMany("AssignedTickets")
-                        .HasForeignKey("AssignedUserId");
+                        .HasForeignKey("AssignedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AssignedUser");
                 });

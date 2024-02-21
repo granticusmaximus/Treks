@@ -30,6 +30,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(ttn => ttn.TechNote)
             .WithMany(tn => tn.TicketTechNotes)
             .HasForeignKey(ttn => ttn.TechNoteId);
+
+        modelBuilder.Entity<ApplicationUser>()
+            .HasMany(u => u.AssignedTickets) // ApplicationUser has many Tickets
+            .WithOne(t => t.AssignedUser) // Each Ticket has one AssignedUser
+            .HasForeignKey(t => t.AssignedUserId) // ForeignKey in the Ticket table
+            .IsRequired(false);
     }
 
     public DbSet<ApplicationUser> ApplicationUser { get; set; }

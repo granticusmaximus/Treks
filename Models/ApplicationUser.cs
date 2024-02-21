@@ -30,6 +30,12 @@ namespace Treks.Models
         public int? RoleId { get; set; }
         public Role? Role { get; set; }
         public DateTime RegisterDate { get; set; } = DateTime.Now;
+        public virtual ICollection<Ticket> AssignedTickets { get; set; }
+
+        public ApplicationUser()
+        {
+            AssignedTickets = new HashSet<Ticket>();
+        }
     }
 
     public enum Gender

@@ -55,7 +55,7 @@ namespace Treks.Services
                 await _context.SaveChangesAsync();
             }
         }
-
+        
         public async Task DeleteTaskAsync(string ticketId)
         {
             var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == ticketId);
