@@ -30,6 +30,7 @@ namespace Treks.Models
         public int? RoleId { get; set; }
         public Role? Role { get; set; }
         public DateTime RegisterDate { get; set; } = DateTime.Now;
+        public bool IsActive { get; set; }
         public virtual ICollection<Ticket> AssignedTickets { get; set; }
 
         public ApplicationUser()

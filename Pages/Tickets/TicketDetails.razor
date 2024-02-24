@@ -6,7 +6,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [AllowAnonymous]
 
-<h2>Ticket Details</h2>
+<h2>@_ticket.Title Details</h2>
 <hr />
 <div class="col-md-6">
     <NavLink class="btn btn-success" href="Tickets">
@@ -28,16 +28,16 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Assigned User:</th>
                     <th scope="col">Severity:</th>
                     <th scope="col">Due Date:</th>
-                    <th scope="col">Time Created:</th>
+                    <th scope="col">Created:</th>
                     <th scope="col">Description:</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <th scope="row">@_ticket.TicketId</th>
+                    <td class="col-sm-2">@_ticket.AssignedUser.FullName</td>
                     <td class="@GetSeverityCssClass(_ticket.Severity.ToString()) text-uppercase text-white text-center"
                         style="font-weight: 700">@_ticket.Severity</td>
                     <td>
@@ -60,7 +60,7 @@
                             }
                         </td>
                         <td>
-                            @_ticket.TimeOfCreation
+                            @_ticket.TimeOfCreation.ToShortDateString()
                         </td>
                         <td>
                             @_ticket.Description
