@@ -298,7 +298,6 @@
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/Treks.MvcApplicationPartsAssemblyInfo.cache
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/Treks.RazorAssemblyInfo.cache
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/Treks.RazorAssemblyInfo.cs
-/Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/Treks.sourcelink.json
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets.build.json
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets.development.json
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets/msbuild.Treks.Microsoft.AspNetCore.StaticWebAssets.props
