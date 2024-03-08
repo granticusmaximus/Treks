@@ -1,0 +1,63 @@
+@page "/DeleteUser/{UserId}"
+@using Treks.Data
+@using Treks.Models
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<ApplicationUser> userManager
+@inject NavigationManager NavigationManager
+
+<h3>Delete User</h3>
+<hr />
+
+@if (user == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <p>Are you sure you want to delete user "@user.Email"?</p>
+
+    <button @onclick="DeleteUser" class="btn btn-danger">Delete</button>
+    <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+}
+
+@code {
+    [Parameter] public string UserId { get; set; }
+    ApplicationUser user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await userManager.FindByIdAsync(UserId);
+        if (user == null)
+        {
+            // Optionally, handle the situation where no user with the given ID is found.
+            NavigationManager.NavigateTo("/Users");
+        }
+    }
+
+    private async Task DeleteUser()
+    {
+        try
+        {
+            var result = await userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                NavigationManager.NavigateTo("/Users");
+            }
+            else
+            {
+                // Handle the error appropriately, maybe display a message to the user.
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle the error appropriately, maybe display a message to the user.
+        }
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/Users");
+    }
+}

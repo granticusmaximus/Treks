@@ -1,0 +1,324 @@
+@page "/tickets"
+@using Treks.Models
+@using Treks.Services
+@inject TicketService ticketService
+@inject NavigationManager navi
+@attribute [AllowAnonymous]
+
+<!-- Your existing CSS styles here -->
+<style>
+    .action-buttons button {
+        padding: 0.2rem 0.4rem;
+        margin-right: 0.2rem;
+        vertical-align: middle;
+    }
+
+    .action-col {
+        width: 15%;
+    }
+
+    .action-buttons-right {
+        float: right;
+    }
+</style>
+
+<center>
+    <div class="col-md-6">
+        <button @onclick="OpenAddNewTicketModal" class="btn btn-warning">Create New Task</button>
+    </div>
+</center>
+<hr />
+<center>
+    <div class="btn-group flex-row justify-content-evenly">
+        <button @onclick="(() => SortTickets(TicketField.Severity))"
+            class="btn btn-primary filter-button">Severity</button>
+        <button @onclick="(() => SortTickets(TicketField.DueDate))" class="btn btn-primary filter-button">Due
+            Date</button>
+        <button @onclick="(() => SortTickets(TicketField.AssignedUserId))"
+            class="btn btn-primary filter-button">Assigned User</button>
+    </div>
+</center>
+
+<!-- Tasks in Progress Section -->
+<h3>
+    <br />
+    <button class="btn btn-link" @onclick="() => showInProgressTasks = !showInProgressTasks">
+        @if (showInProgressTasks)
+        {
+            <button class="btn btn-outline-primary"><i class="oi oi-chevron-top"> Hide In Progress</i></button>
+            // Hide Tasks in Progress
+        }
+        else
+        {
+            <button class="btn btn-outline-primary"><i class="oi oi-chevron-bottom"> Show In Progress</i></button>
+            // Show Tasks in Progress
+        }
+    </button>
+</h3>
+
+@if (showInProgressTasks)
+{
+    <h3>In Progress</h3>
+    <hr />
+    @if (tasksToBeCompleted == null)
+    {
+        <p>Loading tasks to be completed...</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+    <thead class="thead-dark">
+        <tr class="text-center">
+            <th scope="col">Title</th>
+            <th scope="col">Severity</th>
+            <th scope="col">Assigned</th>
+            <th scope="col">Due Date</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in tasksToBeCompleted)
+                {
+                    <tr style="vertical-align: middle;">
+                        <td>@task.Title</td>
+                        <td class="@GetSeverityCssClass(task.Severity.ToString()) text-uppercase text-white text-center"
+                            style="font-weight: 700">@task.Severity</td>
+                        <td>
+                            <center>
+                                @task.AssignedUser.FullName
+                            </center>
+
+                        </td>
+                        <td class="text-center">
+                            @task.DueDate.ToShortDateString()
+                            @{
+                                var daysDifference = (task.DueDate.Date - DateTime.Now.Date).Days;
+                                if (daysDifference < 0)
+                                {
+                                    <span style="color: red;">
+                                        (Overdue by @(-daysDifference) days)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color: green;">
+                                        (@daysDifference days until due)
+                                    </span>
+                                }
+                            }
+                        </td>
+                        <td>
+                            <div class="action-buttons-right">
+                                <button class="btn btn-primary mb-0" @onclick="() => ViewTicketDetails(task.TicketId)">
+                                    <span class="oi oi-eye" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-warning mb-0" @onclick="() => EditTicket(task.TicketId)">
+                                    <span class="oi oi-pencil" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-danger mb-0" @onclick="() => DeleteTicket(task.TicketId)">
+                                    <span class="oi oi-trash" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+<!-- Completed Tasks Section -->
+<h3>
+    <button class="btn btn-link" @onclick="() => showCompletedTasks = !showCompletedTasks">
+        @if (showCompletedTasks)
+        {
+            <button class="btn btn-outline-primary"><i class="oi oi-chevron-top"> Hide Completed</i></button>
+            // Hide Completed Tasks
+        }
+        else
+        {
+            <button class="btn btn-outline-primary"><i class="oi oi-chevron-bottom"> Show Completed</i></button>
+            // Show Completed Tasks
+        }
+    </button>
+</h3>
+
+@if (showCompletedTasks)
+{
+    <h3>Completed</h3>
+    <hr />
+    @if (completedTasks == null)
+    {
+        <p>Loading completed tasks...</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+    <thead class="thead-dark">
+        <tr class="text-center">
+            <th scope="col">Title</th>
+            <th scope="col" class="col-2">Severity</th>
+            <th scope="col" class="col-1">Due Date</th>
+            <th scope="col" class="action-col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in completedTasks)
+                {
+                    <tr style="vertical-align: middle;">
+                        <td>@task.Title</td>
+                        <td class="@GetSeverityCssClass(task.Severity.ToString()) text-uppercase text-white text-center"
+                            style="font-weight: 700">@task.Severity</td>
+                        <td class="text-center">@task.DueDate.ToShortDateString()</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary mb-0" @onclick="() => ViewTicketDetails(task.TicketId)">
+                                    <span class="oi oi-eye" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+<!-- Add New Ticket Modal -->
+<div class="modal fade @(showAddNewTicketModal ? "show d-block" : "")" id="addTaskModal" tabindex="-1" role="dialog"
+    aria-labelledby="addTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTaskModalLabel">Add New Ticket</h5>
+                <button type="button" class="close" @onclick="CloseAddNewTicketModal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <CreateTicket />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CloseAddNewTicketModal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Ticket> completedTasks = new List<Ticket>();
+    private List<Ticket> tasksToBeCompleted = new List<Ticket>();
+    private TicketField sortedColumn = TicketField.TicketID;
+    private bool sortDescending = false;
+    private bool showAddNewTicketModal = false;
+
+    private bool showInProgressTasks = true; // Added for collapsible section
+    private bool showCompletedTasks = false; // Added for collapsible section
+
+
+    //Open and Close Add New Ticket Modal
+    private void OpenAddNewTicketModal()
+    {
+        showAddNewTicketModal = true;
+    }
+
+    private void CloseAddNewTicketModal()
+    {
+        showAddNewTicketModal = false;
+        _ = LoadTickets(); // Asynchronously reload tickets to update the UI
+    }
+
+
+    public enum TicketField
+    {
+        TicketID,
+        AssignedUserId,
+        Severity,
+        DueDate
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTickets();
+    }
+
+    private async Task LoadTickets()
+    {
+        var allTasks = await ticketService.GetAllTasksAsync();
+
+        // Separate tasks into completed and tasks to be completed
+        completedTasks = allTasks.Where(task => task.isComplete).ToList();
+        tasksToBeCompleted = allTasks.Where(task => !task.isComplete).ToList();
+
+        SortTickets(sortedColumn);
+    }
+
+    private void SortTickets(TicketField column)
+    {
+        if (column == sortedColumn)
+        {
+            sortDescending = !sortDescending;
+        }
+        else
+        {
+            sortedColumn = column;
+            sortDescending = false;
+        }
+
+        completedTasks = SortTicketsList(completedTasks, sortedColumn, sortDescending);
+        tasksToBeCompleted = SortTicketsList(tasksToBeCompleted, sortedColumn, sortDescending);
+    }
+
+    private List<Ticket> SortTicketsList(List<Ticket> ticketList, TicketField column, bool descending)
+    {
+        switch (column)
+        {
+            case TicketField.AssignedUserId:
+                return descending ? ticketList.OrderByDescending(t => t.AssignedUser.FullName).ToList() : ticketList.OrderBy(t =>
+                t.AssignedUser.FullName).ToList();
+            case TicketField.Severity:
+                return descending ? ticketList.OrderByDescending(t => t.Severity).ToList() : ticketList.OrderBy(t =>
+                t.Severity).ToList();
+            case TicketField.DueDate:
+                return descending ? ticketList.OrderByDescending(t => t.DueDate).ToList() : ticketList.OrderBy(t => t.DueDate).ToList();
+            default:
+                return descending ? ticketList.OrderByDescending(t => t.TicketId).ToList() : ticketList.OrderBy(t =>
+                t.TicketId).ToList();
+        }
+    }
+
+    private string GetSeverityCssClass(string severity)
+    {
+        switch (severity.ToLower())
+        {
+            case "low":
+                return "bg-success"; // Green
+            case "medium":
+                return "bg-warning"; // Orange
+            case "high":
+                return "bg-danger"; // Red
+            default:
+                return "";
+        }
+    }
+
+    private async Task DeleteTicket(string ticketId)
+    {
+        var confirmed = true; // Implement confirmation logic if needed
+        if (confirmed)
+        {
+            await ticketService.DeleteTaskAsync(ticketId);
+            await LoadTickets(); // Reload tickets to update the list
+        }
+    }
+
+    private void ViewTicketDetails(string ticketId)
+    {
+        navi.NavigateTo($"/tickets/details/{ticketId}");
+    }
+
+    private void EditTicket(string ticketId)
+    {
+        navi.NavigateTo($"/tickets/edit/{ticketId}");
+    }
+}

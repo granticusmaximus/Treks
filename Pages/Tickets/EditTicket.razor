@@ -1,0 +1,121 @@
+@page "/tickets/edit/{TicketId}/"
+@using Treks.Models
+@using Treks.Services
+@inject TicketService ticketService
+@inject ApplicationUserService applicationUserService
+@inject NavigationManager navi
+@attribute [Authorize]
+
+<h3>Edit Ticket</h3>
+<hr />
+<div class="col-md-6">
+    <NavLink class="btn btn-success" href="Tickets">
+        <span aria-hidden="true">Back to Tickets</span>
+    </NavLink>
+</div>
+<hr />
+<EditForm Model="ticket" OnValidSubmit="UpdateTicket">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <InputText id="Title" @bind-Value="ticket.Title" class="form-control" />
+        <ValidationMessage For="@(() => ticket.Title)" />
+    </div>
+
+    <div class="form-group">
+        <label for="DueDate">Due Date</label>
+        <InputDate id="DueDate" @bind-Value="ticket.DueDate" class="form-control" />
+        <ValidationMessage For="@(() => ticket.DueDate)" />
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <InputTextArea id="Description" @bind-Value="ticket.Description" class="form-control" />
+        <ValidationMessage For="@(() => ticket.Description)" />
+    </div>
+
+    <div class="form-group">
+        <label for="Severity">Severity</label>
+        <InputSelect id="Severity" class="form-control" @bind-Value="ticket.Severity">
+            <option value="">--Select Option--</option>
+            @foreach (var severity in Enum.GetValues<TicketSeverity>())
+            {
+                <option value="@severity">@severity</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => ticket.Severity)" />
+    </div>
+
+    <div class="form-group">
+        <label for="AssignedUser">Assigned User</label>
+        <InputSelect id="AssignedUser" class="form-control" @bind-Value="ticket.AssignedUserId">
+            <option value="">-- Select User --</option>
+            @foreach (var user in users)
+            {
+                <option value="@user.Id">@user.FullName</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label for="IsComplete">Is Complete</label>
+        <input type="checkbox" id="IsComplete" @bind="ticket.isComplete" />
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+
+    @if (showWarning)
+    {
+        <div class="alert alert-warning" role="alert">
+            Please fill in all the required fields.
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary" @onclick="UpdateTicket">Save</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string? TicketId { get; set; }
+    private Ticket? ticket;
+    private List<ApplicationUser> users = new List<ApplicationUser>();
+    private bool showWarning = false;
+    private string errorMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(TicketId))
+        {
+            ticket = await ticketService.GetTaskByIdAsync(TicketId);
+        }
+        users = await applicationUserService.GetAllUsersAsync();
+    }
+
+    private async Task UpdateTicket()
+    {
+        showWarning = false;
+        errorMessage = "";
+        if (ticket == null || string.IsNullOrEmpty(ticket.Title) || string.IsNullOrWhiteSpace(ticket.Description) ||
+        ticket.DueDate == default || string.IsNullOrEmpty(ticket.Severity.ToString()))
+        {
+            showWarning = true;
+            return;
+        }
+
+        try
+        {
+            await ticketService.UpdateTaskAsync(ticket);
+            navi.NavigateTo("/tickets");
+        }
+        catch (Exception)
+        {
+            errorMessage = "An error occurred while updating the ticket. Please try again.";
+        }
+    }
+}

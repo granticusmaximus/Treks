@@ -1,0 +1,115 @@
+@page "/create"
+@using Treks.Models
+@using Treks.Services
+@inject TicketService ticketService
+@inject ApplicationUserService userService // Ensure you have this service implemented
+@inject NavigationManager navi
+@attribute [Authorize]
+
+<EditForm Model="@_ticket" OnValidSubmit="SaveTicket">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <div class="row">
+            <div class="form-group col-md-10">
+                <label for="title">Title:</label>
+                <InputText id="title" class="form-control" @bind-Value="_ticket.Title" />
+                <ValidationMessage For="@(() => _ticket.Title)" class="text-danger" />
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="row">
+            <div class="form-group col-md-10">
+                <label for="dueDate">Due Date:</label>
+                <InputDate id="dueDate" class="form-control" @bind-Value="_ticket.DueDate" min="2020-01-01"
+                    max="@($"{DateTime.Now.Year + 1}-12-31")" />
+                <ValidationMessage For="@(() => _ticket.DueDate)" class="text-danger" />
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <InputTextArea id="description" class="form-control" @bind-Value="_ticket.Description" />
+            <ValidationMessage For="@(() => _ticket.Description)" class="text-danger" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="severity">Severity:</label>
+                <InputSelect id="severity" class="form-control" @bind-Value="_ticket.Severity">
+                    <option value="">--Select Option--</option>
+                    @foreach (var severity in Enum.GetValues<TicketSeverity>())
+                    {
+                        <option value="@severity">@severity</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => _ticket.Severity)" class="text-danger" />
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="form-group">
+            <label for="assignedUser">Assigned User:</label>
+            <select class="form-control" id="assignedUser" @bind="_ticket.AssignedUserId">
+                <option value="">-- Select a User --</option>
+                @foreach (var user in users)
+                {
+                    <option value="@user.Id">@user.FullName</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="text-end">
+        <button type="submit" class="btn btn-primary" @onclick="SaveTicket">Save Ticket</button>
+    </div>
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-info mt-3">
+            @message
+        </div>
+    }
+    </EditForm>
+
+    @code {
+    private Ticket _ticket = new Ticket
+        {
+            DueDate = DateTime.Now.Date < new DateTime(2020, 1, 1) ? new DateTime(2020, 1, 1)
+        : DateTime.Now.Date
+        };
+    private ApplicationUser user = new ApplicationUser();
+    private List<ApplicationUser> users = new List<ApplicationUser>();
+    private bool showWarning = false;
+    string message = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await userService.GetAllUsersAsync();
+    }
+
+    private async Task SaveTicket()
+    {
+        if (string.IsNullOrEmpty(_ticket.Title) || string.IsNullOrEmpty(_ticket.Description) ||
+        _ticket.Severity == 0 || string.IsNullOrEmpty(_ticket.AssignedUserId))
+        {
+            showWarning = true;
+            return;
+        }
+
+        _ticket.TicketId = Guid.NewGuid().ToString(); // Assuming TicketId is a string. Adjust if using a different type.
+        _ticket.TimeOfCreation = DateTime.Now;
+        await ticketService.CreateNewTaskAsync(_ticket);
+
+        // Reset the form by reinitializing _ticket with default values
+        _ticket = new Ticket
+            {
+                DueDate = DateTime.Now.Date < new DateTime(2024, 1, 1) ? new DateTime(2024, 1, 1) : DateTime.Now.Date
+            };
+
+        message = "Ticket created successfully";
+        navi.NavigateTo("/tickets"); // Redirect or refresh the page as needed
+    }
+
+
+}
