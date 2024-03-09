@@ -298,13 +298,13 @@
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/Treks.MvcApplicationPartsAssemblyInfo.cache
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/Treks.RazorAssemblyInfo.cache
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/Treks.RazorAssemblyInfo.cs
-/Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets.build.json
-/Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets.development.json
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets/msbuild.Treks.Microsoft.AspNetCore.StaticWebAssets.props
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets/msbuild.build.Treks.props
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets/msbuild.buildMultiTargeting.Treks.props
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.Treks.props
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets.pack.json
+/Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets.build.json
+/Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/staticwebassets.development.json
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/scopedcss/Shared/MainLayout.razor.rz.scp.css
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/scopedcss/Shared/NavMenu.razor.rz.scp.css
 /Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/scopedcss/bundle/Treks.styles.css
