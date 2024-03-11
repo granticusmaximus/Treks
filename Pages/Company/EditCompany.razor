@@ -1,0 +1,133 @@
+@page "/company/edit/{id}"
+@using Treks.Models
+@using Treks.Services
+@inject CompanyService companyService
+@inject NavigationManager navigationManager
+
+<h3>Edit Company</h3>
+
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else if (company == null)
+{
+    <p>Company not found.</p>
+}
+else if (isSaving)
+{
+    <p>Saving...</p>
+}
+else if (saveSuccess)
+{
+    <p>Company updated successfully!</p>
+}
+else if (saveError)
+{
+    <p>Error saving company.</p>
+}
+
+@if (company != null)
+{
+    <EditForm Model="@company" OnValidSubmit="UpdateCompany">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <InputText id="name" @bind-Value="@company.Name" class="form-control" />
+            <ValidationMessage For="@(() => company.Name)" />
+        </div>
+        <div class="form-group">
+            <label for="contactNumber">Contact Number:</label>
+            <InputText id="contactNumber" @bind-Value="@company.ContactNumber" class="form-control" />
+            <ValidationMessage For="@(() => company.ContactNumber)" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <InputText id="email" @bind-Value="@company.Email" class="form-control" />
+            <ValidationMessage For="@(() => company.Email)" />
+        </div>
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <InputText id="address" @bind-Value="@company.Address" class="form-control" />
+            <ValidationMessage For="@(() => company.Address)" />
+        </div>
+        <div class="form-group">
+            <label for="city">City:</label>
+            <InputText id="city" @bind-Value="@company.City" class="form-control" />
+            <ValidationMessage For="@(() => company.City)" />
+        </div>
+        <div class="form-group">
+            <label for="state">State:</label>
+            <InputText id="state" @bind-Value="@company.State" class="form-control" />
+            <ValidationMessage For="@(() => company.State)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private Company company;
+    private bool isLoading = true;
+    private bool isSaving = false;
+    private bool saveSuccess = false;
+    private bool saveError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCompany();
+    }
+
+    private async Task LoadCompany()
+    {
+        try
+        {
+            company = await companyService.GetCompanyByIdAsync(int.Parse(Id));
+            isLoading = false;
+        }
+        catch (Exception)
+        {
+            isLoading = false;
+            // Handle error loading company
+        }
+    }
+
+    private async Task UpdateCompany()
+    {
+        isSaving = true;
+        saveSuccess = false;
+        saveError = false;
+
+        try
+        {
+            bool success = await companyService.UpdateCompanyAsync(company);
+            if (success)
+            {
+                saveSuccess = true;
+            }
+            else
+            {
+                saveError = true;
+            }
+        }
+        catch (Exception)
+        {
+            saveError = true;
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private void CancelEdit()
+    {
+        navigationManager.NavigateTo("/companies");
+    }
+}

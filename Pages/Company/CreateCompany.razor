@@ -1,0 +1,96 @@
+@page "/company/create"
+@using Treks.Models
+@using Treks.Services
+@inject CompanyService companyService
+
+
+<h3>Add New Company</h3>
+
+@if (isSaving)
+{
+    <p>Saving...</p>
+}
+else if (saveSuccess)
+{
+    <p>Company created successfully!</p>
+}
+else if (saveError)
+{
+    <p>Error saving company.</p>
+}
+
+<EditForm Model="@newCompany" OnValidSubmit="SaveCompany">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <InputText id="name" @bind-Value="@newCompany.Name" class="form-control" />
+        <ValidationMessage For="@(() => newCompany.Name)" />
+    </div>
+    <div class="form-group">
+        <label for="contactNumber">Contact Number:</label>
+        <InputText id="contactNumber" @bind-Value="@newCompany.ContactNumber" class="form-control" />
+        <ValidationMessage For="@(() => newCompany.ContactNumber)" />
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="@newCompany.Email" class="form-control" />
+        <ValidationMessage For="@(() => newCompany.Email)" />
+    </div>
+    <div class="form-group">
+        <label for="address">Address:</label>
+        <InputText id="address" @bind-Value="@newCompany.Address" class="form-control" />
+        <ValidationMessage For="@(() => newCompany.Address)" />
+    </div>
+    <div class="form-group">
+        <label for="city">City:</label>
+        <InputText id="city" @bind-Value="@newCompany.City" class="form-control" />
+        <ValidationMessage For="@(() => newCompany.City)" />
+    </div>
+    <div class="form-group">
+        <label for="state">State:</label>
+        <InputText id="state" @bind-Value="@newCompany.State" class="form-control" />
+        <ValidationMessage For="@(() => newCompany.State)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+@code {
+    private Company newCompany = new Company
+    {
+        Name = ""
+    };
+    private bool isSaving = false;
+    private bool saveSuccess = false;
+    private bool saveError = false;
+
+    private async Task SaveCompany()
+    {
+        isSaving = true;
+        saveSuccess = false;
+        saveError = false;
+
+        try
+        {
+            bool success = await companyService.CreateCompanyAsync(newCompany);
+            if (success)
+            {
+                saveSuccess = true;
+            }
+            else
+            {
+                saveError = true;
+            }
+        }
+        catch (Exception)
+        {
+            saveError = true;
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+}

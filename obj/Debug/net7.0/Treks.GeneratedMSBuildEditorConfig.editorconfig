@@ -24,6 +24,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWJvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Company/Companies.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29tcGFueS9Db21wYW5pZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Company/CompanyDetails.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29tcGFueS9Db21wYW55RGV0YWlscy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Company/CreateCompany.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29tcGFueS9DcmVhdGVDb21wYW55LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Company/EditCompany.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29tcGFueS9FZGl0Q29tcGFueS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Contact.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29udGFjdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

@@ -1,0 +1,50 @@
+@page "/company/details/{companyId}"
+@using Treks.Models
+@using Treks.Services
+@inject CompanyService companyService
+@inject NavigationManager navigationManager
+
+<h3>Company Details</h3>
+
+@if (company == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div>
+        <p><strong>Name:</strong> @company.Name</p>
+        <p><strong>Contact Number:</strong> @company.ContactNumber</p>
+        <p><strong>Email:</strong> @company.Email</p>
+        <p><strong>Address:</strong> @company.Address</p>
+        <p><strong>City:</strong> @company.City</p>
+        <p><strong>State:</strong> @company.State</p>
+    </div>
+}
+
+<button class="btn btn-primary" @onclick="NavigateToList">Back to Company List</button>
+
+@code {
+    [Parameter]
+    public string companyId { get; set; }
+
+    private Company company;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            int id = Convert.ToInt32(companyId);
+            company = await companyService.GetCompanyByIdAsync(id);
+        }
+        catch (Exception)
+        {
+            // Handle error, such as redirecting to an error page
+        }
+    }
+
+    private void NavigateToList()
+    {
+        navigationManager.NavigateTo("/companies");
+    }
+}

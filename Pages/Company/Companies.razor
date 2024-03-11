@@ -1,0 +1,102 @@
+@page "/companies"
+@using Treks.Models
+@using Treks.Services
+@inject NavigationManager navi
+@inject CompanyService companyService
+
+<h3>Company List</h3>
+<div class="col-md-6">
+        <button @onclick="OpenAddNewCompanyModal" class="btn btn-warning">Create New Company</button>
+</div>
+
+@if (companies == null || companies.Count == 0)
+{
+    <p>No companies found.</p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Contact Number</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var company in companies)
+            {
+                <tr @onclick="() => ViewDetails(company.Id)" style="cursor: pointer;">
+                    <td>@company.Name</td>
+                    <td>@company.ContactNumber</td>
+                    <td>@company.Email</td>
+                    <td>@company.Address</td>
+                    <td>@company.City</td>
+                    <td>@company.State</td>
+                    <td><button class="btn btn-primary" @onclick="() => EditCompany(company.Id)">Edit</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<!-- Add New Company Modal -->
+<div class="modal fade @(showAddNewCompanyModal ? "show d-block" : "")" id="addTaskModal" tabindex="-1" role="dialog"
+    aria-labelledby="addTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTaskModalLabel">Add New Company</h5>
+                <button type="button" class="close" @onclick="CloseAddNewCompanyModal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <CreateCompany />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CloseAddNewCompanyModal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Company> companies;
+    private bool showAddNewCompanyModal = false;
+
+    private void OpenAddNewCompanyModal()
+    {
+        showAddNewCompanyModal = true;
+    }
+
+    private void CloseAddNewCompanyModal()
+    {
+        showAddNewCompanyModal = false;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            companies = await companyService.GetAllCompaniesAsync();
+        }
+        catch (Exception)
+        {
+            // Handle error, such as redirecting to an error page
+        }
+    }
+
+    private void ViewDetails(int companyId)
+    {
+        navi.NavigateTo($"/company/details/{companyId}");
+    }
+
+    private void EditCompany(int id)
+    {
+        navi.NavigateTo($"/company/edit/{id}");
+    }
+}
