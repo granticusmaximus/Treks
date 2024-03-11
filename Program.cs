@@ -21,6 +21,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>()
 builder.Services.AddScoped<ApplicationUserService>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<TicketService>();
+builder.Services.AddScoped<CompanyService>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
