@@ -45,8 +45,8 @@ else
     {
         try
         {
-            int id = Convert.ToInt32(id);
-            company = await companyService.GetCompanyByIdAsync(id);
+            int companyID = Convert.ToInt32(id);
+            company = await companyService.GetCompanyByIdAsync(companyID);
         }
         catch (Exception)
         {
