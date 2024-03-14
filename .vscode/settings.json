@@ -6,5 +6,6 @@
             "name": "DbConnect",
             "database": "${workspaceFolder:Treks}/app.db"
         }
-    ]
+    ],
+    "sqltools.useNodeRuntime": true
 }

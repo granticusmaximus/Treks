@@ -1,10 +1,21 @@
-@page "/company/details/{companyId}"
+@page "/company/details/{id}"
 @using Treks.Models
 @using Treks.Services
 @inject CompanyService companyService
 @inject NavigationManager navigationManager
 
 <h3>Company Details</h3>
+
+<hr/>
+    <button class="btn btn-success" @onclick="NavigateToList">Back to Company List</button>
+    @if (!string.IsNullOrEmpty(id))
+        {
+            var editCompanyUrl = $"/company/edit/{id}";
+            <NavLink class="btn btn-warning ml-2" href="@editCompanyUrl">
+                <span aria-hidden="true">Edit Company</span>
+            </NavLink>
+        }
+<hr/>
 
 @if (company == null)
 {
@@ -22,11 +33,11 @@ else
     </div>
 }
 
-<button class="btn btn-primary" @onclick="NavigateToList">Back to Company List</button>
+
 
 @code {
     [Parameter]
-    public string companyId { get; set; }
+    public string id { get; set; }
 
     private Company company;
 
@@ -34,7 +45,7 @@ else
     {
         try
         {
-            int id = Convert.ToInt32(companyId);
+            int id = Convert.ToInt32(id);
             company = await companyService.GetCompanyByIdAsync(id);
         }
         catch (Exception)
