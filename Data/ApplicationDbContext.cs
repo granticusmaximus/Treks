@@ -32,10 +32,15 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(ttn => ttn.TechNoteId);
 
         modelBuilder.Entity<ApplicationUser>()
-            .HasMany(u => u.AssignedTickets) // ApplicationUser has many Tickets
-            .WithOne(t => t.AssignedUser) // Each Ticket has one AssignedUser
-            .HasForeignKey(t => t.AssignedUserId) // ForeignKey in the Ticket table
+            .HasMany(u => u.AssignedTickets) 
+            .WithOne(t => t.AssignedUser)
+            .HasForeignKey(t => t.AssignedUserId)
             .IsRequired(false);
+
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.Company)
+            .WithMany(c => c.Comments)
+            .HasForeignKey(c => c.CompanyId);
     }
 
     public DbSet<ApplicationUser> ApplicationUser { get; set; }
@@ -45,5 +50,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<TicketTechNote> TicketTechNotes { get; set; }
     public DbSet<LUT_UserRoles> LUT_UserRoles { get; set; }
     public DbSet<Company> Companies { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
 }

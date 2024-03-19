@@ -1,0 +1,14 @@
+@page "/company/comments"
+@using Treks.Models
+@using Treks.Services
+@inject CompanyService service
+
+
+@code {
+    private List<Comment> comments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        comments = await service.GetAllCommentsAsync();
+    }
+}

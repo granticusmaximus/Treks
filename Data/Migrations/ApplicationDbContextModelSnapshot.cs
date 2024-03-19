@@ -247,6 +247,29 @@ namespace Treks.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Treks.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Treks.Models.Company", b =>
                 {
                     b.Property<int>("Id")
@@ -442,6 +465,17 @@ namespace Treks.Data.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Treks.Models.Comment", b =>
+                {
+                    b.HasOne("Treks.Models.Company", "Company")
+                        .WithMany("Comments")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("Treks.Models.LUT_UserRoles", b =>
                 {
                     b.HasOne("Treks.Models.Role", "Role")
@@ -492,6 +526,11 @@ namespace Treks.Data.Migrations
             modelBuilder.Entity("Treks.Models.ApplicationUser", b =>
                 {
                     b.Navigation("AssignedTickets");
+                });
+
+            modelBuilder.Entity("Treks.Models.Company", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("Treks.Models.TechNote", b =>

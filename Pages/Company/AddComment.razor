@@ -1,0 +1,74 @@
+@page "/company/add-comment"
+@using Treks.Services
+@using Treks.Models
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CompanyService service 
+
+<div class="row">
+    <div class="col-md-6">
+        <form>
+            <div class="form-group">
+                <label for="Comment" class="control-label">Comment</label>
+                <input id="Comment" class="form-control" @bind="comment.Notes" />
+            </div>
+            <hr  />
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="AddNewComment" value="Comment" />
+            </div>
+        </form>
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <div class="alert alert-info mt-3">
+                @message
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private Comment comment = new Comment { Notes = "" }; // Initialize a new Comment object with the Notes property set to an empty string
+    private string message = "";
+    private bool success = false;
+    public string CompanyId { get; set; }
+    private string newCompanyComment = string.Empty;
+
+    private async Task AddNewComment()
+    {
+        if (!string.IsNullOrWhiteSpace(newCompanyComment))
+        {
+            var username = await GetUsernameAsync();
+
+            // Create a new comment object and set its properties
+            var newComment = new Comment
+            {
+                Notes = newCompanyComment, // Set the Notes property
+                Username = username
+            };
+
+            // Call the service method to add the new comment
+            await service.AddCommentAsync(CompanyId, newComment);
+
+            // Reset the input field
+            newCompanyComment = string.Empty;
+        }
+        else
+        {
+            message = "There was an error with saving the note!";
+        }
+    }
+
+    private async Task<string> GetUsernameAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            return user.Identity.Name; // This will give you the username
+        }
+        else
+        {
+            return "Anonymous"; // Handle the case when the user is not authenticated
+        }
+    }
+}

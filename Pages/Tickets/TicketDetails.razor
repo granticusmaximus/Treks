@@ -4,6 +4,7 @@
 @inject TicketService ticketService
 @inject NavigationManager navi
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager
 @attribute [AllowAnonymous]
 
 <h2>@_ticket.Title Details</h2>
@@ -11,7 +12,7 @@
 <div class="col-md-6">
     <NavLink class="btn btn-success" href="Tickets">
         <span aria-hidden="true">Back to Tickets</span>
-    </NavLink>
+    </NavLink> &nbsp;
     @if (!string.IsNullOrEmpty(TicketId))
     {
         var editTicketUrl = $"tickets/edit/{TicketId}";
@@ -75,25 +76,23 @@
     {
         @foreach (var ticketTechNote in _ticket.TicketTechNotes)
         {
-            <div class="card">
-    <div class="card-header">
-        <h5 class="card-title">
+            <div class="comments">
+                    <div class="username">
                         @ticketTechNote.TechNote.Username 
-                    </h5>
+                    </div>
+                <div class="comment">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <p>@ticketTechNote.TechNote.Notes</p>
+                        </div>
+                        <div class="col-2">
+                            <button class="btn btn-sm btn-danger" @onclick="@(() => DeleteTechNote(ticketTechNote.TechNote.Id))">
+                                <span class="oi oi-trash" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-        <div class="row">
-            <div class="col-lg-12">
-                    <p>@ticketTechNote.TechNote.Notes</p>
             </div>
-            <div class="col-2">
-                <button class="btn btn-sm btn-danger" @onclick="@(() => DeleteTechNote(ticketTechNote.TechNote.Id))">
-                        <span class="oi oi-trash" aria-hidden="true"></span>
-                    </button>
-                </div>
-            </div>
-    </div>
-</div>
         }
     }
     else
@@ -154,7 +153,7 @@ else if (!string.IsNullOrEmpty(message))
             message = "There was an error with retrieving the ticket!";
         }
     }
-
+    
     private void OpenModal()
     {
         showModal = true;

@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Treks.Models
@@ -18,5 +18,7 @@ namespace Treks.Models
         public string? Address { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
+
+        public virtual ICollection<Comment>? Comments { get; set; }
     }
 }

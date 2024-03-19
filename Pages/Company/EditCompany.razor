@@ -32,38 +32,57 @@ else if (saveError)
     <EditForm Model="@company" OnValidSubmit="UpdateCompany">
         <DataAnnotationsValidator />
         <ValidationSummary />
-
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <InputText id="name" @bind-Value="@company.Name" class="form-control" />
-            <ValidationMessage For="@(() => company.Name)" />
+        <div class="row">
+            <div class="col-10">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <InputText id="name" @bind-Value="@company.Name" class="form-control" />
+                    <ValidationMessage For="@(() => company.Name)" />
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="contactNumber">Contact Number:</label>
-            <InputText id="contactNumber" @bind-Value="@company.ContactNumber" class="form-control" />
-            <ValidationMessage For="@(() => company.ContactNumber)" />
+        <div class="row">
+            <div class="col-5">
+                <div class="form-group">
+                    <label for="contactNumber">Contact Number:</label>
+                    <InputText id="contactNumber" @bind-Value="@company.ContactNumber" class="form-control" />
+                    <ValidationMessage For="@(() => company.ContactNumber)" />
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <InputText id="email" @bind-Value="@company.Email" class="form-control" />
+                    <ValidationMessage For="@(() => company.Email)" />
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <InputText id="email" @bind-Value="@company.Email" class="form-control" />
-            <ValidationMessage For="@(() => company.Email)" />
+        <div class="row">
+            <div class="form-group">
+                <div class="col-10">
+                    <label for="address">Address:</label>
+                    <InputText id="address" @bind-Value="@company.Address" class="form-control" />
+                    <ValidationMessage For="@(() => company.Address)" />
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="address">Address:</label>
-            <InputText id="address" @bind-Value="@company.Address" class="form-control" />
-            <ValidationMessage For="@(() => company.Address)" />
+        <div class="row">
+            <div class="col-5">
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <InputText id="city" @bind-Value="@company.City" class="form-control" />
+                    <ValidationMessage For="@(() => company.City)" />
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <InputText id="state" @bind-Value="@company.State" class="form-control" />
+                    <ValidationMessage For="@(() => company.State)" />
+                </div>    
+            </div>
         </div>
-        <div class="form-group">
-            <label for="city">City:</label>
-            <InputText id="city" @bind-Value="@company.City" class="form-control" />
-            <ValidationMessage For="@(() => company.City)" />
-        </div>
-        <div class="form-group">
-            <label for="state">State:</label>
-            <InputText id="state" @bind-Value="@company.State" class="form-control" />
-            <ValidationMessage For="@(() => company.State)" />
-        </div>
-
+        <hr/>
         <button type="submit" class="btn btn-primary">Save</button>
         <button type="button" class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
     </EditForm>

@@ -79,6 +79,37 @@ namespace Treks.Services
             }
         }
 
+        public async Task AddCommentAsync(string companyID, Comment comment)
+        {
+            if (comment.Id == 0)
+            {
+                _context.Comments.Add(comment);
+                await _context.SaveChangesAsync();
+            }
+
+            var lu_comment = new LUT_Comments
+            {
+                CompanyId = companyID,
+                CommentId = comment.Id
+            };
+
+            _context.Add(lu_comment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Comment>> GetAllCommentsAsync()
+        {
+            try
+            {
+                return await _context.Comments.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                throw new ApplicationException("Error occurred while retrieving comments.", ex);
+            }
+        }
+
         public async Task<bool> DeleteCompanyAsync(int id)
         {
             try

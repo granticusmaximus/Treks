@@ -4,18 +4,6 @@
 @inject CompanyService companyService
 @inject NavigationManager navigationManager
 
-<h3>Company Details</h3>
-
-<hr/>
-    <button class="btn btn-success" @onclick="NavigateToList">Back to Company List</button>
-    @if (!string.IsNullOrEmpty(id))
-        {
-            var editCompanyUrl = $"/company/edit/{id}";
-            <NavLink class="btn btn-warning ml-2" href="@editCompanyUrl">
-                <span aria-hidden="true">Edit Company</span>
-            </NavLink>
-        }
-<hr/>
 
 @if (company == null)
 {
@@ -23,14 +11,32 @@
 }
 else
 {
-    <div>
-        <p><strong>Name:</strong> @company.Name</p>
-        <p><strong>Contact Number:</strong> @company.ContactNumber</p>
-        <p><strong>Email:</strong> @company.Email</p>
-        <p><strong>Address:</strong> @company.Address</p>
-        <p><strong>City:</strong> @company.City</p>
-        <p><strong>State:</strong> @company.State</p>
-    </div>
+    <center>
+        <div class="card">
+            <div class="cardHeader"><h2>@company.Name Details</h2></div>
+            <div class="cardBody">
+                <strong>Contact Number:</strong> 
+                <p>@company.ContactNumber</p>
+                <strong>Email:</strong> 
+                <p>@company.Email</p>
+                <strong>Location:</strong>
+                <p> @company.Address,<br/> @company.City, @company.State</p>
+            </div>
+            <hr/>
+            <div class="cardFooter">
+                <button class="btn btn-success" @onclick="NavigateToList">Back to Company List</button> &nbsp;
+                @if (!string.IsNullOrEmpty(id))
+                {
+                    var editCompanyUrl = $"/company/edit/{id}";
+                    <NavLink class="btn btn-warning ml-2" href="@editCompanyUrl">
+                        <span aria-hidden="true">Edit Company</span>
+                    </NavLink>
+                }
+            </div>
+            <hr/>
+        </div>
+    </center>
+    
 }
 
 
@@ -38,8 +44,19 @@ else
 @code {
     [Parameter]
     public string id { get; set; }
+    private bool showModal = false;
 
     private Company company;
+
+    private void OpenModal()
+    {
+        showModal = true;
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
+    }
 
     protected override async Task OnInitializedAsync()
     {
