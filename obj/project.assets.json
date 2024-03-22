@@ -239,11 +239,11 @@
           }
         }
       },
-      "Microsoft.AspNetCore.Identity.UI/7.0.10": {
+      "Microsoft.AspNetCore.Identity.UI/7.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.FileProviders.Embedded": "7.0.10",
-          "Microsoft.Extensions.Identity.Stores": "7.0.10"
+          "Microsoft.Extensions.FileProviders.Embedded": "7.0.0",
+          "Microsoft.Extensions.Identity.Stores": "7.0.0"
         },
         "compile": {
           "lib/net7.0/Microsoft.AspNetCore.Identity.UI.dll": {
@@ -1506,7 +1506,7 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.FileProviders.Embedded/7.0.10": {
+      "Microsoft.Extensions.FileProviders.Embedded/7.0.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.FileProviders.Abstractions": "7.0.0"
@@ -4422,10 +4422,10 @@
         "microsoft.aspnetcore.identity.entityframeworkcore.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Identity.UI/7.0.10": {
-      "sha512": "SxlAutmDx+pj1ENwh3lFSgAKSkUUMA1uGl8zCfL7uXbnwjSDvUZrMqGf7vahY0Ts2uqfQOjrP5NTMFn3QXSPsg==",
+    "Microsoft.AspNetCore.Identity.UI/7.0.0": {
+      "sha512": "7hIgF+K5ppATRneTwxcCTBPbvr+lqYkA6aYde3JEAKo4Z8OoWZyYiOh6UR3pulakKGFFNxzdWUYLUmhLOcU/Yg==",
       "type": "package",
-      "path": "microsoft.aspnetcore.identity.ui/7.0.10",
+      "path": "microsoft.aspnetcore.identity.ui/7.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4440,7 +4440,7 @@
         "buildTransitive/Microsoft.AspNetCore.Identity.UI.targets",
         "lib/net7.0/Microsoft.AspNetCore.Identity.UI.dll",
         "lib/net7.0/Microsoft.AspNetCore.Identity.UI.xml",
-        "microsoft.aspnetcore.identity.ui.7.0.10.nupkg.sha512",
+        "microsoft.aspnetcore.identity.ui.7.0.0.nupkg.sha512",
         "microsoft.aspnetcore.identity.ui.nuspec",
         "staticwebassets/V4/css/site.css",
         "staticwebassets/V4/favicon.ico",
@@ -5851,10 +5851,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.FileProviders.Embedded/7.0.10": {
-      "sha512": "XzWmAHg4YZQ9iAWuv0DhaP6jtn1m08xeP6aW8S6SDkYzC3MDjQbvsgskLywigJBnaAZgt+pR52eG84tS1JxQAQ==",
+    "Microsoft.Extensions.FileProviders.Embedded/7.0.0": {
+      "sha512": "mh0rIIjKO7PiU7VPtC92LlIG2lpWVCnGIEqBk8ru2oMWEVQ/gJDizePv1fdmnljwC4e69jtYknXYmLNwm0dZEg==",
       "type": "package",
-      "path": "microsoft.extensions.fileproviders.embedded/7.0.10",
+      "path": "microsoft.extensions.fileproviders.embedded/7.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5869,7 +5869,7 @@
         "lib/net7.0/Microsoft.Extensions.FileProviders.Embedded.xml",
         "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.dll",
         "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.xml",
-        "microsoft.extensions.fileproviders.embedded.7.0.10.nupkg.sha512",
+        "microsoft.extensions.fileproviders.embedded.7.0.0.nupkg.sha512",
         "microsoft.extensions.fileproviders.embedded.nuspec",
         "tasks/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.dll"
       ]
@@ -11520,7 +11520,7 @@
     "net7.0": [
       "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore >= 7.0.10",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 7.0.10",
-      "Microsoft.AspNetCore.Identity.UI >= 7.0.10",
+      "Microsoft.AspNetCore.Identity.UI >= 7.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.0",
       "Microsoft.EntityFrameworkCore.Sqlite >= 7.0.10",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.10",
@@ -11575,7 +11575,7 @@
           },
           "Microsoft.AspNetCore.Identity.UI": {
             "target": "Package",
-            "version": "[7.0.10, )"
+            "version": "[7.0.0, )"
           },
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
