@@ -363,7 +363,6 @@
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Microsoft.EntityFrameworkCore.Sqlite.dll
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Microsoft.EntityFrameworkCore.SqlServer.dll
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Microsoft.Extensions.DependencyModel.dll
-/Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Microsoft.Extensions.FileProviders.Embedded.dll
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Microsoft.Extensions.Identity.Core.dll
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Microsoft.Extensions.Identity.Stores.dll
 /Users/grantwatson/Desktop/Development/CSharp/Treks/bin/Debug/net7.0/Microsoft.Extensions.Options.dll
