@@ -8,10 +8,11 @@ namespace Treks.Models
         public int Id { get; set; }
 
         [Required]
-        public required string Notes { get; set; }
+        public string Notes { get; set; }
+
         public string? Username { get; set; }
 
-       // Foreign key for the Company relationship
+        // Foreign key for the Company relationship
         public int CompanyId { get; set; }
         public Company Company { get; set; }
 

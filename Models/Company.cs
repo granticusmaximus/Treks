@@ -10,11 +10,14 @@ namespace Treks.Models
 
         [Display(Name = "Company Name")]
         [Required]
-        public required string Name { get; set; }
+        public string Name { get; set; }
+
         [Phone]
         public string? ContactNumber { get; set; }
+
         [EmailAddress]
         public string? Email { get; set; }
+
         public string? Address { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }

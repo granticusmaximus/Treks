@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "tbNNfyiEXXV+yqOgkJtX9OsuH8+EV4fTVPTJnqqWwOBy7Ei/OsylKypFCltWqZTnr5ZFVga+L6KSY/aUp5Sshg==",
+  "dgSpecHash": "bTQQLn3TsbDUcqNxXAJarYwDnJyR+iQMUpugk8AauuODZCa+rpx41tEqA/Z0N8NjNAbE+rBR68f4+gVGow20hg==",
   "success": true,
   "projectFilePath": "/Users/grantwatson/Desktop/Development/CSharp/Treks/Treks.csproj",
   "expectedPackageFiles": [
@@ -49,12 +49,12 @@
     "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore/7.0.10/microsoft.entityframeworkcore.7.0.10.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore.abstractions/7.0.10/microsoft.entityframeworkcore.abstractions.7.0.10.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore.analyzers/7.0.10/microsoft.entityframeworkcore.analyzers.7.0.10.nupkg.sha512",
-    "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore.design/7.0.10/microsoft.entityframeworkcore.design.7.0.10.nupkg.sha512",
+    "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore.design/7.0.0/microsoft.entityframeworkcore.design.7.0.0.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore.relational/7.0.10/microsoft.entityframeworkcore.relational.7.0.10.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore.sqlite/7.0.10/microsoft.entityframeworkcore.sqlite.7.0.10.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore.sqlite.core/7.0.10/microsoft.entityframeworkcore.sqlite.core.7.0.10.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore.sqlserver/7.0.0/microsoft.entityframeworkcore.sqlserver.7.0.0.nupkg.sha512",
-    "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore.tools/7.0.10/microsoft.entityframeworkcore.tools.7.0.10.nupkg.sha512",
+    "/Users/grantwatson/.nuget/packages/microsoft.entityframeworkcore.tools/7.0.0/microsoft.entityframeworkcore.tools.7.0.0.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/microsoft.extensions.caching.abstractions/7.0.0/microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/microsoft.extensions.caching.memory/7.0.0/microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/microsoft.extensions.configuration.abstractions/7.0.0/microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
