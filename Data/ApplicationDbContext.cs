@@ -36,11 +36,23 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithOne(t => t.AssignedUser)
             .HasForeignKey(t => t.AssignedUserId)
             .IsRequired(false);
-
-        modelBuilder.Entity<Comment>()
-            .HasOne(c => c.Company)
+        
+        modelBuilder.Entity<LUT_Comments>()
+            .HasOne(c=> c.Company)
             .WithMany(c => c.Comments)
             .HasForeignKey(c => c.CompanyId);
+
+        modelBuilder.Entity<LUT_Comments>()
+            .HasOne(c => c.Comment)
+            .WithMany(c => c.Comments)
+            .HasForeignKey(c => c.CommentId);
+
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.ParentComment)
+            .WithMany(c => c.ChildComments)
+            .HasForeignKey(c => c.ParentCommentId)
+            .OnDelete(DeleteBehavior.Restrict); // Prevents cascade delete
+
     }
 
     public DbSet<ApplicationUser> ApplicationUser { get; set; }
@@ -49,6 +61,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<TicketTechNote> TicketTechNotes { get; set; }
     public DbSet<LUT_UserRoles> LUT_UserRoles { get; set; }
+    public DbSet<LUT_Comments> LUT_Comments { get; set; }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Comment> Comments { get; set; }
 

@@ -1,14 +1,33 @@
-@page "/company/comments"
+@page "/company/comments/{id}"
 @using Treks.Models
 @using Treks.Services
 @inject CompanyService service
 
+<h3>Comments</h3>
+@if (comments != null && comments.Any())
+{
+    foreach (var comment in comments)
+    {
+        <div class="comment">
+            <p>@comment.TheComment</p>
+            <!-- Display other comment details here -->
+        </div>
+    }
+}
+else
+{
+    <p>No comments available.</p>
+}
 
 @code {
+    [Parameter]
+    public string id { get; set; }
+
     private List<Comment> comments;
 
     protected override async Task OnInitializedAsync()
     {
-        comments = await service.GetAllCommentsAsync();
+        int companyID = Convert.ToInt32(id); // Assuming id is the CompanyId as string
+        comments = await service.GetCommentsByCompanyIdAsync(companyID);
     }
 }

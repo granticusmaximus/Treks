@@ -21,7 +21,8 @@ namespace Treks.Services
         {
             try
             {
-                return await _context.Companies.ToListAsync();
+                // Includes comments for eager loading, adjust if comments should be lazy-loaded
+                return await _context.Companies.Include(c => c.Comments).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -34,7 +35,17 @@ namespace Treks.Services
         {
             try
             {
-                return await _context.Companies.FindAsync(id);
+                // Include comments when fetching a specific company
+                var company = await _context.Companies
+                    .Include(c => c.Comments)
+                    .FirstOrDefaultAsync(c => c.Id == id);
+
+                if (company == null)
+                {
+                    throw new ApplicationException($"Company with ID {id} not found.");
+                }
+
+                return company;
             }
             catch (Exception ex)
             {
@@ -79,34 +90,38 @@ namespace Treks.Services
             }
         }
 
-        public async Task AddCommentAsync(string companyID, Comment comment)
+        public async Task AddCommentAsync(Comment comment)
         {
-            if (comment.Id == 0)
+            if (comment == null)
+                throw new ArgumentNullException(nameof(comment));
+
+            try
             {
                 _context.Comments.Add(comment);
                 await _context.SaveChangesAsync();
             }
-
-            var lu_comment = new LUT_Comments
+            catch (Exception ex)
             {
-                CompanyId = companyID,
-                CommentId = comment.Id
-            };
-
-            _context.Add(lu_comment);
-            await _context.SaveChangesAsync();
+                // Log the exception or handle it appropriately
+                throw new ApplicationException("Error occurred while adding a comment.", ex);
+            }
         }
 
-        public async Task<List<Comment>> GetAllCommentsAsync()
+        public async Task<List<Comment>> GetCommentsByCompanyIdAsync(int companyId)
         {
             try
             {
-                return await _context.Comments.ToListAsync();
+                // Adjust this method if you need to handle hierarchical comments differently
+                var comments = await _context.Comments
+                    .Where(c => c.CompanyId == companyId)
+                    .ToListAsync();
+
+                return comments;
             }
             catch (Exception ex)
             {
                 // Log the exception or handle it appropriately
-                throw new ApplicationException("Error occurred while retrieving comments.", ex);
+                throw new ApplicationException($"Error occurred while retrieving comments for company ID {companyId}.", ex);
             }
         }
 

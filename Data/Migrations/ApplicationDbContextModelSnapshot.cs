@@ -256,7 +256,16 @@ namespace Treks.Data.Migrations
                     b.Property<int>("CompanyId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Notes")
+                    b.Property<string>("FullName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ParentCommentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("TheComment")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -265,7 +274,7 @@ namespace Treks.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("ParentCommentId");
 
                     b.ToTable("Comments");
                 });
@@ -298,6 +307,27 @@ namespace Treks.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Treks.Models.LUT_Comments", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("LUT_Comments");
                 });
 
             modelBuilder.Entity("Treks.Models.LUT_UserRoles", b =>
@@ -473,11 +503,29 @@ namespace Treks.Data.Migrations
 
             modelBuilder.Entity("Treks.Models.Comment", b =>
                 {
+                    b.HasOne("Treks.Models.Comment", "ParentComment")
+                        .WithMany("ChildComments")
+                        .HasForeignKey("ParentCommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ParentComment");
+                });
+
+            modelBuilder.Entity("Treks.Models.LUT_Comments", b =>
+                {
+                    b.HasOne("Treks.Models.Comment", "Comment")
+                        .WithMany("Comments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Treks.Models.Company", "Company")
                         .WithMany("Comments")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Comment");
 
                     b.Navigation("Company");
                 });
@@ -532,6 +580,13 @@ namespace Treks.Data.Migrations
             modelBuilder.Entity("Treks.Models.ApplicationUser", b =>
                 {
                     b.Navigation("AssignedTickets");
+                });
+
+            modelBuilder.Entity("Treks.Models.Comment", b =>
+                {
+                    b.Navigation("ChildComments");
+
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("Treks.Models.Company", b =>

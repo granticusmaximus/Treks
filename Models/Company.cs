@@ -22,6 +22,6 @@ namespace Treks.Models
         public string? City { get; set; }
         public string? State { get; set; }
 
-        public virtual ICollection<Comment>? Comments { get; set; }
+        public virtual ICollection<LUT_Comments> Comments { get; set; }
     }
 }
