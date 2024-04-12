@@ -18,7 +18,6 @@ namespace Treks.Models
         {
             get { return FirstName + " " + LastName; }
         }
-
         public string? Address { get; set; }
         public string? Cellnumber { get; set; }
 
@@ -32,10 +31,12 @@ namespace Treks.Models
         public DateTime RegisterDate { get; set; } = DateTime.Now;
         public bool IsActive { get; set; }
         public virtual ICollection<Ticket> AssignedTickets { get; set; }
+        public virtual ICollection<Company> AssignedCompany { get; set; }
 
         public ApplicationUser()
         {
             AssignedTickets = new HashSet<Ticket>();
+            AssignedCompany = new HashSet<Company>();
         }
     }
 

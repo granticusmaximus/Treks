@@ -22,6 +22,9 @@ namespace Treks.Models
         public string? City { get; set; }
         public string? State { get; set; }
 
+        public virtual ICollection<ApplicationUser> AssignedUsers { get; set; }
+        public virtual ICollection<Ticket> Tickets { get; set; }    
+
         public virtual ICollection<LUT_Comments> Comments { get; set; }
     }
 }

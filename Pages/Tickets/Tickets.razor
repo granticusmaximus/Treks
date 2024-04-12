@@ -36,6 +36,8 @@
             Date</button>
         <button @onclick="(() => SortTickets(TicketField.AssignedUserId))"
             class="btn btn-primary filter-button">Assigned User</button>
+        <button @onclick="(() => SortTickets(TicketField.AssignedCompanyId))"
+            class="btn btn-primary filter-button">Assigned Company</button>
     </div>
 </center>
 
@@ -71,7 +73,8 @@
         <tr class="text-center">
             <th scope="col">Title</th>
             <th scope="col">Severity</th>
-            <th scope="col">Assigned</th>
+            <th scope="col">Assigned User</th>
+            <th scope="col">Assigned Company</th>
             <th scope="col">Due Date</th>
             <th scope="col"></th>
         </tr>
@@ -87,7 +90,11 @@
                             <center>
                                 @task.AssignedUser.FullName
                             </center>
-
+                        </td>
+                        <td>
+                            <center>
+                                @task.AssignedCompany.Name
+                            </center>
                         </td>
                         <td class="text-center">
                             @task.DueDate.ToShortDateString()
@@ -276,6 +283,9 @@
             case TicketField.AssignedUserId:
                 return descending ? ticketList.OrderByDescending(t => t.AssignedUser.FullName).ToList() : ticketList.OrderBy(t =>
                 t.AssignedUser.FullName).ToList();
+            case TicketField.AssignedCompanyId:
+                return descending ? ticketList.OrderByDescending(t => t.AssignedCompany.Name).ToList() : ticketList.OrderBy(t =>
+                t.AssignedCompany.Name).ToList();
             case TicketField.Severity:
                 return descending ? ticketList.OrderByDescending(t => t.Severity).ToList() : ticketList.OrderBy(t =>
                 t.Severity).ToList();

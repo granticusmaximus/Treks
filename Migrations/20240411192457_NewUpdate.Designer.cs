@@ -8,17 +8,32 @@ using Treks.Data;
 
 #nullable disable
 
-namespace Treks.Data.Migrations
+namespace Treks.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240219193506_TicketModelUpdate")]
-    partial class TicketModelUpdate
+    [Migration("20240411192457_NewUpdate")]
+    partial class NewUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
+
+            modelBuilder.Entity("ApplicationUserCompany", b =>
+                {
+                    b.Property<int>("AssignedCompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AssignedUsersId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("AssignedCompanyId", "AssignedUsersId");
+
+                    b.HasIndex("AssignedUsersId");
+
+                    b.ToTable("ApplicationUserCompany");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -187,6 +202,9 @@ namespace Treks.Data.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -247,6 +265,89 @@ namespace Treks.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Treks.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ParentCommentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("TheComment")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentCommentId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Treks.Models.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("City")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ContactNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("State")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Treks.Models.LUT_Comments", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("LUT_Comments");
+                });
+
             modelBuilder.Entity("Treks.Models.LUT_UserRoles", b =>
                 {
                     b.Property<int>("Id")
@@ -290,9 +391,15 @@ namespace Treks.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("FullName")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("Username")
                         .HasColumnType("TEXT");
@@ -307,7 +414,13 @@ namespace Treks.Data.Migrations
                     b.Property<string>("TicketId")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("AssignedCompanyId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("AssignedUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CompanyId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -333,6 +446,8 @@ namespace Treks.Data.Migrations
 
                     b.HasKey("TicketId");
 
+                    b.HasIndex("AssignedCompanyId");
+
                     b.HasIndex("AssignedUserId");
 
                     b.ToTable("Tickets");
@@ -351,6 +466,21 @@ namespace Treks.Data.Migrations
                     b.HasIndex("TechNoteId");
 
                     b.ToTable("TicketTechNotes");
+                });
+
+            modelBuilder.Entity("ApplicationUserCompany", b =>
+                {
+                    b.HasOne("Treks.Models.Company", null)
+                        .WithMany()
+                        .HasForeignKey("AssignedCompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Treks.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("AssignedUsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -413,6 +543,35 @@ namespace Treks.Data.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Treks.Models.Comment", b =>
+                {
+                    b.HasOne("Treks.Models.Comment", "ParentComment")
+                        .WithMany("ChildComments")
+                        .HasForeignKey("ParentCommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ParentComment");
+                });
+
+            modelBuilder.Entity("Treks.Models.LUT_Comments", b =>
+                {
+                    b.HasOne("Treks.Models.Comment", "Comment")
+                        .WithMany("Comments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Treks.Models.Company", "Company")
+                        .WithMany("Comments")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("Treks.Models.LUT_UserRoles", b =>
                 {
                     b.HasOne("Treks.Models.Role", "Role")
@@ -434,11 +593,17 @@ namespace Treks.Data.Migrations
 
             modelBuilder.Entity("Treks.Models.Ticket", b =>
                 {
-                    b.HasOne("Treks.Models.ApplicationUser", "AssignedUser")
-                        .WithMany("AssignedTickets")
-                        .HasForeignKey("AssignedUserId")
+                    b.HasOne("Treks.Models.Company", "AssignedCompany")
+                        .WithMany("Tickets")
+                        .HasForeignKey("AssignedCompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Treks.Models.ApplicationUser", "AssignedUser")
+                        .WithMany("AssignedTickets")
+                        .HasForeignKey("AssignedUserId");
+
+                    b.Navigation("AssignedCompany");
 
                     b.Navigation("AssignedUser");
                 });
@@ -465,6 +630,20 @@ namespace Treks.Data.Migrations
             modelBuilder.Entity("Treks.Models.ApplicationUser", b =>
                 {
                     b.Navigation("AssignedTickets");
+                });
+
+            modelBuilder.Entity("Treks.Models.Comment", b =>
+                {
+                    b.Navigation("ChildComments");
+
+                    b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("Treks.Models.Company", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("Treks.Models.TechNote", b =>
