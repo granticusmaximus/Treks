@@ -2,6 +2,7 @@
 @using Treks.Models
 @using Treks.Services
 @inject TicketService ticketService
+@inject CompanyService companyService
 @inject ApplicationUserService userService // Ensure you have this service implemented
 @inject NavigationManager navi
 @attribute [Authorize]
@@ -61,6 +62,18 @@
             </select>
         </div>
     </div>
+    <div class="mb-3">
+        <div class="form-group">
+            <label for="assignedCompany">Assigned to a Company:</label>
+            <InputSelect id="AssignedCompany" class="form-control" @bind-Value="_ticket.AssignedCompany">
+                <option value="">-- Select Company --</option>
+                @foreach (var company in companies)
+                {
+                    <option value="@company.Id">@company.Name</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
     <div class="text-end">
         <button type="submit" class="btn btn-primary" @onclick="SaveTicket">Save Ticket</button>
     </div>
@@ -80,12 +93,15 @@
         };
     private ApplicationUser user = new ApplicationUser();
     private List<ApplicationUser> users = new List<ApplicationUser>();
+    private Company company = new Company();
+    private List<Company> companies = new List<Company>();
     private bool showWarning = false;
     string message = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         users = await userService.GetAllUsersAsync();
+        companies = await companyService.GetAllCompaniesAsync();
     }
 
     private async Task SaveTicket()

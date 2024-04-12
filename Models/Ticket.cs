@@ -25,7 +25,7 @@ namespace Treks.Models
         public virtual ApplicationUser AssignedUser { get; set; } // Navigation property
 
         [ForeignKey("CompanyId")]
-        public string CompanyId { get; set; }
+        public int AssignedCompanyId { get; set; }
         public virtual Company AssignedCompany { get; set; }
         public virtual ICollection<TicketTechNote> TicketTechNotes { get; set; }
 

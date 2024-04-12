@@ -240,6 +240,7 @@
     {
         TicketID,
         AssignedUserId,
+        AssignedCompanyId,
         Severity,
         DueDate
     }
@@ -281,21 +282,24 @@
         switch (column)
         {
             case TicketField.AssignedUserId:
-                return descending ? ticketList.OrderByDescending(t => t.AssignedUser.FullName).ToList() : ticketList.OrderBy(t =>
-                t.AssignedUser.FullName).ToList();
+                return descending ? ticketList.OrderByDescending(t => t.AssignedUser?.FullName).ToList() :
+                    ticketList.OrderBy(t => t.AssignedUser?.FullName).ToList();
             case TicketField.AssignedCompanyId:
-                return descending ? ticketList.OrderByDescending(t => t.AssignedCompany.Name).ToList() : ticketList.OrderBy(t =>
-                t.AssignedCompany.Name).ToList();
+                // Ensure you have the company names loaded, or adjust to use CompanyId
+                return descending ? ticketList.OrderByDescending(t => t.AssignedCompany?.Name).ToList() :
+                    ticketList.OrderBy(t => t.AssignedCompany?.Name).ToList();
             case TicketField.Severity:
-                return descending ? ticketList.OrderByDescending(t => t.Severity).ToList() : ticketList.OrderBy(t =>
-                t.Severity).ToList();
+                return descending ? ticketList.OrderByDescending(t => t.Severity).ToList() :
+                    ticketList.OrderBy(t => t.Severity).ToList();
             case TicketField.DueDate:
-                return descending ? ticketList.OrderByDescending(t => t.DueDate).ToList() : ticketList.OrderBy(t => t.DueDate).ToList();
+                return descending ? ticketList.OrderByDescending(t => t.DueDate).ToList() :
+                    ticketList.OrderBy(t => t.DueDate).ToList();
             default:
-                return descending ? ticketList.OrderByDescending(t => t.TicketId).ToList() : ticketList.OrderBy(t =>
-                t.TicketId).ToList();
+                return descending ? ticketList.OrderByDescending(t => t.TicketId).ToList() :
+                    ticketList.OrderBy(t => t.TicketId).ToList();
         }
     }
+
 
     private string GetSeverityCssClass(string severity)
     {
