@@ -6,7 +6,7 @@
 
 <h3>Company List</h3>
 <div class="col-md-6">
-        <button @onclick="OpenAddNewCompanyModal" class="btn btn-warning">Create New Company</button>
+    <button @onclick="OpenAddNewCompanyModal" class="btn btn-warning">Create New Company</button>
 </div>
 
 @if (companies == null || companies.Count == 0)
@@ -81,19 +81,27 @@ else
         showAddNewCompanyModal = true;
     }
 
-    private void CloseAddNewCompanyModal()
+    private async void CloseAddNewCompanyModal()
     {
         showAddNewCompanyModal = false;
+        await LoadCompanies(); // Refresh the list of companies after modal close
     }
+
     protected override async Task OnInitializedAsync()
+    {
+        await LoadCompanies();
+    }
+
+    private async Task LoadCompanies()
     {
         try
         {
             companies = await companyService.GetAllCompaniesAsync();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            //ss Handle error, such as redirecting to an error page
+            // Handle error, such as redirecting to an error page or showing an error message
+            Console.Error.WriteLine($"Error fetching companies: {ex.Message}");
         }
     }
 

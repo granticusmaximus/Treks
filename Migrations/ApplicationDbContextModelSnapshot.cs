@@ -417,10 +417,6 @@ namespace Treks.Migrations
                     b.Property<string>("AssignedUserId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CompanyId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
