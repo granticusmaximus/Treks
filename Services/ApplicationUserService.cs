@@ -53,6 +53,40 @@ namespace Treks.Services
         }
         #endregion
 
+        #region Get Assigned Companies by UserID
+        public async Task<List<Company>> GetAssignedCompaniesAsync(string userId)
+        {
+            // Fetch the user from the database with all related assigned companies
+            var user = await _appDBContext.ApplicationUser
+                .Include(u => u.AssignedCompany)  // Eagerly load the AssignedCompany navigation property
+                .FirstOrDefaultAsync(u => u.Id == userId); // Use user ID to identify the user
+
+            if (user == null)
+            {
+                throw new ArgumentException("Invalid user ID provided.");
+            }
+
+            return user.AssignedCompany.ToList(); // Convert to a list for easier manipulation and usage
+        }
+        #endregion
+
+        #region Get Assigned Tickets by UserID
+        public async Task<List<Ticket>> GetAssignedTicketsAsync(string userId)
+        {
+            // Fetch the user from the database with all related assigned tickets
+            var user = await _appDBContext.ApplicationUser
+                .Include(u => u.AssignedTickets)  // Eagerly load the AssignedTickets navigation property
+                .FirstOrDefaultAsync(u => u.Id == userId); // Use user ID to identify the user
+
+            if (user == null)
+            {
+                throw new ArgumentException("Invalid user ID provided.");
+            }
+
+            return user.AssignedTickets.ToList(); // Convert to a list for easier manipulation and usage
+        }
+        #endregion
+
         #region Update App User
         public async Task<bool> UpdateUserAsync(ApplicationUser appUser, int selectedRoleId)
         {

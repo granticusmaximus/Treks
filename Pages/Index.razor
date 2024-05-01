@@ -1,44 +1,65 @@
 ﻿@page "/"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using Microsoft.AspNetCore.Components.Authorization
+@using Treks.Pages.Users
 
 <PageTitle>Home</PageTitle>
 
+@* Retrieve the user's authentication state *@
+@code {
+    private bool isAuthenticated = false;
 
-<center>
-    <h1>General Kenobi!</h1>
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        isAuthenticated = authState.User.Identity.IsAuthenticated; // Check if the user is authenticated
+    }
+}
 
-    Welcome to your new app called Treks. This is a learning module application for Grant Watson. I am using Blazor,
-    .NET 6 and SQLite for local db storage. I am trying to learn as much as possible for newer interations of .NET
-</center>
-<hr />
-<center>
-    <div class="col-md-8">
-        <div class="card ">
-            <h4 class="mx-2 mt-2">Ticket Features:</h4>
-            <div class="card-body">
-                <ul class="list-group">
-                    <li class="list-group-item">Create and submit IT support tickets.</li>
-                    <li class="list-group-item">Track the status and progress of your submitted tickets.</li>
-                    <li class="list-group-item">View ticket details, including title, severity, due date, and more.</li>
-                    <li class="list-group-item">Assign Users to specific tickets.</li>
-                    <li class="list-group-item">Ability to comment on tickets if clarification is needed.</li>
-                </ul>
-                <hr />
-                <h4 class="mx-2 mt-2">Users/Roles Features:</h4>
-                <ul class="list-group">
-                    <li class="list-group-item">Create new Users.</li>
-                    <li class="list-group-item">Create new Roles</li>
-                    <li class="list-group-item">Edit basic user information</li>
-                    <li class="list-group-item">Assign roles to users</li>
-                </ul>
-                <hr />
-                <h4 class="mx-2 mt-2">Client Management:</h4>
-                <ul class="list-group">
-                    <li class="list-group-item">Create new companies/clients.</li>
-                    <li class="list-group-item">Edit basic company/client information</li>
-                    <li class="list-group-item">Ability to create and assign projects to companies/clients</li>
-                    <li class="list-group-item">Ability to create and assign tickets to comnpany/client projects</li>
-                </ul>
+@* Conditionally render the content based on the user's authentication state *@
+@if (isAuthenticated)
+{
+    <Profile /> <!-- Show the user's profile if authenticated -->
+}
+else
+{
+    <center>
+        <h1>General Kenobi!</h1>
+
+        Welcome to your new app called Treks. This is a learning module application for Grant Watson. I am using Blazor,
+        .NET 6 and SQLite for local db storage. I am trying to learn as much as possible for newer interations of .NET
+    </center>
+    <hr />
+    <center>
+        <div class="col-md-8">
+            <div class="card">
+                <h4 class="mx-2 mt-2">Ticket Features:</h4>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">Create and submit IT support tickets.</li>
+                        <li class="list-group-item">Track the status and progress of your submitted tickets.</li>
+                        <li class="list-group-item">View ticket details, including title, severity, due date, and more.</li>
+                        <li class="list-group-item">Assign users to specific tickets.</li>
+                        <li class="list-group-item">Ability to comment on tickets if clarification is needed.</li>
+                    </ul>
+                    <hr />
+                    <h4 class="mx-2 mt-2">Users/Roles Features:</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item">Create new users.</li>
+                        <li class="list-group-item">Create new roles.</li>
+                        <li class="list-group-item">Edit basic user information.</li>
+                        <li class="list-group-item">Assign roles to users.</li>
+                    </ul>
+                    <hr />
+                    <h4 class="mx-2 mt-2">Client Management:</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item">Create new companies/clients.</li>
+                        <li class="list-group-item">Edit basic company/client information.</li>
+                        <li class="list-group-item">Ability to create and assign projects to companies/clients.</li>
+                        <li class="list-group-item">Ability to create and assign tickets to company/client projects.</li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-</center>
+    </center>
+}

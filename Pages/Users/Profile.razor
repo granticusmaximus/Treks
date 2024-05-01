@@ -1,5 +1,140 @@
 @page "/profile/{id:int}"
 
-@code{
+@using Treks.Models
+@using Treks.Services
+@using Microsoft.AspNetCore.Identity
+@inject NavigationManager navi
+@inject ApplicationUserService userService
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
+<center>
+    <h3>@CurrentUser.FullName's Profile</h3>
+</center>
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Assigned Tickets</h4>
+            </div>
+            <div class="card-body">
+                @if (tickets == null)
+                {
+                    <p>Loading...</p>
+                }
+                else if (!tickets.Any())
+                {
+                    <p>No assigned tickets found.</p>
+                }
+                else
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Due Date</th>
+                                <th>Severity</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ticket in tickets)
+                            {
+                                <tr>
+                                    <td>@ticket.Title</td>
+                                    <td>@ticket.DueDate.ToShortDateString()</td>
+                                    <td class="@GetSeverityCssClass(ticket.Severity.ToString()) text-uppercase text-white text-center">@ticket.Severity</td>
+                                    <td><button class="btn btn-primary" @onclick="() => ShowTicketDetails(ticket)">View</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ticket Details Modal -->
+<div class="modal fade @(showTicketDetailsModal ? "show d-block" : "d-none")" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ticket Details</h5>
+                <button type="button" class="close" @onclick="() => showTicketDetailsModal = false">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (selectedTicket != null)
+                {
+                    <p><strong>Title:</strong> @selectedTicket.Title</p>
+                    <p><strong>Description:</strong> @selectedTicket.Description</p>
+                    <p><strong>Severity:</strong> @selectedTicket.Severity</p>
+                    <p><strong>Due Date:</strong> @selectedTicket.DueDate.ToShortDateString()</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="() => showTicketDetailsModal = false">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    private ApplicationUser CurrentUser { get; set; }
+    private List<Ticket> tickets;
+    private bool showTicketDetailsModal = false;
+    private Ticket? selectedTicket = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+        await LoadTickets();
+    }
+
+    private async Task LoadTickets()
+    {
+        try
+        {
+            tickets = await userService.GetAssignedTicketsAsync(CurrentUser.Id);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error fetching tickets: {ex.Message}");
+        }
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity.IsAuthenticated)
+        {
+            CurrentUser = await UserManager.FindByNameAsync(user.Identity.Name);
+        }
+    }
+
+    private void ShowTicketDetails(Ticket ticket)
+    {
+        selectedTicket = ticket;
+        showTicketDetailsModal = true;
+    }
+
+    private string GetSeverityCssClass(string severity)
+    {
+        switch (severity.ToLower())
+        {
+            case "low":
+                return "bg-success";
+            case "medium":
+                return "bg-warning";
+            case "high":
+                return "bg-danger";
+            default:
+                return "";
+        }
+    }
 }
