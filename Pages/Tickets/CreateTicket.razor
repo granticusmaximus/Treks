@@ -58,14 +58,21 @@
             }
         </InputSelect>
     </div>
-
+    <hr/>
     <button type="submit" class="btn btn-primary">Save Ticket</button>
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-info mt-3">
+            @message
+        </div>
+    }
 </EditForm>
 
 @code {
     private Ticket _ticket = new Ticket { DueDate = DateTime.Today };
     private List<ApplicationUser> users = new List<ApplicationUser>();
     private List<Company> companies = new List<Company>();
+    private string message = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,15 +82,28 @@
 
     private async Task SaveTicket()
     {
-        if (string.IsNullOrEmpty(_ticket.Title) || _ticket.AssignedCompanyId == 0)
+        try
         {
-            // Show validation error
-            return;
-        }
+            if (string.IsNullOrEmpty(_ticket.Title) || _ticket.AssignedCompanyId == 0)
+            {
+                message = "Please fill all required fields.";
+                return;
+            }
 
-        _ticket.TicketId = Guid.NewGuid().ToString(); // Assuming TicketId is a string
-        _ticket.TimeOfCreation = DateTime.Now;
-        await ticketService.CreateNewTaskAsync(_ticket);
-        navi.NavigateTo("/tickets"); // Redirect to the ticket list page
+            _ticket.TicketId = Guid.NewGuid().ToString();
+            _ticket.TimeOfCreation = DateTime.Now;
+            await ticketService.CreateNewTaskAsync(_ticket);
+            message = "The ticket has been created successfully!";
+            ResetTicket();
+        }
+        catch (Exception ex)
+        {
+            message = $"Error creating the ticket: {ex.Message}";
+        }
+    }
+
+    private void ResetTicket()
+    {
+        _ticket = new Ticket { DueDate = DateTime.Today };
     }
 }

@@ -2,9 +2,9 @@
 @using Treks.Models
 @using Treks.Services
 @using Treks.Pages.Company
+@using Treks.Pages.Tickets
 @inject CompanyService companyService
 @inject NavigationManager navigationManager
-
 
 @if (company == null)
 {
@@ -25,48 +25,133 @@ else
             </div>
             <hr/>
             <div class="cardFooter">
-                <button class="btn btn-success" @onclick="NavigateToList">Back to Company List</button> &nbsp;
-                @if (!string.IsNullOrEmpty(id))
-                {
-                    var editCompanyUrl = $"/company/edit/{id}";
-                    <NavLink class="btn btn-warning ml-2" href="@editCompanyUrl">
-                        <span aria-hidden="true">Edit Company</span>
-                    </NavLink>
-                }
+                    
+                    <button class="btn btn-success" @onclick="NavigateToList">Back to Company List</button> &nbsp;
+                    @if (!string.IsNullOrEmpty(id))
+                    {
+                        var editCompanyUrl = $"/company/edit/{id}";
+                        <NavLink class="btn btn-warning ml-2" href="@editCompanyUrl">
+                            <span aria-hidden="true">Edit Company</span>
+                        </NavLink>
+                    }
             </div>
             <hr/>
         </div>
     </center>
-    
 }
 
 <hr/>
-<center>
-    <button class="btn btn-primary mt-3" @onclick="OpenModal">Add Comment</button>
-</center>
 
-<!-- Add New Comment Modal -->
-<div class="modal fade @(showModal ? "show d-block" : "d-none")" tabindex="-1" role="dialog">
+<div class="row mt-3">
+    <div class="col-md-6">
+        <center>
+            <button class="btn btn-primary mt-3" @onclick="OpenCommentModal">Add Comment</button>
+        </center>
+
+        <!-- Add New Comment Modal -->
+        <div class="modal fade @(showCommentModal ? "show d-block" : "d-none")" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Comment</h5>
+                        <button type="button" class="close" @onclick="CloseCommentModal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <AddComment id="@id" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseCommentModal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3>Comments</h3>
+        <Comments id="@id" />
+    </div>
+    <div class="col-md-6">
+        <center>
+            <button class="btn btn-primary mt-3" @onclick="OpenAddTicketModal">Add New Ticket</button> &nbsp;
+        </center>
+        
+        <h3 class="mt-4">Active Tickets</h3>
+        @if (tickets != null && tickets.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Due Date</th>
+                        <th>Severity</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ticket in tickets)
+                    {
+                        <tr>
+                            <td>@ticket.Title</td>
+                            <td>@ticket.DueDate.ToShortDateString()</td>
+                            <td class="@GetSeverityCssClass(ticket.Severity.ToString()) text-uppercase text-white text-center" style="font-weight: 500">@ticket.Severity</td>
+                            <td><button class="btn btn-primary" @onclick="() => ShowTicketDetails(ticket)"><span class="oi oi-eye" aria-hidden="true"></span></button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No active tickets found.</p>
+        }
+    </div>
+</div>
+
+<!-- Ticket Details Modal -->
+<div class="modal fade @(showTicketDetailsModal ? "show d-block" : "d-none")" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Comment</h5>
-                <button type="button" class="close" @onclick="CloseModal">
+                <h5 class="modal-title">Ticket Details</h5>
+                <button type="button" class="close" @onclick="() => showTicketDetailsModal = false">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Ensure the parameter name matches -->
-                <AddComment id="@id" />
+                @if (selectedTicket != null)
+                {
+                    <p><strong>Title:</strong> @selectedTicket.Title</p>
+                    <p><strong>Description:</strong> @selectedTicket.Description</p>
+                    <p><strong>Severity:</strong> @selectedTicket.Severity</p>
+                    <p><strong>Due Date:</strong> @selectedTicket.DueDate.ToShortDateString()</p>
+                }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => showTicketDetailsModal = false">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<Comments id="@id" />
+<!-- Add New Ticket Modal -->
+        <div class="modal fade @(showAddTicketModal ? "show d-block" : "d-none")" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add New Ticket</h5>
+                        <button type="button" class="close" @onclick="CloseAddTicketModal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <CreateTicket />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseAddTicketModal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 @code {
     [Parameter]
@@ -74,20 +159,35 @@ else
 
     public int CompanyId => Convert.ToInt32(id);
 
-    private string newComment = string.Empty;
-    private bool showModal = false;
-
+    private bool showCommentModal = false;
+    private bool showTicketModal = false;
+    private bool showAddTicketModal = false;
+    private bool showTicketDetailsModal = false;
     private Company company;
+    private List<Ticket> tickets;
+    private Ticket selectedTicket;
 
-    private void OpenModal()
+    private void OpenCommentModal()
     {
-        showModal = true;
+        showCommentModal = true;
     }
 
-    private void CloseModal()
+    private void CloseCommentModal()
     {
-        showModal = false;
+        showCommentModal = false;
     }
+
+    private void OpenAddTicketModal()
+    {
+        showAddTicketModal = true;
+    }
+
+    private void CloseAddTicketModal()
+    {
+        showAddTicketModal = false;
+        _ = LoadTickets();
+    }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,10 +195,45 @@ else
         {
             int companyID = Convert.ToInt32(id);
             company = await companyService.GetCompanyByIdAsync(companyID);
+            await LoadTickets();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Handle error, such as redirecting to an error page
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    private async Task LoadTickets()
+    {
+        try
+        {
+            int companyID = Convert.ToInt32(id);
+            tickets = await companyService.GetActiveTicketsbyCompanyIdAsync(companyID);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    private void ShowTicketDetails(Ticket ticket)
+    {
+        selectedTicket = ticket;
+        showTicketDetailsModal = true;
+    }
+
+    private string GetSeverityCssClass(string severity)
+    {
+        switch (severity.ToLower())
+        {
+            case "low":
+                return "bg-success";
+            case "medium":
+                return "bg-warning";
+            case "high":
+                return "bg-danger";
+            default:
+                return "";
         }
     }
 

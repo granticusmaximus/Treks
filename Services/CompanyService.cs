@@ -125,6 +125,23 @@ namespace Treks.Services
             }
         }
 
+        public async Task<List<Ticket>> GetActiveTicketsbyCompanyIdAsync(int companyId)
+        {
+            try
+            {
+                var tickets = await _context.Tickets
+                    .Where(t => t.AssignedCompanyId == companyId && t.isComplete != true)
+                    .ToListAsync();
+
+                return tickets;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                throw new ApplicationException($"Error occurred while retrieving active tickets for company ID {companyId}.", ex);
+            }
+        }
+
         public async Task<bool> DeleteCompanyAsync(int id)
         {
             try
