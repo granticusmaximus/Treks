@@ -19,7 +19,10 @@ namespace Treks.Services
 
         public async Task<List<Ticket>> GetAllTasksAsync()
         {
-            return await _context.Tickets.ToListAsync();
+            return await _context.Tickets
+                .Include(t => t.AssignedUser)
+                .Include(t => t.AssignedCompany)
+                .ToListAsync();
         }
 
         public async Task<Ticket> GetTaskByIdAsync(string ticketId, bool includeTechNotes = false)

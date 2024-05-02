@@ -93,7 +93,7 @@
                         </td>
                         <td>
                             <center>
-                                @task.AssignedCompany.Name
+                                @(task.AssignedCompany?.Name ?? "No Company Assigned")
                             </center>
                         </td>
                         <td class="text-center">

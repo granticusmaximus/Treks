@@ -9,24 +9,66 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <center>
-    <h3>@CurrentUser.FullName's Profile</h3>
+    <h3>
+        <img src="data:image/jpeg;base64,@Convert.ToBase64String(CurrentUser.ProfilePicture)" width="55"
+                            height="55" alt="Profile Picture" class="rounded-circle" />
+        @CurrentUser.FullName's Profile
+    </h3>
 </center>
 <hr />
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h4>Assigned Tickets</h4>
+                <h4>Completed Tickets</h4>
             </div>
             <div class="card-body">
-                @if (tickets == null)
+                @if (completedTickets == null)
                 {
                     <p>Loading...</p>
                 }
-                else if (!tickets.Any())
+                else if (!completedTickets.Any())
                 {
-                    <p>No assigned tickets found.</p>
+                    <p>No completed tickets found.</p>
+                }
+                else
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ticket in completedTickets)
+                            {
+                                <tr>
+                                    <td>@ticket.Title</td>
+                                    <td><button class="btn btn-primary" @onclick="() => ShowTicketDetails(ticket)">View</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Active Tickets</h4>
+            </div>
+            <div class="card-body">
+                @if (activeTickets == null)
+                {
+                    <p>Loading...</p>
+                }
+                else if (!activeTickets.Any())
+                {
+                    <p>No active tickets found.</p>
                 }
                 else
                 {
@@ -40,7 +82,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var ticket in tickets)
+                            @foreach (var ticket in activeTickets)
                             {
                                 <tr>
                                     <td>@ticket.Title</td>
@@ -51,7 +93,7 @@
                             }
                         </tbody>
                     </table>
-                }
+                    }
             </div>
         </div>
     </div>
@@ -85,7 +127,8 @@
 
 @code{
     private ApplicationUser CurrentUser { get; set; }
-    private List<Ticket> tickets;
+    private List<Ticket> activeTickets;
+    private List<Ticket> completedTickets;
     private bool showTicketDetailsModal = false;
     private Ticket? selectedTicket = null;
 
@@ -99,7 +142,9 @@
     {
         try
         {
-            tickets = await userService.GetAssignedTicketsAsync(CurrentUser.Id);
+            var allTickets = await userService.GetAssignedTicketsAsync(CurrentUser.Id);
+            activeTickets = allTickets.Where(t => !t.isComplete).ToList();
+            completedTickets = allTickets.Where(t => t.isComplete).ToList();
         }
         catch (Exception ex)
         {
