@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Treks.Data;
 using Treks.Models;
@@ -12,12 +13,14 @@ namespace Treks.Services
     {
         #region Property
         private readonly ApplicationDbContext _appDBContext;
+        private readonly UserManager<ApplicationUser> _userManager;
         #endregion
 
         #region Constructor
-        public ApplicationUserService(ApplicationDbContext appDBContext)
+        public ApplicationUserService(ApplicationDbContext appDBContext, UserManager<ApplicationUser> userManager)
         {
             _appDBContext = appDBContext;
+            _userManager = userManager;
         }
         #endregion
 
@@ -112,5 +115,23 @@ namespace Treks.Services
             return true;
         }
         #endregion
+
+        public async Task<ApplicationUser> GetUserByNameAsync(string userName)
+        {
+            return await _appDBContext.ApplicationUser.FirstOrDefaultAsync(u => u.UserName == userName);
+        }
+
+        public async Task<bool> UpdateUserAsync(ApplicationUser appUser)
+        {
+            _appDBContext.ApplicationUser.Update(appUser);
+            await _appDBContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)
+        {
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            return result.Succeeded;
+        }
     }
 }

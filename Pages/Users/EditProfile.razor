@@ -1,0 +1,178 @@
+@page "/EditProfile"
+@using Microsoft.AspNetCore.Identity
+@using Treks.Models
+@using Treks.Services
+@inject ApplicationUserService userService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+
+<hr />
+
+<EditForm Model="@user" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="row">
+        <div class="col-5">
+            <div class="form-group">
+                <label for="FirstName" class="control-label">First Name</label>
+                <InputText id="FirstName" class="form-control" @bind-Value="@user.FirstName" />
+                <ValidationMessage For="@(() => user.FirstName)" />
+            </div>
+        </div>
+
+        <div class="col-5">
+            <div class="form-group">
+                <label for="LastName" class="control-label">Last Name</label>
+                <InputText id="LastName" class="form-control" @bind-Value="@user.LastName" />
+                <ValidationMessage For="@(() => user.LastName)" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10">
+            <div class="form-group">
+                <label for="Gender" class="control-label">Gender</label>
+                <InputSelect id="Gender" class="form-control" @bind-Value="@user.Gender">
+                    <option value="">--Select Option--</option>
+                    @foreach (var gender in Enum.GetValues<Gender>())
+                    {
+                        <option value="@gender">@gender</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => user.Gender)" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-5">
+            <div class="form-group">
+                <label for="Address" class="control-label">Address</label>
+                <InputText id="Address" class="form-control" @bind-Value="@user.Address" />
+                <ValidationMessage For="@(() => user.Address)" />
+            </div>
+        </div>
+
+        <div class="col-5">
+            <div class="form-group">
+                <label for="City" class="control-label">City</label>
+                <InputText id="City" class="form-control" @bind-Value="@user.City" />
+                <ValidationMessage For="@(() => user.City)" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10">
+            <div class="form-group">
+                <label for="Cellnumber" class="control-label">Cell Phone</label>
+                <InputText id="Cellnumber" class="form-control" @bind-Value="@user.Cellnumber" />
+                <ValidationMessage For="@(() => user.Cellnumber)" />
+            </div>
+        </div>
+
+    </div>
+    <hr/>
+    <center>
+        <div class="col-sm">
+            <div class="form-group">
+                <button class="btn btn-secondary" @onclick="ToggleChangePassword">
+                    @(changePassword ? "Cancel Change Password" : "Change Password")
+                </button>
+            </div>
+        </div>
+    </center>
+    
+
+    @if (changePassword)
+    {
+        <div class="row">
+            <div class="col-10">
+                <div class="form-group">
+                    <label for="CurrentPassword">Current Password</label>
+                    <InputText id="CurrentPassword" class="form-control" @bind-Value="currentPassword" type="password" />
+                </div>
+            </div>
+            <div class="col-10">
+                <div class="form-group">
+                    <label for="NewPassword">New Password</label>
+                    <InputText id="NewPassword" class="form-control" @bind-Value="newPassword" type="password" />
+                </div>
+            </div>
+            <div class="col-10">
+                <div class="form-group">
+                    <label for="ConfirmPassword">Confirm Password</label>
+                    <InputText id="ConfirmPassword" class="form-control" @bind-Value="confirmPassword" type="password" />
+                </div>
+            </div>
+        </div>
+    }
+    <hr/>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Update</button>
+        <button class="btn btn-danger" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>
+
+@code {
+    private ApplicationUser user = new ApplicationUser();
+    private bool changePassword;
+    private string currentPassword;
+    private string newPassword;
+    private string confirmPassword;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var currentUser = authState.User;
+        if (currentUser.Identity.IsAuthenticated)
+        {
+            user = await userService.GetUserByNameAsync(currentUser.Identity.Name);
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            bool isSuccess = await userService.UpdateUserAsync(user);
+            if (isSuccess && changePassword)
+            {
+                var passwordChangeResult = await userService.ChangePasswordAsync(user, currentPassword, newPassword);
+                if (passwordChangeResult)
+                {
+                    NavigationManager.NavigateTo("/Profile");
+                }
+                else
+                {
+                    // Display a message for password change failure
+                    Console.Error.WriteLine("Failed to change the password.");
+                }
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/Profile");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine("An unexpected error occurred while updating your profile. Please try again later.");
+        }
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/Profile");
+    }
+
+    private void ToggleChangePassword()
+    {
+        changePassword = !changePassword;
+    }
+}

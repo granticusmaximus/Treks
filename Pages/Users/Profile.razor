@@ -13,6 +13,7 @@
         <img src="data:image/jpeg;base64,@Convert.ToBase64String(CurrentUser.ProfilePicture)" width="55"
                             height="55" alt="Profile Picture" class="rounded-circle" />
         @CurrentUser.FullName's Profile
+        <button class="btn btn-primary" @onclick="() => ShowEditProfileModal()">Edit your profile</button>
     </h3>
 </center>
 <hr />
@@ -97,6 +98,27 @@
             </div>
         </div>
     </div>
+
+</div>
+
+<!-- EditProfile Modal -->
+<div class="modal fade @(showEditProfileModal ? "show d-block" : "d-none")" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Profile</h5>
+                <button type="button" class="close" @onclick="() => showEditProfileModal = false">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditProfile />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="() => showEditProfileModal = false">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Ticket Details Modal -->
@@ -130,6 +152,7 @@
     private List<Ticket> activeTickets;
     private List<Ticket> completedTickets;
     private bool showTicketDetailsModal = false;
+    private bool showEditProfileModal = false;
     private Ticket? selectedTicket = null;
 
     protected override async Task OnInitializedAsync()
@@ -166,6 +189,11 @@
     {
         selectedTicket = ticket;
         showTicketDetailsModal = true;
+    }
+
+    private void ShowEditProfileModal()
+    {
+        showEditProfileModal = true;
     }
 
     private string GetSeverityCssClass(string severity)
