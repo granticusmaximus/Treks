@@ -16,7 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>()
-    .AddRoles<IdentityRole>()
+    .AddRoles<Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddScoped<ApplicationUserService>();
 builder.Services.AddScoped<RoleService>();

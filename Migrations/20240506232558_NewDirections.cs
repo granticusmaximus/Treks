@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Treks.Migrations
 {
     /// <inheritdoc />
-    public partial class NewUpdate : Migration
+    public partial class NewDirections : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,6 +16,7 @@ namespace Treks.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
@@ -84,19 +85,6 @@ namespace Treks.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Roles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -115,6 +103,46 @@ namespace Treks.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    Address = table.Column<string>(type: "TEXT", nullable: true),
+                    Cellnumber = table.Column<string>(type: "TEXT", nullable: true),
+                    ProfilePicture = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    Gender = table.Column<int>(type: "INTEGER", nullable: false),
+                    City = table.Column<string>(type: "TEXT", nullable: true),
+                    RoleId = table.Column<string>(type: "TEXT", nullable: true),
+                    RegisterDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -141,46 +169,6 @@ namespace Treks.Migrations
                         principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    Address = table.Column<string>(type: "TEXT", nullable: true),
-                    Cellnumber = table.Column<string>(type: "TEXT", nullable: true),
-                    ProfilePicture = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    Gender = table.Column<int>(type: "INTEGER", nullable: false),
-                    City = table.Column<string>(type: "TEXT", nullable: true),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: true),
-                    RegisterDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -299,21 +287,21 @@ namespace Treks.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false)
+                    RoleId = table.Column<int>(type: "INTEGER", nullable: false),
+                    RoleId1 = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LUT_UserRoles", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_LUT_UserRoles_AspNetRoles_RoleId1",
+                        column: x => x.RoleId1,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_LUT_UserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LUT_UserRoles_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -330,7 +318,6 @@ namespace Treks.Migrations
                     TimeOfCreation = table.Column<DateTime>(type: "TEXT", nullable: false),
                     isComplete = table.Column<bool>(type: "INTEGER", nullable: false),
                     AssignedUserId = table.Column<string>(type: "TEXT", nullable: true),
-                    CompanyId = table.Column<string>(type: "TEXT", nullable: false),
                     AssignedCompanyId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -436,9 +423,9 @@ namespace Treks.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LUT_UserRoles_RoleId",
+                name: "IX_LUT_UserRoles_RoleId1",
                 table: "LUT_UserRoles",
-                column: "RoleId");
+                column: "RoleId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LUT_UserRoles_UserId",
@@ -492,9 +479,6 @@ namespace Treks.Migrations
                 name: "TicketTechNotes");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
@@ -510,7 +494,7 @@ namespace Treks.Migrations
                 name: "Companies");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "AspNetRoles");
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Treks.Services
         #endregion
 
         #region Insert User
-        public async Task<bool> InsertUserAsync(ApplicationUser appUser, int selectedRoleId)
+        public async Task<bool> InsertUserAsync(ApplicationUser appUser, string selectedRoleId)
         {
             var role = await _appDBContext.Roles.FindAsync(selectedRoleId);
             if (role == null)
@@ -91,7 +91,7 @@ namespace Treks.Services
         #endregion
 
         #region Update App User
-        public async Task<bool> UpdateUserAsync(ApplicationUser appUser, int selectedRoleId)
+        public async Task<bool> UpdateUserAsync(ApplicationUser appUser, string selectedRoleId)
         {
             var role = await _appDBContext.Roles.FindAsync(selectedRoleId);
             if (role == null)

@@ -11,8 +11,8 @@ using Treks.Data;
 namespace Treks.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240413182509_NewUpdate00")]
-    partial class NewUpdate00
+    [Migration("20240506232558_NewDirections")]
+    partial class NewDirections
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,32 +33,6 @@ namespace Treks.Migrations
                     b.HasIndex("AssignedUsersId");
 
                     b.ToTable("ApplicationUserCompany");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
-
-                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -238,8 +212,8 @@ namespace Treks.Migrations
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
@@ -357,13 +331,16 @@ namespace Treks.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("RoleId1")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleId1");
 
                     b.HasIndex("UserId");
 
@@ -372,17 +349,32 @@ namespace Treks.Migrations
 
             modelBuilder.Entity("Treks.Models.Role", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Treks.Models.TechNote", b =>
@@ -481,7 +473,7 @@ namespace Treks.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Treks.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -508,7 +500,7 @@ namespace Treks.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Treks.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -572,9 +564,7 @@ namespace Treks.Migrations
                 {
                     b.HasOne("Treks.Models.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId1");
 
                     b.HasOne("Treks.Models.ApplicationUser", "User")
                         .WithMany()

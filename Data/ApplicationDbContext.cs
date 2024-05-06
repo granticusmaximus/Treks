@@ -4,7 +4,7 @@ using Treks.Models;
 
 namespace Treks.Data;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, string>  // Use your custom Role class
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

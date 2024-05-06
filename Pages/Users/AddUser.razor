@@ -8,7 +8,7 @@
 @inject ApplicationDbContext context
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager NavigationManager
-
+@attribute [Authorize(Roles = "Admin, Manager")]
 <h3>Add User</h3>
 <hr />
 

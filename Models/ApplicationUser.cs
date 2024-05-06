@@ -26,7 +26,7 @@ namespace Treks.Models
 
         public Gender Gender { get; set; }
         public string? City { get; set; }
-        public int? RoleId { get; set; }
+        public string? RoleId { get; set; }
         public Role? Role { get; set; }
         public DateTime RegisterDate { get; set; } = DateTime.Now;
         public bool IsActive { get; set; }
