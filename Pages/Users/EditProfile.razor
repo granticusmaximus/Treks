@@ -146,7 +146,7 @@
                 var passwordChangeResult = await userService.ChangePasswordAsync(user, currentPassword, newPassword);
                 if (passwordChangeResult)
                 {
-                    NavigationManager.NavigateTo("/Profile");
+                    NavigationManager.NavigateTo("/");
                 }
                 else
                 {
