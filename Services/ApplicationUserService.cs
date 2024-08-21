@@ -24,23 +24,6 @@ namespace Treks.Services
         }
         #endregion
 
-        #region Insert User
-        public async Task<bool> InsertUserAsync(ApplicationUser appUser, string selectedRoleId)
-        {
-            var role = await _appDBContext.Roles.FindAsync(selectedRoleId);
-            if (role == null)
-            {
-                throw new ArgumentException("Invalid role ID provided.");
-            }
-
-            appUser.RoleId = selectedRoleId;
-
-            await _appDBContext.ApplicationUser.AddAsync(appUser);
-            await _appDBContext.SaveChangesAsync();
-            return true;
-        }
-        #endregion
-
         #region Get All App Users   
         public async Task<List<ApplicationUser>> GetAllUsersAsync()
         {

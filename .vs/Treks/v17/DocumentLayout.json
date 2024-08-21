@@ -1,7 +1,17 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "\\\\Mac\\Home\\Desktop\\Development\\CSharp\\Treks\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{40E66D3D-AEFF-4252-8F13-BB155EA957EB}|Treks.csproj|\\\\mac\\home\\desktop\\development\\csharp\\treks\\services\\roleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40E66D3D-AEFF-4252-8F13-BB155EA957EB}|Treks.csproj|\\\\mac\\home\\desktop\\development\\csharp\\treks\\services\\iemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40E66D3D-AEFF-4252-8F13-BB155EA957EB}|Treks.csproj|\\\\mac\\home\\desktop\\development\\csharp\\treks\\services\\companyservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +19,46 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RoleService.cs",
+              "DocumentMoniker": "\\\\Mac\\Home\\Desktop\\Development\\CSharp\\Treks\\Services\\RoleService.cs",
+              "RelativeDocumentMoniker": "Services\\RoleService.cs",
+              "ToolTip": "\\\\Mac\\Home\\Desktop\\Development\\CSharp\\Treks\\Services\\RoleService.cs*",
+              "RelativeToolTip": "Services\\RoleService.cs*",
+              "ViewState": "AQIAAAgAAABAzszMzEwRwCUAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-19T19:23:47.693Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IEmailSender.cs",
+              "DocumentMoniker": "\\\\Mac\\Home\\Desktop\\Development\\CSharp\\Treks\\Services\\IEmailSender.cs",
+              "RelativeDocumentMoniker": "Services\\IEmailSender.cs",
+              "ToolTip": "\\\\Mac\\Home\\Desktop\\Development\\CSharp\\Treks\\Services\\IEmailSender.cs",
+              "RelativeToolTip": "Services\\IEmailSender.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-19T19:23:47.584Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CompanyService.cs",
+              "DocumentMoniker": "\\\\Mac\\Home\\Desktop\\Development\\CSharp\\Treks\\Services\\CompanyService.cs",
+              "RelativeDocumentMoniker": "Services\\CompanyService.cs",
+              "ToolTip": "\\\\Mac\\Home\\Desktop\\Development\\CSharp\\Treks\\Services\\CompanyService.cs",
+              "RelativeToolTip": "Services\\CompanyService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-19T19:23:44.787Z",
+              "EditorCaption": ""
             }
           ]
         }

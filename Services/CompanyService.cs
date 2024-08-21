@@ -160,5 +160,46 @@ namespace Treks.Services
                 throw new ApplicationException($"Error occurred while deleting company with ID {id}.", ex);
             }
         }
+
+        public async Task<bool> AssignUsersToCompanyAsync(int companyId, List<string> userIds)
+        {
+            try
+            {
+                var company = await _context.Companies.Include(c => c.AssignedUsers)
+                                                      .FirstOrDefaultAsync(c => c.Id == companyId);
+
+                if (company == null)
+                {
+                    throw new ApplicationException($"Company with ID {companyId} not found.");
+                }
+
+                var users = await _context.ApplicationUser.Where(u => userIds.Contains(u.Id)).ToListAsync();
+
+                if (users == null || !users.Any())
+                {
+                    throw new ApplicationException("No valid users found for assignment.");
+                }
+
+                foreach (var user in users)
+                {
+                    if (!company.AssignedUsers.Contains(user))
+                    {
+                        company.AssignedUsers.Add(user);
+                    }
+
+                    if (!user.AssignedCompany.Contains(company))
+                    {
+                        user.AssignedCompany.Add(company);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error occurred while assigning users to company.", ex);
+            }
+        }
     }
 }

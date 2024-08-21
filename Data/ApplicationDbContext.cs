@@ -57,7 +57,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, str
 
     public DbSet<ApplicationUser> ApplicationUser { get; set; }
     public DbSet<TechNote> Notes { get; set; }
-    public DbSet<Role> Roles { get; set; }
+    public new DbSet<Role> Roles { get; set; } 
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<TicketTechNote> TicketTechNotes { get; set; }
     public DbSet<LUT_UserRoles> LUT_UserRoles { get; set; }

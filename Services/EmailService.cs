@@ -1,65 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 
-namespace Treks.Services
+public class EmailSender : IEmailSender
 {
-    public interface IEmailService
+    private readonly SmtpClient _smtpClient;
+
+    public EmailSender(SmtpClient smtpClient)
     {
-        Task SendEmailAsync(string to, string subject, string body);
+        _smtpClient = smtpClient;
     }
 
-    public class EmailService : IEmailService
+    public async Task SendEmailAsync(string email, string subject, string message)
     {
-        private readonly EmailSettings _emailSettings;
-
-        public EmailService(IOptions<EmailSettings> emailSettings)
+        var mailMessage = new MailMessage
         {
-            _emailSettings = emailSettings.Value;
-        }
+            From = new MailAddress("grant@gwsapp.net", "Grant" + " " + "Watson"),
+            Subject = subject,
+            Body = message,
+            IsBodyHtml = true
+        };
+        mailMessage.To.Add(email);
 
-        public async Task SendEmailAsync(string to, string subject, string body)
-        {
-            using (var smtpClient = new SmtpClient(_emailSettings.SmtpServer)
-            {
-                Port = _emailSettings.SmtpPort,
-                Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password),
-                EnableSsl = _emailSettings.EnableSSL,
-            })
-            {
-                var mailMessage = new MailMessage
-                {
-                    From = new MailAddress(_emailSettings.Username),
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = false,
-                };
-                mailMessage.To.Add(to);
-
-                try
-                {
-                    await smtpClient.SendMailAsync(mailMessage);
-                }
-                catch (SmtpException ex)
-                {
-                    // Handle exception here
-                    throw;
-                }
-            }
-        }
+        await _smtpClient.SendMailAsync(mailMessage);
     }
-
-    public class EmailSettings
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string SmtpServer { get; set; }
-        public int SmtpPort { get; set; }
-        public bool EnableSSL { get; set; }
-    }
-
 }

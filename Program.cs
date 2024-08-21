@@ -7,6 +7,8 @@ using Treks.Areas.Identity;
 using Treks.Data;
 using Treks.Services;
 using Treks.Models;
+using System.Net;
+using System.Net.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,16 @@ builder.Services.AddScoped<CompanyService>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
+
+// Add EmailSender service
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddSingleton(new SmtpClient
+{
+    Host = "smtp.gmail.com",
+    Port = 587,
+    Credentials = new NetworkCredential("gwatson117@gmail.com", "skudplate-pimppe6-Electron0721"),
+    EnableSsl = true
+});
 
 var app = builder.Build();
 
