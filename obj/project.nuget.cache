@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bTQQLn3TsbDUcqNxXAJarYwDnJyR+iQMUpugk8AauuODZCa+rpx41tEqA/Z0N8NjNAbE+rBR68f4+gVGow20hg==",
+  "dgSpecHash": "5hFohBJ0NgM=",
   "success": true,
   "projectFilePath": "/Users/grantwatson/Desktop/Development/CSharp/Treks/Treks.csproj",
   "expectedPackageFiles": [
@@ -209,7 +209,10 @@
     "/Users/grantwatson/.nuget/packages/system.windows.extensions/6.0.0/system.windows.extensions.6.0.0.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/system.xml.readerwriter/4.3.0/system.xml.readerwriter.4.3.0.nupkg.sha512",
     "/Users/grantwatson/.nuget/packages/system.xml.xdocument/4.3.0/system.xml.xdocument.4.3.0.nupkg.sha512",
-    "/Users/grantwatson/.nuget/packages/tinymce.blazor/1.0.4/tinymce.blazor.1.0.4.nupkg.sha512"
+    "/Users/grantwatson/.nuget/packages/tinymce.blazor/1.0.4/tinymce.blazor.1.0.4.nupkg.sha512",
+    "/Users/grantwatson/.nuget/packages/microsoft.netcore.app.ref/7.0.20/microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
+    "/Users/grantwatson/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.20/microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512",
+    "/Users/grantwatson/.nuget/packages/microsoft.netcore.app.host.osx-arm64/7.0.20/microsoft.netcore.app.host.osx-arm64.7.0.20.nupkg.sha512"
   ],
   "logs": []
 }
