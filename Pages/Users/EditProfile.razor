@@ -108,15 +108,19 @@
         </div>
     }
     <hr/>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Update</button>
-        <button class="btn btn-danger" @onclick="Cancel">Cancel</button>
-    </div>
+    <center>
+       <div class="form-group">
+            <button type="submit" class="btn btn-primary">Update</button>
+            <button class="btn btn-danger" @onclick="Cancel">Cancel</button>
+        </div> 
+    </center>
+    
 </EditForm>
 
 @code {
     private ApplicationUser user = new ApplicationUser();
     private bool changePassword;
+    private string errorMessage;
     private string currentPassword;
     private string newPassword;
     private string confirmPassword;
@@ -141,34 +145,34 @@
         try
         {
             bool isSuccess = await userService.UpdateUserAsync(user);
-            if (isSuccess && changePassword)
+            if (isSuccess)
             {
-                var passwordChangeResult = await userService.ChangePasswordAsync(user, currentPassword, newPassword);
-                if (passwordChangeResult)
+                if (changePassword)
                 {
-                    NavigationManager.NavigateTo("/");
+                    var passwordChangeResult = await userService.ChangePasswordAsync(user, currentPassword, newPassword);
+                    if (!passwordChangeResult)
+                    {
+                        errorMessage = "Failed to change the password.";
+                        return;
+                    }
                 }
-                else
-                {
-                    // Display a message for password change failure
-                    Console.Error.WriteLine("Failed to change the password.");
-                }
+                NavigationManager.NavigateTo($"/");
             }
             else
             {
-                NavigationManager.NavigateTo("/Profile");
+                errorMessage = "Failed to update the profile. Please try again.";
             }
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            Console.Error.WriteLine("An unexpected error occurred while updating your profile. Please try again later.");
+            errorMessage = "An unexpected error occurred. Please try again later.";
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 
     private void Cancel()
     {
-        NavigationManager.NavigateTo("/Profile");
+        NavigationManager.NavigateTo("/");
     }
 
     private void ToggleChangePassword()
