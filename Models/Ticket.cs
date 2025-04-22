@@ -28,6 +28,7 @@ namespace Treks.Models
         public int AssignedCompanyId { get; set; }
         public virtual Company AssignedCompany { get; set; }
         public virtual ICollection<TicketTechNote> TicketTechNotes { get; set; }
+        public virtual ICollection<SubTask> SubTasks { get; set; }
 
     }
 
