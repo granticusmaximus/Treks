@@ -11,14 +11,14 @@
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        isAuthenticated = authState.User.Identity.IsAuthenticated; // Check if the user is authenticated
+        isAuthenticated = authState.User?.Identity?.IsAuthenticated ?? false; // Check if the user is authenticated
     }
 }
 
 @* Conditionally render the content based on the user's authentication state *@
 @if (isAuthenticated)
 {
-    <Profile /> <!-- Show the user's profile if authenticated -->
+    <Profile /> 
 }
 else
 {
@@ -26,7 +26,7 @@ else
         <h1>General Kenobi!</h1>
 
         Welcome to your new app called Treks. This is a learning module application for Grant Watson. I am using Blazor,
-        .NET 6 and SQLite for local db storage. I am trying to learn as much as possible for newer interations of .NET
+        .NET 7 and SQLite for local db storage. I am trying to learn as much as possible for newer interations of .NET
     </center>
     <hr />
     <center>
