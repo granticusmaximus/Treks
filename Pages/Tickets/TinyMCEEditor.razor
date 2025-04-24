@@ -1,0 +1,47 @@
+@* TinyMCEEditor.razor *@
+
+@inject IJSRuntime JS
+
+<div>
+    <textarea id="@EditorId"></textarea>
+</div>
+
+@code {
+    [Parameter] public string? InitialContent { get; set; }
+    [Parameter] public EventCallback<string> OnContentChanged { get; set; }
+
+    private string EditorId = $"editor_{Guid.NewGuid().ToString().Replace("-", "")}";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("tinymce.init", new
+            {
+                selector = "#" + EditorId,
+                height = 300,
+                menubar = false,
+                plugins = new[] { "link", "lists", "code" },
+                toolbar = "undo redo | bold italic underline | bullist numlist | link | code"
+            });
+
+            if (!string.IsNullOrWhiteSpace(InitialContent))
+            {
+                var editorRef = await JS.InvokeAsync<IJSObjectReference>("tinymce.get", EditorId);
+                await editorRef.InvokeVoidAsync("setContent", InitialContent);
+            }
+        }
+    }
+
+    public async Task<string> GetContentAsync()
+    {
+        var editorRef = await JS.InvokeAsync<IJSObjectReference>("tinymce.get", EditorId);
+        return await editorRef.InvokeAsync<string>("getContent");
+    }
+
+    public async Task SetContentAsync(string content)
+    {
+        var editorRef = await JS.InvokeAsync<IJSObjectReference>("tinymce.get", EditorId);
+        await editorRef.InvokeVoidAsync("setContent", content);
+    }
+}

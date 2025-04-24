@@ -65,6 +65,18 @@
       "PackagePath": "staticwebassets/js/registerDnD.js"
     },
     {
+      "Id": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/blazored-texteditor.js",
+      "PackagePath": "staticwebassets/js/texteditor/blazored-texteditor.js"
+    },
+    {
+      "Id": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.min.js",
+      "PackagePath": "staticwebassets/js/texteditor/quill.min.js"
+    },
+    {
+      "Id": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.snow.css",
+      "PackagePath": "staticwebassets/js/texteditor/quill.snow.css"
+    },
+    {
       "Id": "obj/Debug/net7.0/staticwebassets/msbuild.Treks.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
     },

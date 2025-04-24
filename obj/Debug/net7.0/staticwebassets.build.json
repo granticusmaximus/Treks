@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "iqB2KCZvM0TbOttRizP8H+t91C+aqPrS0od8KFxrDQg=",
+  "Hash": "5TmSxo/GGWWV9BhhVbF7rhSZ7VRHZzY2Qe9oy36WP1M=",
   "Source": "Treks",
   "BasePath": "_content/Treks",
   "Mode": "Default",
@@ -16,6 +16,48 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "/Users/grantwatson/.nuget/packages/blazored.texteditor/1.1.3/staticwebassets/Blazored-BlazorQuill.js",
+      "SourceId": "Blazored.TextEditor",
+      "SourceType": "Package",
+      "ContentRoot": "/Users/grantwatson/.nuget/packages/blazored.texteditor/1.1.3/staticwebassets/",
+      "BasePath": "_content/Blazored.TextEditor",
+      "RelativePath": "Blazored-BlazorQuill.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "dj4raj0v6v",
+      "Integrity": "uYWJEOddyql6USMTLDsAXzo0Gp9WY1rK8K+Tul1rbAc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "/Users/grantwatson/.nuget/packages/blazored.texteditor/1.1.3/staticwebassets/Blazored-BlazorQuill.js"
+    },
+    {
+      "Identity": "/Users/grantwatson/.nuget/packages/blazored.texteditor/1.1.3/staticwebassets/quill-blot-formatter.min.js",
+      "SourceId": "Blazored.TextEditor",
+      "SourceType": "Package",
+      "ContentRoot": "/Users/grantwatson/.nuget/packages/blazored.texteditor/1.1.3/staticwebassets/",
+      "BasePath": "_content/Blazored.TextEditor",
+      "RelativePath": "quill-blot-formatter.min.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "06wjpxauos",
+      "Integrity": "aNk36zfXB+ixZlkufdUvWaoJNMMNVB0nqx7xVe0YdAA=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "/Users/grantwatson/.nuget/packages/blazored.texteditor/1.1.3/staticwebassets/quill-blot-formatter.min.js"
+    },
     {
       "Identity": "/Users/grantwatson/.nuget/packages/microsoft.aspnetcore.identity.ui/7.0.0/staticwebassets/V5/css/site.css",
       "SourceId": "Microsoft.AspNetCore.Identity.UI",
@@ -1277,31 +1319,10 @@
       "OriginalItemSpec": "/Users/grantwatson/.nuget/packages/microsoft.aspnetcore.identity.ui/7.0.0/staticwebassets/V5/lib/jquery/LICENSE.txt"
     },
     {
-      "Identity": "/Users/grantwatson/.nuget/packages/tinymce.blazor/1.0.4/staticwebassets/tinymce-blazor.js",
+      "Identity": "/Users/grantwatson/.nuget/packages/tinymce.blazor/2.0.0/staticwebassets/TinyMce.Blazor.lib.module.js",
       "SourceId": "TinyMCE.Blazor",
       "SourceType": "Package",
-      "ContentRoot": "/Users/grantwatson/.nuget/packages/tinymce.blazor/1.0.4/staticwebassets/",
-      "BasePath": "_content/TinyMCE.Blazor",
-      "RelativePath": "tinymce-blazor.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "Fingerprint": "29nwf45ptx",
-      "Integrity": "SjNNuqAj1CT+nLfmHCJCyjY2wo4A2VESaug0Nzci+N8=",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "/Users/grantwatson/.nuget/packages/tinymce.blazor/1.0.4/staticwebassets/tinymce-blazor.js"
-    },
-    {
-      "Identity": "/Users/grantwatson/.nuget/packages/tinymce.blazor/1.0.4/staticwebassets/TinyMce.Blazor.lib.module.js",
-      "SourceId": "TinyMCE.Blazor",
-      "SourceType": "Package",
-      "ContentRoot": "/Users/grantwatson/.nuget/packages/tinymce.blazor/1.0.4/staticwebassets/",
+      "ContentRoot": "/Users/grantwatson/.nuget/packages/tinymce.blazor/2.0.0/staticwebassets/",
       "BasePath": "_content/TinyMCE.Blazor",
       "RelativePath": "TinyMce.Blazor.lib.module.js",
       "AssetKind": "All",
@@ -1310,13 +1331,34 @@
       "AssetMergeBehavior": "",
       "AssetMergeSource": "",
       "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "Fingerprint": "29nwf45ptx",
-      "Integrity": "SjNNuqAj1CT+nLfmHCJCyjY2wo4A2VESaug0Nzci+N8=",
+      "AssetTraitName": "JSModule",
+      "AssetTraitValue": "JSLibraryModule",
+      "Fingerprint": "adowt9srv1",
+      "Integrity": "XsRnQkvbM/leotRxAbM8p6giRHM1kT/1feTIEzpYil4=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "/Users/grantwatson/.nuget/packages/tinymce.blazor/1.0.4/staticwebassets/TinyMce.Blazor.lib.module.js"
+      "OriginalItemSpec": "/Users/grantwatson/.nuget/packages/tinymce.blazor/2.0.0/staticwebassets/TinyMce.Blazor.lib.module.js"
+    },
+    {
+      "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/jsmodules/jsmodules.build.manifest.json",
+      "SourceId": "Treks",
+      "SourceType": "Computed",
+      "ContentRoot": "/Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/jsmodules/",
+      "BasePath": "_content/Treks",
+      "RelativePath": "Treks.modules.json",
+      "AssetKind": "Build",
+      "AssetMode": "CurrentProject",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "JSModule",
+      "AssetTraitValue": "JSModuleManifest",
+      "Fingerprint": "raj9calk05",
+      "Integrity": "8w0id1QHRTgskRq6+cZi6xqxQoM7N5//p5y3PI4r49M=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "obj/Debug/net7.0/jsmodules/jsmodules.build.manifest.json"
     },
     {
       "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/scopedcss/bundle/Treks.styles.css",
@@ -1606,8 +1648,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "kmfk6i73ho",
-      "Integrity": "5PUi9YfUsgPqYixtHi/UZlopaYZ6a17bYcdhIZItsmI=",
+      "Fingerprint": "jbkagd8he8",
+      "Integrity": "oVaLgcC2M7qzpj6jJ40pbTSKPbsMTmiKSs2TPd/8YvM=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/css/site.css"
@@ -1674,12 +1716,75 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/js/registerDnD.js"
+    },
+    {
+      "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/blazored-texteditor.js",
+      "SourceId": "Treks",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/",
+      "BasePath": "_content/Treks",
+      "RelativePath": "js/texteditor/blazored-texteditor#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "lv7743vni8",
+      "Integrity": "X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/texteditor/blazored-texteditor.js"
+    },
+    {
+      "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.min.js",
+      "SourceId": "Treks",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/",
+      "BasePath": "_content/Treks",
+      "RelativePath": "js/texteditor/quill.min#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "7z4y7so7e3",
+      "Integrity": "s+SsR0QzPs5T89tjHyz5z1Dn6MrmELZccAy6Y5IN03A=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/texteditor/quill.min.js"
+    },
+    {
+      "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.snow.css",
+      "SourceId": "Treks",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/",
+      "BasePath": "_content/Treks",
+      "RelativePath": "js/texteditor/quill.snow#[.{fingerprint}]?.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "k03aijfrn9",
+      "Integrity": "PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/texteditor/quill.snow.css"
     }
   ],
   "Endpoints": [
     {
-      "Route": "_content/TinyMCE.Blazor/tinymce-blazor.js",
-      "AssetFile": "/Users/grantwatson/.nuget/packages/tinymce.blazor/1.0.4/staticwebassets/tinymce-blazor.js",
+      "Route": "_content/Blazored.TextEditor/Blazored-BlazorQuill.dj4raj0v6v.js",
+      "AssetFile": "/Users/grantwatson/.nuget/packages/blazored.texteditor/1.1.3/staticwebassets/Blazored-BlazorQuill.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1687,8 +1792,12 @@
           "Value": "bytes"
         },
         {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
           "Name": "Content-Length",
-          "Value": "5633"
+          "Value": "2826"
         },
         {
           "Name": "Content-Type",
@@ -1696,27 +1805,150 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"SjNNuqAj1CT+nLfmHCJCyjY2wo4A2VESaug0Nzci+N8=\""
+          "Value": "\"uYWJEOddyql6USMTLDsAXzo0Gp9WY1rK8K+Tul1rbAc=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 20 May 2022 02:33:40 GMT"
+          "Value": "Fri, 11 Apr 2025 02:04:08 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "dj4raj0v6v"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-uYWJEOddyql6USMTLDsAXzo0Gp9WY1rK8K+Tul1rbAc="
+        },
+        {
+          "Name": "label",
+          "Value": "_content/Blazored.TextEditor/Blazored-BlazorQuill.js"
+        }
+      ]
+    },
+    {
+      "Route": "_content/Blazored.TextEditor/Blazored-BlazorQuill.js",
+      "AssetFile": "/Users/grantwatson/.nuget/packages/blazored.texteditor/1.1.3/staticwebassets/Blazored-BlazorQuill.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
         },
         {
           "Name": "Cache-Control",
           "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2826"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"uYWJEOddyql6USMTLDsAXzo0Gp9WY1rK8K+Tul1rbAc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 11 Apr 2025 02:04:08 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-SjNNuqAj1CT+nLfmHCJCyjY2wo4A2VESaug0Nzci+N8="
+          "Value": "sha256-uYWJEOddyql6USMTLDsAXzo0Gp9WY1rK8K+Tul1rbAc="
+        }
+      ]
+    },
+    {
+      "Route": "_content/Blazored.TextEditor/quill-blot-formatter.min.06wjpxauos.js",
+      "AssetFile": "/Users/grantwatson/.nuget/packages/blazored.texteditor/1.1.3/staticwebassets/quill-blot-formatter.min.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "30284"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"aNk36zfXB+ixZlkufdUvWaoJNMMNVB0nqx7xVe0YdAA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 11 Apr 2025 02:04:08 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "06wjpxauos"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-aNk36zfXB+ixZlkufdUvWaoJNMMNVB0nqx7xVe0YdAA="
+        },
+        {
+          "Name": "label",
+          "Value": "_content/Blazored.TextEditor/quill-blot-formatter.min.js"
+        }
+      ]
+    },
+    {
+      "Route": "_content/Blazored.TextEditor/quill-blot-formatter.min.js",
+      "AssetFile": "/Users/grantwatson/.nuget/packages/blazored.texteditor/1.1.3/staticwebassets/quill-blot-formatter.min.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "30284"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"aNk36zfXB+ixZlkufdUvWaoJNMMNVB0nqx7xVe0YdAA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 11 Apr 2025 02:04:08 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-aNk36zfXB+ixZlkufdUvWaoJNMMNVB0nqx7xVe0YdAA="
         }
       ]
     },
     {
       "Route": "_content/TinyMCE.Blazor/TinyMce.Blazor.lib.module.js",
-      "AssetFile": "/Users/grantwatson/.nuget/packages/tinymce.blazor/1.0.4/staticwebassets/TinyMce.Blazor.lib.module.js",
+      "AssetFile": "/Users/grantwatson/.nuget/packages/tinymce.blazor/2.0.0/staticwebassets/TinyMce.Blazor.lib.module.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1725,7 +1957,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "5633"
+          "Value": "5550"
         },
         {
           "Name": "Content-Type",
@@ -1733,11 +1965,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"SjNNuqAj1CT+nLfmHCJCyjY2wo4A2VESaug0Nzci+N8=\""
+          "Value": "\"XsRnQkvbM/leotRxAbM8p6giRHM1kT/1feTIEzpYil4=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 20 May 2022 02:33:40 GMT"
+          "Value": "Tue, 05 Nov 2024 22:33:50 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1747,7 +1979,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-SjNNuqAj1CT+nLfmHCJCyjY2wo4A2VESaug0Nzci+N8="
+          "Value": "sha256-XsRnQkvbM/leotRxAbM8p6giRHM1kT/1feTIEzpYil4="
         }
       ]
     },
@@ -2664,7 +2896,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "7809"
+          "Value": "8098"
         },
         {
           "Name": "Content-Type",
@@ -2672,11 +2904,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"5PUi9YfUsgPqYixtHi/UZlopaYZ6a17bYcdhIZItsmI=\""
+          "Value": "\"oVaLgcC2M7qzpj6jJ40pbTSKPbsMTmiKSs2TPd/8YvM=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Jan 2025 20:26:09 GMT"
+          "Value": "Thu, 24 Apr 2025 20:06:08 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2686,12 +2918,12 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-5PUi9YfUsgPqYixtHi/UZlopaYZ6a17bYcdhIZItsmI="
+          "Value": "sha256-oVaLgcC2M7qzpj6jJ40pbTSKPbsMTmiKSs2TPd/8YvM="
         }
       ]
     },
     {
-      "Route": "css/site.kmfk6i73ho.css",
+      "Route": "css/site.jbkagd8he8.css",
       "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/css/site.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -2701,7 +2933,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "7809"
+          "Value": "8098"
         },
         {
           "Name": "Content-Type",
@@ -2709,11 +2941,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"5PUi9YfUsgPqYixtHi/UZlopaYZ6a17bYcdhIZItsmI=\""
+          "Value": "\"oVaLgcC2M7qzpj6jJ40pbTSKPbsMTmiKSs2TPd/8YvM=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Jan 2025 20:26:09 GMT"
+          "Value": "Thu, 24 Apr 2025 20:06:08 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2723,7 +2955,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "kmfk6i73ho"
+          "Value": "jbkagd8he8"
         },
         {
           "Name": "label",
@@ -2731,7 +2963,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-5PUi9YfUsgPqYixtHi/UZlopaYZ6a17bYcdhIZItsmI="
+          "Value": "sha256-oVaLgcC2M7qzpj6jJ40pbTSKPbsMTmiKSs2TPd/8YvM="
         }
       ]
     },
@@ -5202,6 +5434,252 @@
       ]
     },
     {
+      "Route": "js/texteditor/blazored-texteditor.js",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/blazored-texteditor.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "917"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:22:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4="
+        }
+      ]
+    },
+    {
+      "Route": "js/texteditor/blazored-texteditor.lv7743vni8.js",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/blazored-texteditor.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "917"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:22:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "lv7743vni8"
+        },
+        {
+          "Name": "label",
+          "Value": "js/texteditor/blazored-texteditor.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4="
+        }
+      ]
+    },
+    {
+      "Route": "js/texteditor/quill.min.7z4y7so7e3.js",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.min.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "215311"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"s+SsR0QzPs5T89tjHyz5z1Dn6MrmELZccAy6Y5IN03A=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:31:43 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "7z4y7so7e3"
+        },
+        {
+          "Name": "label",
+          "Value": "js/texteditor/quill.min.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-s+SsR0QzPs5T89tjHyz5z1Dn6MrmELZccAy6Y5IN03A="
+        }
+      ]
+    },
+    {
+      "Route": "js/texteditor/quill.min.js",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.min.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "215311"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"s+SsR0QzPs5T89tjHyz5z1Dn6MrmELZccAy6Y5IN03A=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:31:43 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-s+SsR0QzPs5T89tjHyz5z1Dn6MrmELZccAy6Y5IN03A="
+        }
+      ]
+    },
+    {
+      "Route": "js/texteditor/quill.snow.css",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.snow.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "26619"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:20:50 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I="
+        }
+      ]
+    },
+    {
+      "Route": "js/texteditor/quill.snow.k03aijfrn9.css",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.snow.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "26619"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:20:50 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "k03aijfrn9"
+        },
+        {
+          "Name": "label",
+          "Value": "js/texteditor/quill.snow.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I="
+        }
+      ]
+    },
+    {
       "Route": "Treks.bundle.scp.css",
       "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/scopedcss/projectbundle/Treks.bundle.scp.css",
       "Selectors": [],
@@ -5224,7 +5702,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 22 Apr 2025 21:09:29 GMT"
+          "Value": "Thu, 24 Apr 2025 19:58:11 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5235,6 +5713,43 @@
         {
           "Name": "integrity",
           "Value": "sha256-J/+nG0NpViI5OM+Fkasrx+4wkOi0/0wupuPEgg/HsVs="
+        }
+      ]
+    },
+    {
+      "Route": "Treks.modules.json",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/obj/Debug/net7.0/jsmodules/jsmodules.build.manifest.json",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "60"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/json"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"8w0id1QHRTgskRq6+cZi6xqxQoM7N5//p5y3PI4r49M=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 24 Apr 2025 19:58:11 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-8w0id1QHRTgskRq6+cZi6xqxQoM7N5//p5y3PI4r49M="
         }
       ]
     },
@@ -5261,7 +5776,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 22 Apr 2025 21:09:29 GMT"
+          "Value": "Thu, 24 Apr 2025 19:58:11 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5306,7 +5821,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 22 Apr 2025 21:09:29 GMT"
+          "Value": "Thu, 24 Apr 2025 19:58:11 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5351,7 +5866,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 22 Apr 2025 21:09:29 GMT"
+          "Value": "Thu, 24 Apr 2025 19:58:11 GMT"
         },
         {
           "Name": "Cache-Control",

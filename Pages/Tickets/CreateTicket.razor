@@ -7,7 +7,16 @@
 @inject NavigationManager navi
 @attribute [Authorize]
 
+<style>
+    .select-caret {
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='70,90 20,50 120,50' fill='%23666'/%3E%3C/svg%3E") no-repeat right 0.75rem center/1rem auto;
+        appearance: none;
+        padding-right: 2rem;
+    }
+</style>
+
 <h3>Create New Ticket</h3>
+
 <EditForm Model="@_ticket" OnValidSubmit="SaveTicket">
     <DataAnnotationsValidator />
 
@@ -18,12 +27,12 @@
 
     <div class="form-group">
         <label for="description">Description:</label>
-        <InputTextArea id="description" class="form-control" @bind-Value="_ticket.Description" />
+        <TinyMCEEditor @ref="editor" />
     </div>
 
     <div class="form-group">
         <label for="severity">Severity:</label>
-        <InputSelect id="severity" class="form-control" @bind-Value="_ticket.Severity">
+        <InputSelect id="severity" class="form-control select-caret" @bind-Value="_ticket.Severity">
             <option value="">--Select Severity--</option>
             @foreach (var severity in Enum.GetValues<TicketSeverity>())
             {
@@ -39,7 +48,7 @@
 
     <div class="form-group">
         <label for="assignedUser">Assigned User:</label>
-        <InputSelect id="assignedUser" class="form-control" @bind-Value="_ticket.AssignedUserId">
+        <InputSelect id="assignedUser" class="form-control select-caret" @bind-Value="_ticket.AssignedUserId">
             <option value="">-- Select a User --</option>
             @foreach (var user in users)
             {
@@ -50,7 +59,7 @@
 
     <div class="form-group">
         <label for="assignedCompany">Assigned to a Company:</label>
-        <InputSelect id="assignedCompany" class="form-control" @bind-Value="_ticket.AssignedCompanyId">
+        <InputSelect id="assignedCompany" class="form-control select-caret" @bind-Value="_ticket.AssignedCompanyId">
             <option value="">-- Select Company --</option>
             @foreach (var company in companies)
             {
@@ -58,20 +67,22 @@
             }
         </InputSelect>
     </div>
-    <hr/>
+
+    <hr />
+
     <button type="submit" class="btn btn-primary">Save Ticket</button>
+
     @if (!string.IsNullOrEmpty(message))
     {
-        <div class="alert alert-info mt-3">
-            @message
-        </div>
+        <div class="alert alert-info mt-3">@message</div>
     }
 </EditForm>
 
 @code {
     private Ticket _ticket = new Ticket { DueDate = DateTime.Today };
-    private List<ApplicationUser> users = new List<ApplicationUser>();
-    private List<Company> companies = new List<Company>();
+    private TinyMCEEditor? editor;
+    private List<ApplicationUser> users = new();
+    private List<Company> companies = new();
     private string message = "";
 
     protected override async Task OnInitializedAsync()
@@ -82,28 +93,20 @@
 
     private async Task SaveTicket()
     {
-        try
-        {
-            if (string.IsNullOrEmpty(_ticket.Title) || _ticket.AssignedCompanyId == 0)
-            {
-                message = "Please fill all required fields.";
-                return;
-            }
+        _ticket.Description = await editor!.GetContentAsync();
 
-            _ticket.TicketId = Guid.NewGuid().ToString();
-            _ticket.TimeOfCreation = DateTime.Now;
-            await ticketService.CreateNewTaskAsync(_ticket);
-            message = "The ticket has been created successfully!";
-            ResetTicket();
-        }
-        catch (Exception ex)
+        if (string.IsNullOrWhiteSpace(_ticket.Title) || _ticket.AssignedCompanyId == 0)
         {
-            message = $"Error creating the ticket: {ex.Message}";
+            message = "Please fill all required fields.";
+            return;
         }
-    }
 
-    private void ResetTicket()
-    {
+        _ticket.TicketId = Guid.NewGuid().ToString();
+        _ticket.TimeOfCreation = DateTime.Now;
+
+        await ticketService.CreateNewTaskAsync(_ticket);
+        message = "The ticket has been created successfully!";
         _ticket = new Ticket { DueDate = DateTime.Today };
+        await editor.SetContentAsync(string.Empty);
     }
 }

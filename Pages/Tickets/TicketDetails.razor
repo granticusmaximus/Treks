@@ -7,20 +7,33 @@
 @inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager
 @attribute [AllowAnonymous]
 
-<h2>@_ticket?.Title Details</h2>
-<hr />
-<div class="col-md-6">
-    <NavLink class="btn btn-success" href="/tickets">
-        <span aria-hidden="true">Back to Tickets</span>
-    </NavLink> &nbsp;
-    @if (!string.IsNullOrEmpty(TicketId))
+<NavLink href="/tickets" class="btn btn-secondary mb-3">
+    <span aria-hidden="true">&larr;</span> Back to Tickets
+</NavLink>
+<h2>
+    @_ticket?.Title Details
+    @if (_ticket?.SubTasks?.Any() == true)
     {
-        var editTicketUrl = $"tickets/edit/{TicketId}";
-        <NavLink class="btn btn-primary ml-2" href="@editTicketUrl">
-            <span aria-hidden="true">Edit Ticket</span>
-        </NavLink>
+        <span class="badge bg-info">@_ticket.SubTasks.Count Tasks</span>
     }
-</div>
+</h2>
+
+@if (_ticket?.SubTasks?.Any() == true)
+{
+    <div class="progress my-2" style="height: 25px;">
+        <div class="progress-bar" role="progressbar"
+             style="width: @ProgressPercentage%;"
+             aria-valuenow="@CompletedSubTasksCount"
+             aria-valuemin="0"
+             aria-valuemax="@_ticket.SubTasks.Count">
+            @ProgressPercentage% Complete
+        </div>
+    </div>
+}
+else
+{
+    <p><strong>SubTasks:</strong> None</p>
+}
 <hr />
 
 @if (_ticket != null)
@@ -74,9 +87,9 @@
             {
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <input type="checkbox" 
+                        <input type="checkbox"
                                checked="@subtask.IsComplete"
-                               @onchange="(e) => ToggleSubTaskCompletion(subtask.SubTaskId, (bool)e.Value)" />
+                               @onchange="@(async (e) => await ToggleSubTaskCompletion(subtask.SubTaskId, (bool)(e.Value ?? false)))" />
                         &nbsp; @subtask.Title
                     </div>
                 </li>
@@ -168,6 +181,10 @@ else if (!string.IsNullOrEmpty(message))
     private string message = "";
     private SubTask newSubTask = new SubTask();
 
+    private int CompletedSubTasksCount => _ticket?.SubTasks?.Count(st => st.IsComplete) ?? 0;
+    private int TotalSubTasksCount => _ticket?.SubTasks?.Count ?? 0;
+    private int ProgressPercentage => TotalSubTasksCount == 0 ? 0 : (int)((double)CompletedSubTasksCount / TotalSubTasksCount * 100);
+
     protected override async Task OnInitializedAsync()
     {
         await LoadTicketDetails();
@@ -177,7 +194,6 @@ else if (!string.IsNullOrEmpty(message))
     {
         _ticket = await ticketService.GetTaskByIdAsync(TicketId, includeTechNotes: true);
 
-        // Load SubTasks too
         if (_ticket != null)
         {
             _ticket.SubTasks = await ticketService.GetSubTasksForTicketAsync(TicketId);

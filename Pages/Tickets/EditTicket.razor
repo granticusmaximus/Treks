@@ -10,7 +10,7 @@
 <h3>Edit Ticket</h3>
 <hr />
 <div class="col-md-6">
-    <NavLink class="btn btn-success" href="Tickets">
+    <NavLink class="btn btn-success" href="/tickets">
         <span aria-hidden="true">Back to Tickets</span>
     </NavLink>
 </div>
@@ -32,7 +32,7 @@
 
     <div class="form-group">
         <label for="Description">Description</label>
-        <InputTextArea id="Description" @bind-Value="ticket.Description" class="form-control" />
+        <TinyMCEEditor @ref="editor" />
         <ValidationMessage For="@(() => ticket.Description)" />
     </div>
 
@@ -89,13 +89,14 @@
         </div>
     }
 
-    <button type="submit" class="btn btn-primary" @onclick="UpdateTicket">Save</button>
+    <button type="submit" class="btn btn-primary">Save</button>
 </EditForm>
 
 @code {
     [Parameter]
     public string? TicketId { get; set; }
     private Ticket? ticket;
+    private TinyMCEEditor? editor;
     private List<ApplicationUser> users = new List<ApplicationUser>();
     private List<Company> companies = new List<Company>();
     private bool showWarning = false;
@@ -111,12 +112,26 @@
         companies = await companyService.GetAllCompaniesAsync();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && ticket != null && editor != null)
+        {
+            await editor.SetContentAsync(ticket.Description ?? string.Empty);
+        }
+    }
+
     private async Task UpdateTicket()
     {
         showWarning = false;
         errorMessage = "";
-        if (ticket == null || string.IsNullOrEmpty(ticket.Title) || string.IsNullOrWhiteSpace(ticket.Description) ||
-        ticket.DueDate == default || string.IsNullOrEmpty(ticket.Severity.ToString()))
+
+        if (ticket == null)
+            return;
+
+        ticket.Description = await editor!.GetContentAsync();
+
+        if (string.IsNullOrWhiteSpace(ticket.Title) || string.IsNullOrWhiteSpace(ticket.Description) ||
+            ticket.DueDate == default || string.IsNullOrEmpty(ticket.Severity.ToString()))
         {
             showWarning = true;
             return;
