@@ -1,0 +1,39 @@
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
+<div id="@EditorId"></div>
+
+@code {
+    [Parameter] public string? InitialContent { get; set; }
+    [Parameter] public string? UploadUrl { get; set; } // ✅ Add this line
+
+    private string EditorId = $"editor-{Guid.NewGuid()}";
+    private IJSObjectReference? _module;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/tinymce-wrapper.js");
+            await _module.InvokeVoidAsync("initEditor", EditorId, InitialContent ?? string.Empty, UploadUrl);
+        }
+    }
+
+    public async Task<string> GetContentAsync()
+    {
+        if (_module != null)
+        {
+            return await _module.InvokeAsync<string>("getEditorContent", EditorId);
+        }
+
+        return string.Empty;
+    }
+
+    public async Task SetContentAsync(string content)
+    {
+        if (_module != null)
+        {
+            await _module.InvokeVoidAsync("setEditorContent", EditorId, content);
+        }
+    }
+}

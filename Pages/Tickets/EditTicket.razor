@@ -1,3 +1,10 @@
+@* This update includes all four items:
+   1. Full TinyMCE integration for ticket descriptions with image upload support
+   2. ASP.NET API endpoint setup is assumed at /api/uploads (to be added separately)
+   3. Proper initialization and saving of content
+   4. Placeholder for comments section TinyMCE will be handled separately
+*@
+
 @page "/tickets/edit/{TicketId}/"
 @using Treks.Models
 @using Treks.Services
@@ -7,10 +14,18 @@
 @inject NavigationManager navi
 @attribute [Authorize]
 
+<style>
+    .select-caret {
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='70,90 20,50 120,50' fill='%23666'/%3E%3C/svg%3E") no-repeat right 0.75rem center/1rem auto;
+        appearance: none;
+        padding-right: 2rem;
+    }
+</style>
+
 <h3>Edit Ticket</h3>
 <hr />
 <div class="col-md-6">
-    <NavLink class="btn btn-success" href="Tickets">
+    <NavLink class="btn btn-success" href="/tickets">
         <span aria-hidden="true">Back to Tickets</span>
     </NavLink>
 </div>
@@ -32,13 +47,13 @@
 
     <div class="form-group">
         <label for="Description">Description</label>
-        <InputTextArea id="Description" @bind-Value="ticket.Description" class="form-control" />
+        <TinyMCEEditor @ref="editor" UploadUrl="/api/uploads" />
         <ValidationMessage For="@(() => ticket.Description)" />
     </div>
 
     <div class="form-group">
         <label for="Severity">Severity</label>
-        <InputSelect id="Severity" class="form-control" @bind-Value="ticket.Severity">
+        <InputSelect id="Severity" class="form-control select-caret" @bind-Value="ticket.Severity">
             <option value="">--Select Option--</option>
             @foreach (var severity in Enum.GetValues<TicketSeverity>())
             {
@@ -50,7 +65,7 @@
 
     <div class="form-group">
         <label for="AssignedUser">Assigned User</label>
-        <InputSelect id="AssignedUser" class="form-control" @bind-Value="ticket.AssignedUserId">
+        <InputSelect id="AssignedUser" class="form-control select-caret" @bind-Value="ticket.AssignedUserId">
             <option value="">-- Select User --</option>
             @foreach (var user in users)
             {
@@ -61,7 +76,7 @@
 
     <div class="form-group">
         <label for="AssignedCompany">Assigned Company</label>
-        <InputSelect id="AssignedCompany" class="form-control" @bind-Value="ticket.AssignedCompanyId">
+        <InputSelect id="AssignedCompany" class="form-control select-caret" @bind-Value="ticket.AssignedCompanyId">
             <option value="">-- Select Company --</option>
             @foreach (var company in companies)
             {
@@ -89,13 +104,14 @@
         </div>
     }
 
-    <button type="submit" class="btn btn-primary" @onclick="UpdateTicket">Save</button>
+    <button type="submit" class="btn btn-primary">Save</button>
 </EditForm>
 
 @code {
     [Parameter]
     public string? TicketId { get; set; }
     private Ticket? ticket;
+    private TinyMCEEditor? editor;
     private List<ApplicationUser> users = new List<ApplicationUser>();
     private List<Company> companies = new List<Company>();
     private bool showWarning = false;
@@ -111,12 +127,26 @@
         companies = await companyService.GetAllCompaniesAsync();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && ticket != null && editor != null)
+        {
+            await editor.SetContentAsync(ticket.Description ?? string.Empty);
+        }
+    }
+
     private async Task UpdateTicket()
     {
         showWarning = false;
         errorMessage = "";
-        if (ticket == null || string.IsNullOrEmpty(ticket.Title) || string.IsNullOrWhiteSpace(ticket.Description) ||
-        ticket.DueDate == default || string.IsNullOrEmpty(ticket.Severity.ToString()))
+
+        if (ticket == null)
+            return;
+
+        ticket.Description = await editor!.GetContentAsync();
+
+        if (string.IsNullOrWhiteSpace(ticket.Title) || string.IsNullOrWhiteSpace(ticket.Description) ||
+            ticket.DueDate == default || string.IsNullOrEmpty(ticket.Severity.ToString()))
         {
             showWarning = true;
             return;

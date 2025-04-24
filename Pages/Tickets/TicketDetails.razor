@@ -1,101 +1,137 @@
 @page "/tickets/details/{TicketId}/"
 @using Treks.Models
 @using Treks.Services
+@using Treks
 @inject TicketService ticketService
 @inject NavigationManager navi
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager
 @attribute [AllowAnonymous]
 
-<h2>@_ticket.Title Details</h2>
-<hr />
-<div class="col-md-6">
-    <NavLink class="btn btn-success" href="Tickets">
-        <span aria-hidden="true">Back to Tickets</span>
-    </NavLink> &nbsp;
-    @if (!string.IsNullOrEmpty(TicketId))
+<NavLink href="/tickets" class="btn btn-secondary mb-3">
+    <span aria-hidden="true">&larr;</span> Back to Tickets
+</NavLink>
+<h2>
+    @_ticket?.Title Details
+    @if (_ticket?.SubTasks?.Any() == true)
     {
-        var editTicketUrl = $"tickets/edit/{TicketId}";
-        <NavLink class="btn btn-primary ml-2" href="@editTicketUrl">
-            <span aria-hidden="true">Edit Ticket</span>
-        </NavLink>
+        <span class="badge bg-info">@_ticket.SubTasks.Count Tasks</span>
     }
-</div>
+</h2>
+
+@if (_ticket?.SubTasks?.Any() == true)
+{
+    <div class="progress my-2" style="height: 25px;">
+        <div class="progress-bar" role="progressbar"
+             style="width: @ProgressPercentage%;"
+             aria-valuenow="@CompletedSubTasksCount"
+             aria-valuemin="0"
+             aria-valuemax="@_ticket.SubTasks.Count">
+            @ProgressPercentage% Complete
+        </div>
+    </div>
+}
+else
+{
+    <p><strong>SubTasks:</strong> None</p>
+}
 <hr />
+
 @if (_ticket != null)
 {
     <div class="card">
-    <div class="card-body">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Assigned User:</th>
-                    <th scope="col">Severity:</th>
-                    <th scope="col">Due Date:</th>
-                    <th scope="col">Created:</th>
-                    <th scope="col">Description:</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="col-sm-2">@_ticket.AssignedUser.FullName</td>
-                    <td class="@GetSeverityCssClass(_ticket.Severity.ToString()) text-uppercase text-white text-center"
-                        style="font-weight: 700">@_ticket.Severity</td>
-                    <td>
-                        @_ticket.DueDate.ToShortDateString()
-                        @if (!_ticket.isComplete)
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Assigned User:</th>
+                        <th>Severity:</th>
+                        <th>Due Date:</th>
+                        <th>Created:</th>
+                        <th>Description:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@_ticket.AssignedUser?.FullName</td>
+                        <td class="@GetSeverityCssClass(_ticket.Severity.ToString()) text-uppercase text-white text-center" style="font-weight: 700">@_ticket.Severity</td>
+                        <td>
+                            @_ticket.DueDate.ToShortDateString()
+                            @if (!_ticket.isComplete)
                             {
                                 var daysDifference = (_ticket.DueDate.Date - DateTime.Now.Date).Days;
                                 if (daysDifference < 0)
                                 {
-                                    <span style="color: red;">
-                                        (Overdue by @(-daysDifference) days)
-                                    </span>
+                                    <span style="color: red;">(Overdue by @(-daysDifference) days)</span>
                                 }
                                 else
                                 {
-                                    <span style="color: green;">
-                                        (@daysDifference days until due)
-                                    </span>
+                                    <span style="color: green;">(@daysDifference days until due)</span>
                                 }
                             }
                         </td>
-                        <td>
-                            @_ticket.TimeOfCreation.ToShortDateString()
-                        </td>
-                        <td>
-                            @_ticket.Description
-                        </td>
+                        <td>@_ticket.TimeOfCreation.ToShortDateString()</td>
+                        <td>@((MarkupString)_ticket.Description)</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <hr />
+    <h3>SubTasks</h3>
+
+    @if (_ticket.SubTasks != null && _ticket.SubTasks.Any())
+    {
+        <ul class="list-group">
+            @foreach (var subtask in _ticket.SubTasks)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <input type="checkbox"
+                               checked="@subtask.IsComplete"
+                               @onchange="@(async (e) => await ToggleSubTaskCompletion(subtask.SubTaskId, (bool)(e.Value ?? false)))" />
+                        &nbsp; @subtask.Title
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No SubTasks for this ticket yet.</p>
+    }
+
+    <EditForm Model="@newSubTask" OnValidSubmit="@(() => AddNewSubTask())" class="mt-3">
+        <div class="input-group">
+            <InputText class="form-control" placeholder="New SubTask Title..." @bind-Value="newSubTask.Title" />
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Add SubTask</button>
+            </div>
+        </div>
+    </EditForm>
+
     <hr />
     <h3>Comments</h3>
+
     @if (_ticket.TicketTechNotes != null && _ticket.TicketTechNotes.Any())
     {
         @foreach (var ticketTechNote in _ticket.TicketTechNotes)
         {
             <div class="comments">
-                    <div class="username">
-                        @ticketTechNote.TechNote.Username 
-                    </div>
+                <div class="username">
+                    @ticketTechNote.TechNote?.Username
+                </div>
                 <div class="comment">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="username">
-                                @if (ticketTechNote.TechNote.ProfilePicture != null)
-                                {
-                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(ticketTechNote.TechNote.ProfilePicture)" width="30"
-                                        height="30" alt="Profile Picture" class="rounded-circle" />
-                                }
-                                @ticketTechNote.TechNote.FullName 
-                                <br/>
-                            </div>
-                            <p>@ticketTechNote.TechNote.Notes</p>
+                            @if (ticketTechNote.TechNote?.ProfilePicture != null)
+                            {
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(ticketTechNote.TechNote.ProfilePicture)" width="30" height="30" alt="Profile Picture" class="rounded-circle" />
+                            }
+                            <span>@ticketTechNote.TechNote?.FullName</span>
+                            <p>@((MarkupString?)ticketTechNote.TechNote?.Notes)</p>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -105,7 +141,6 @@
     {
         <p>No ticket notes available.</p>
     }
-
 
     <button class="btn btn-primary mt-3" @onclick="OpenModal">Add Comment</button>
 
@@ -120,9 +155,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <textarea class="form-control" @bind="newTechNotes" rows="4"></textarea>
-                    </div>
+                    <TinyMCEEditor @ref="editor" UploadUrl="/api/uploads" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
@@ -140,10 +173,17 @@ else if (!string.IsNullOrEmpty(message))
 @code {
     [Parameter]
     public string TicketId { get; set; }
-    private string message = "";
+
     private Ticket _ticket;
     private string newTechNotes = string.Empty;
     private bool showModal = false;
+    private string message = "";
+    private SubTask newSubTask = new SubTask();
+    private TinyMCEEditor? editor;
+
+    private int CompletedSubTasksCount => _ticket?.SubTasks?.Count(st => st.IsComplete) ?? 0;
+    private int TotalSubTasksCount => _ticket?.SubTasks?.Count ?? 0;
+    private int ProgressPercentage => TotalSubTasksCount == 0 ? 0 : (int)((double)CompletedSubTasksCount / TotalSubTasksCount * 100);
 
     protected override async Task OnInitializedAsync()
     {
@@ -154,7 +194,11 @@ else if (!string.IsNullOrEmpty(message))
     {
         _ticket = await ticketService.GetTaskByIdAsync(TicketId, includeTechNotes: true);
 
-        if (_ticket == null)
+        if (_ticket != null)
+        {
+            _ticket.SubTasks = await ticketService.GetSubTasksForTicketAsync(TicketId);
+        }
+        else
         {
             message = "There was an error with retrieving the ticket!";
         }
@@ -172,16 +216,21 @@ else if (!string.IsNullOrEmpty(message))
 
     private async Task SaveTechNotes()
     {
+        if (editor != null)
+        {
+            newTechNotes = await editor.GetContentAsync();
+        }
+
         if (!string.IsNullOrWhiteSpace(newTechNotes))
         {
             var userProfile = await userManager.GetUserAsync((await AuthenticationStateProvider.GetAuthenticationStateAsync()).User);
 
             var techNote = new TechNote
-                {
-                    Notes = newTechNotes,
-                    FullName = userProfile?.FullName,
-                    ProfilePicture = userProfile?.ProfilePicture
-                };
+            {
+                Notes = newTechNotes,
+                FullName = userProfile?.FullName,
+                ProfilePicture = userProfile?.ProfilePicture
+            };
 
             await ticketService.AddTechNoteToTicketAsync(TicketId, techNote);
             newTechNotes = string.Empty;
@@ -194,38 +243,30 @@ else if (!string.IsNullOrEmpty(message))
         }
     }
 
-    private string GetSeverityCssClass(string severity)
+    private async Task AddNewSubTask()
     {
-        switch (severity.ToLower())
+        if (!string.IsNullOrWhiteSpace(newSubTask.Title))
         {
-            case "low":
-                return "bg-success"; // Green
-            case "medium":
-                return "bg-warning"; // Orange
-            case "high":
-                return "bg-danger"; // Red
-            default:
-                return "";
+            await ticketService.AddSubTaskAsync(TicketId, newSubTask);
+            newSubTask = new SubTask();
+            await LoadTicketDetails();
         }
     }
 
-    private async Task DeleteTechNote(int techNoteId)
+    private async Task ToggleSubTaskCompletion(int subTaskId, bool isComplete)
     {
-        await ticketService.DeleteTechNoteAsync(techNoteId);
+        await ticketService.UpdateSubTaskCompletionAsync(subTaskId, isComplete);
         await LoadTicketDetails();
     }
-    private async Task<string> GetUsernameAsync()
-    {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
 
-        if (user.Identity.IsAuthenticated)
+    private string GetSeverityCssClass(string severity)
+    {
+        return severity.ToLower() switch
         {
-            return user.Identity.Name; // This will give you the username
-        }
-        else
-        {
-            return "Anonymous"; // Handle the case when the user is not authenticated
-        }
+            "low" => "bg-success",
+            "medium" => "bg-warning",
+            "high" => "bg-danger",
+            _ => ""
+        };
     }
 }

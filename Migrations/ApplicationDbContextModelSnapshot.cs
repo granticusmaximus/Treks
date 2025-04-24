@@ -370,6 +370,33 @@ namespace Treks.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
+            modelBuilder.Entity("Treks.Models.SubTask", b =>
+                {
+                    b.Property<int>("SubTaskId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsComplete")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TicketId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("SubTaskId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("SubTasks");
+                });
+
             modelBuilder.Entity("Treks.Models.TechNote", b =>
                 {
                     b.Property<int>("Id")
@@ -570,6 +597,17 @@ namespace Treks.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Treks.Models.SubTask", b =>
+                {
+                    b.HasOne("Treks.Models.Ticket", "Ticket")
+                        .WithMany("SubTasks")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ticket");
+                });
+
             modelBuilder.Entity("Treks.Models.Ticket", b =>
                 {
                     b.HasOne("Treks.Models.Company", "AssignedCompany")
@@ -632,6 +670,8 @@ namespace Treks.Migrations
 
             modelBuilder.Entity("Treks.Models.Ticket", b =>
                 {
+                    b.Navigation("SubTasks");
+
                     b.Navigation("TicketTechNotes");
                 });
 #pragma warning restore 612, 618

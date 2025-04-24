@@ -58,7 +58,7 @@ namespace Treks.Services
                 await _context.SaveChangesAsync();
             }
         }
-        
+
         public async Task DeleteTaskAsync(string ticketId)
         {
             var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == ticketId);
@@ -104,6 +104,49 @@ namespace Treks.Services
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task AddSubTaskAsync(string ticketId, SubTask subTask)
+        {
+            subTask.TicketId = ticketId;
+            _context.SubTasks.Add(subTask);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<SubTask>> GetSubTasksForTicketAsync(string ticketId)
+        {
+            return await _context.SubTasks
+                .Where(st => st.TicketId == ticketId)
+                .ToListAsync();
+        }
+
+        public async Task CompleteSubTaskAsync(int subTaskId)
+        {
+            var subTask = await _context.SubTasks.FindAsync(subTaskId);
+            if (subTask != null)
+            {
+                subTask.IsComplete = true;
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task UpdateSubTaskCompletionAsync(int subTaskId, bool isComplete)
+        {
+            // Logic to update the completion status of a subtask
+            var subTask = await _context.SubTasks.FindAsync(subTaskId);
+            if (subTask != null)
+            {
+                subTask.IsComplete = isComplete;
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task DeleteSubTaskAsync(int subTaskId)
+        {
+            var subTask = await _context.SubTasks.FindAsync(subTaskId);
+            if (subTask != null)
+            {
+                _context.SubTasks.Remove(subTask);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

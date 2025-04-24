@@ -32,13 +32,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, str
             .HasForeignKey(ttn => ttn.TechNoteId);
 
         modelBuilder.Entity<ApplicationUser>()
-            .HasMany(u => u.AssignedTickets) 
+            .HasMany(u => u.AssignedTickets)
             .WithOne(t => t.AssignedUser)
             .HasForeignKey(t => t.AssignedUserId)
             .IsRequired(false);
-        
+
         modelBuilder.Entity<LUT_Comments>()
-            .HasOne(c=> c.Company)
+            .HasOne(c => c.Company)
             .WithMany(c => c.Comments)
             .HasForeignKey(c => c.CompanyId);
 
@@ -51,15 +51,21 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, str
             .HasOne(c => c.ParentComment)
             .WithMany(c => c.ChildComments)
             .HasForeignKey(c => c.ParentCommentId)
-            .OnDelete(DeleteBehavior.Restrict); // Prevents cascade delete
+            .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<SubTask>()
+            .HasOne(st => st.Ticket)
+            .WithMany(t => t.SubTasks)
+            .HasForeignKey(st => st.TicketId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     public DbSet<ApplicationUser> ApplicationUser { get; set; }
     public DbSet<TechNote> Notes { get; set; }
-    public new DbSet<Role> Roles { get; set; } 
+    public new DbSet<Role> Roles { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<TicketTechNote> TicketTechNotes { get; set; }
+    public DbSet<SubTask> SubTasks { get; set; }
     public DbSet<LUT_UserRoles> LUT_UserRoles { get; set; }
     public DbSet<LUT_Comments> LUT_Comments { get; set; }
     public DbSet<Company> Companies { get; set; }
