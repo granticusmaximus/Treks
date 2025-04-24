@@ -1,6 +1,7 @@
 @page "/tickets/details/{TicketId}/"
 @using Treks.Models
 @using Treks.Services
+@using Treks
 @inject TicketService ticketService
 @inject NavigationManager navi
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -70,7 +71,7 @@ else
                             }
                         </td>
                         <td>@_ticket.TimeOfCreation.ToShortDateString()</td>
-                        <td>@_ticket.Description</td>
+                        <td>@((MarkupString)_ticket.Description)</td>
                     </tr>
                 </tbody>
             </table>
@@ -129,7 +130,7 @@ else
                                 <img src="data:image/jpeg;base64,@Convert.ToBase64String(ticketTechNote.TechNote.ProfilePicture)" width="30" height="30" alt="Profile Picture" class="rounded-circle" />
                             }
                             <span>@ticketTechNote.TechNote?.FullName</span>
-                            <p>@ticketTechNote.TechNote?.Notes</p>
+                            <p>@((MarkupString?)ticketTechNote.TechNote?.Notes)</p>
                         </div>
                     </div>
                 </div>
@@ -154,9 +155,7 @@ else
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <textarea class="form-control" @bind="newTechNotes" rows="4"></textarea>
-                    </div>
+                    <TinyMCEEditor @ref="editor" UploadUrl="/api/uploads" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
@@ -180,6 +179,7 @@ else if (!string.IsNullOrEmpty(message))
     private bool showModal = false;
     private string message = "";
     private SubTask newSubTask = new SubTask();
+    private TinyMCEEditor? editor;
 
     private int CompletedSubTasksCount => _ticket?.SubTasks?.Count(st => st.IsComplete) ?? 0;
     private int TotalSubTasksCount => _ticket?.SubTasks?.Count ?? 0;
@@ -216,6 +216,11 @@ else if (!string.IsNullOrEmpty(message))
 
     private async Task SaveTechNotes()
     {
+        if (editor != null)
+        {
+            newTechNotes = await editor.GetContentAsync();
+        }
+
         if (!string.IsNullOrWhiteSpace(newTechNotes))
         {
             var userProfile = await userManager.GetUserAsync((await AuthenticationStateProvider.GetAuthenticationStateAsync()).User);
