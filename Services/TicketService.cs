@@ -139,6 +139,18 @@ namespace Treks.Services
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task UpdateSubTaskAsync(SubTask subTask)
+        {
+            var existing = await _context.SubTasks.FindAsync(subTask.SubTaskId);
+            if (existing != null)
+            {
+                existing.Title = subTask.Title;
+                existing.IsComplete = subTask.IsComplete;
+                await _context.SaveChangesAsync();
+            }
+        }
+        
         public async Task DeleteSubTaskAsync(int subTaskId)
         {
             var subTask = await _context.SubTasks.FindAsync(subTaskId);
