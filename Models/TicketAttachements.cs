@@ -8,11 +8,20 @@ namespace Treks.Models
         [Key]
         public int Id { get; set; }
 
-        public string FileName { get; set; }
+        [Required]
+        public string FileName { get; set; } = string.Empty;
+        public string StoredFileName { get; set; } = string.Empty;
+
+        [Required]
+        public string FilePath { get; set; } = string.Empty;
+
+        public DateTime UploadedAt { get; set; } = DateTime.Now;
         public string FileUrl { get; set; }
 
+        [Required]
+        public string TicketId { get; set; } = string.Empty;
+
         [ForeignKey("TicketId")]
-        public string TicketId { get; set; }
-        public virtual Ticket Ticket { get; set; }
+        public Ticket Ticket { get; set; } = null!;
     }
 }
