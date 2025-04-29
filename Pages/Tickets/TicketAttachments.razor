@@ -1,0 +1,53 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using Treks.Models
+@inject IJSRuntime JS
+
+<div class="form-group">
+    <label>Attach Files:</label>
+    <InputFile OnChange="OnInputFileChanged" multiple />
+
+    @if (attachments.Any())
+    {
+        <div class="mt-2">
+            <strong>Uploaded Files:</strong>
+            <ul class="list-group mt-2">
+                @foreach (var file in attachments)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="@file.FilePath" target="_blank">@file.FileName</a>
+                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteAttachment(file)">Delete</button>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string TicketId { get; set; } = string.Empty;
+    [Parameter] public List<TicketAttachment> attachments { get; set; } = new();
+    [Parameter] public EventCallback<List<TicketAttachment>> AttachmentsChanged { get; set; }
+
+    private async Task OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var buffer = new byte[file.Size];
+            await file.OpenReadStream(maxAllowedSize: 1024 * 1024 * 10).ReadAsync(buffer);
+
+            var base64 = Convert.ToBase64String(buffer);
+            var fileName = Path.GetFileName(file.Name);
+
+            var response = await JS.InvokeAsync<string>("uploadFileToServer", base64, fileName, TicketId);
+            attachments.Add(new TicketAttachment { FileName = fileName, FileUrl = response });
+        }
+
+        await AttachmentsChanged.InvokeAsync(attachments);
+    }
+
+    private async Task DeleteAttachment(TicketAttachment file)
+    {
+        attachments.Remove(file);
+        await AttachmentsChanged.InvokeAsync(attachments);
+    }
+}

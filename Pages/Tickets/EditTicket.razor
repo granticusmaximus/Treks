@@ -1,10 +1,3 @@
-@* This update includes all four items:
-   1. Full TinyMCE integration for ticket descriptions with image upload support
-   2. ASP.NET API endpoint setup is assumed at /api/uploads (to be added separately)
-   3. Proper initialization and saving of content
-   4. Placeholder for comments section TinyMCE will be handled separately
-*@
-
 @page "/tickets/edit/{TicketId}/"
 @using Treks.Models
 @using Treks.Services
@@ -47,7 +40,7 @@
 
     <div class="form-group">
         <label for="Description">Description</label>
-        <TinyMCEEditor @ref="editor" UploadUrl="/api/uploads" />
+        <TinyMCEEditor @ref="editor" InitialContent="@initialContent" UploadUrl="/api/uploads" />
         <ValidationMessage For="@(() => ticket.Description)" />
     </div>
 
@@ -92,16 +85,12 @@
 
     @if (!string.IsNullOrEmpty(errorMessage))
     {
-        <div class="alert alert-danger" role="alert">
-            @errorMessage
-        </div>
+        <div class="alert alert-danger" role="alert">@errorMessage</div>
     }
 
     @if (showWarning)
     {
-        <div class="alert alert-warning" role="alert">
-            Please fill in all the required fields.
-        </div>
+        <div class="alert alert-warning" role="alert">Please fill in all the required fields.</div>
     }
 
     <button type="submit" class="btn btn-primary">Save</button>
@@ -110,10 +99,11 @@
 @code {
     [Parameter]
     public string? TicketId { get; set; }
-    private Ticket? ticket;
+    private Ticket? ticket = new();
     private TinyMCEEditor? editor;
-    private List<ApplicationUser> users = new List<ApplicationUser>();
-    private List<Company> companies = new List<Company>();
+    private string initialContent = string.Empty;
+    private List<ApplicationUser> users = new();
+    private List<Company> companies = new();
     private bool showWarning = false;
     private string errorMessage = "";
 
@@ -122,17 +112,11 @@
         if (!string.IsNullOrEmpty(TicketId))
         {
             ticket = await ticketService.GetTaskByIdAsync(TicketId);
+            initialContent = ticket?.Description ?? string.Empty;
         }
+
         users = await applicationUserService.GetAllUsersAsync();
         companies = await companyService.GetAllCompaniesAsync();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender && ticket != null && editor != null)
-        {
-            await editor.SetContentAsync(ticket.Description ?? string.Empty);
-        }
     }
 
     private async Task UpdateTicket()
@@ -145,7 +129,8 @@
 
         ticket.Description = await editor!.GetContentAsync();
 
-        if (string.IsNullOrWhiteSpace(ticket.Title) || string.IsNullOrWhiteSpace(ticket.Description) ||
+        if (string.IsNullOrWhiteSpace(ticket.Title) ||
+            string.IsNullOrWhiteSpace(ticket.Description) ||
             ticket.DueDate == default || string.IsNullOrEmpty(ticket.Severity.ToString()))
         {
             showWarning = true;

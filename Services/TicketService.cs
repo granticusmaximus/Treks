@@ -139,12 +139,66 @@ namespace Treks.Services
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task UpdateSubTaskAsync(SubTask subTask)
+        {
+            var existing = await _context.SubTasks.FindAsync(subTask.SubTaskId);
+            if (existing != null)
+            {
+                existing.Title = subTask.Title;
+                existing.IsComplete = subTask.IsComplete;
+                await _context.SaveChangesAsync();
+            }
+        }
+        
         public async Task DeleteSubTaskAsync(int subTaskId)
         {
             var subTask = await _context.SubTasks.FindAsync(subTaskId);
             if (subTask != null)
             {
                 _context.SubTasks.Remove(subTask);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<TicketAttachment>> GetAttachmentsForTicketAsync(string ticketId)
+        {
+            return await _context.Attachments.Where(a => a.TicketId == ticketId).ToListAsync();
+        }
+
+        public async Task AddAttachmentToTicketAsync(string ticketId, TicketAttachment attachment)
+        {
+            attachment.TicketId = ticketId;
+            _context.Attachments.Add(attachment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAttachmentAsync(int attachmentId)
+        {
+            var attachment = await _context.Attachments.FindAsync(attachmentId);
+            if (attachment != null)
+            {
+                _context.Attachments.Remove(attachment);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateSubTaskTitleAsync(int subTaskId, string newTitle)
+        {
+            var subTask = await _context.SubTasks.FindAsync(subTaskId);
+            if (subTask != null)
+            {
+                subTask.Title = newTitle;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateSubTaskDueDateAsync(int subTaskId, DateTime? dueDate)
+        {
+            var subTask = await _context.SubTasks.FindAsync(subTaskId);
+            if (subTask != null)
+            {
+                subTask.DueDate = dueDate;
                 await _context.SaveChangesAsync();
             }
         }

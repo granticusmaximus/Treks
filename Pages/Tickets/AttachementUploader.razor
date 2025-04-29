@@ -1,0 +1,73 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using Treks.Models
+@using Treks.Services
+@inject Treks.Services.UploadService uploadService
+@inject TicketService ticketService
+
+@if (isLoading)
+{
+    <div class="alert alert-info">Uploading...</div>
+}
+
+<div class="mb-3">
+    <label for="fileUpload" class="form-label">Upload Attachments</label>
+    <InputFile OnChange="HandleFileSelected" multiple />
+</div>
+
+@if (attachments.Any())
+{
+    <h5>Attachments</h5>
+    <ul class="list-group">
+        @foreach (var attachment in attachments)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="@attachment.FilePath" target="_blank">@attachment.FileName</a>
+                <button class="btn btn-danger btn-sm" @onclick="() => DeleteAttachment(attachment.Id)">Delete</button>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public string TicketId { get; set; } = string.Empty;
+
+    private List<TicketAttachment> attachments = new();
+    private bool isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAttachments();
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        isLoading = true;
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var uploadedFilePath = await uploadService.UploadFileAsync(file);
+
+            var attachment = new TicketAttachment
+            {
+                FileName = file.Name,
+                FilePath = uploadedFilePath,
+                UploadedAt = DateTime.UtcNow
+            };
+
+            await ticketService.AddAttachmentToTicketAsync(TicketId, attachment);
+        }
+        await LoadAttachments();
+        isLoading = false;
+    }
+
+    private async Task LoadAttachments()
+    {
+        attachments = await ticketService.GetAttachmentsForTicketAsync(TicketId);
+    }
+
+    private async Task DeleteAttachment(int id)
+    {
+        await ticketService.DeleteAttachmentAsync(id);
+        await LoadAttachments();
+    }
+}

@@ -11,15 +11,18 @@ namespace Treks.Models
         [Required]
         public string Title { get; set; }
 
-        public string? Description { get; set; }
-
         public bool IsComplete { get; set; }
 
-        // Foreign key to Ticket
         [Required]
-        [ForeignKey("Ticket")]
         public string TicketId { get; set; }
-        
-        public virtual Ticket Ticket { get; set; }
+
+        [ForeignKey("TicketId")]
+        public Ticket Ticket { get; set; }
+
+        // 🆕 Added Properties
+        [Range(1, 5, ErrorMessage = "Priority must be between 1 (High) and 5 (Low).")]
+        public int Priority { get; set; } = 3; // Default to Medium priority
+
+        public DateTime? DueDate { get; set; } // Optional
     }
-}
+} 

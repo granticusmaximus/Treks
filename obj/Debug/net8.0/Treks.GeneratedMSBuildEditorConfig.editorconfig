@@ -68,12 +68,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUm9sZXMvUm9sZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Tickets/AttachementUploader.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVGlja2V0cy9BdHRhY2hlbWVudFVwbG9hZGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Tickets/CreateTicket.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVGlja2V0cy9DcmVhdGVUaWNrZXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Tickets/EditTicket.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVGlja2V0cy9FZGl0VGlja2V0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Tickets/TicketAttachments.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVGlja2V0cy9UaWNrZXRBdHRhY2htZW50cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Tickets/TicketDetails.razor]

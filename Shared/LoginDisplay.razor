@@ -39,7 +39,7 @@
 
 
 @code {
-    private ApplicationUser CurrentUser { get; set; }
+    private ApplicationUser? CurrentUser { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -51,9 +51,16 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        if (user.Identity.IsAuthenticated)
+        if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-            CurrentUser = await UserManager.FindByNameAsync(user.Identity.Name);
+            if (!string.IsNullOrEmpty(user.Identity?.Name))
+            {
+                var foundUser = await UserManager.FindByNameAsync(user.Identity.Name);
+                if (foundUser != null)
+                {
+                    CurrentUser = foundUser;
+                }
+            }
         }
     }
 

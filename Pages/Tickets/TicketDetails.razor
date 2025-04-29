@@ -2,7 +2,9 @@
 @using Treks.Models
 @using Treks.Services
 @using Treks
+@using Microsoft.EntityFrameworkCore
 @inject TicketService ticketService
+@inject CompanyService companyService
 @inject NavigationManager navi
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager
@@ -11,6 +13,7 @@
 <NavLink href="/tickets" class="btn btn-secondary mb-3">
     <span aria-hidden="true">&larr;</span> Back to Tickets
 </NavLink>
+
 <h2>
     @_ticket?.Title Details
     @if (_ticket?.SubTasks?.Any() == true)
@@ -35,6 +38,7 @@ else
 {
     <p><strong>SubTasks:</strong> None</p>
 }
+
 <hr />
 
 @if (_ticket != null)
@@ -78,31 +82,152 @@ else
         </div>
     </div>
 
+    <div class="mt-3">
+        <button class="btn btn-warning" @onclick="OpenEditModal">Edit Ticket</button>
+    </div>
+
+    <!-- Edit Ticket Modal -->
+    <div class="modal fade @(showEditModal ? "show d-block" : "")" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Ticket</h5>
+                    <button type="button" class="close" @onclick="CloseEditModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <EditForm Model="@_ticket" OnValidSubmit="UpdateTicket">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <InputText id="title" class="form-control" @bind-Value="_ticket.Title" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dueDate">Due Date</label>
+                            <InputDate id="dueDate" class="form-control" @bind-Value="_ticket.DueDate" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <TinyMCEEditor @ref="editor" UploadUrl="/api/uploads" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="severity">Severity</label>
+                            <InputSelect id="severity" class="form-control" @bind-Value="_ticket.Severity">
+                                @foreach (var severity in Enum.GetValues<TicketSeverity>())
+                                {
+                                    <option value="@severity">@severity</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assignedUser">Assigned User</label>
+                            <InputSelect id="assignedUser" class="form-control" @bind-Value="_ticket.AssignedUserId">
+                                @foreach (var user in users)
+                                {
+                                    <option value="@user.Id">@user.FullName</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assignedCompany">Assigned Company</label>
+                            <InputSelect id="assignedCompany" class="form-control" @bind-Value="_ticket.AssignedCompanyId">
+                                @foreach (var company in companies)
+                                {
+                                    <option value="@company.Id">@company.Name</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="checkbox" id="isComplete" @bind="_ticket.isComplete" />
+                            <label for="isComplete">Mark as Complete</label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseEditModal">Cancel</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+
     <hr />
     <h3>SubTasks</h3>
 
     @if (_ticket.SubTasks != null && _ticket.SubTasks.Any())
-    {
-        <ul class="list-group">
-            @foreach (var subtask in _ticket.SubTasks)
-            {
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
+{
+    <ul class="list-group">
+        @foreach (var subtask in _ticket.SubTasks
+            .OrderBy(st => st.IsComplete)
+            .ThenBy(st =>
+                st.DueDate.HasValue
+                    ? (st.DueDate.Value.Date - DateTime.Today).Days
+                    : int.MaxValue
+            ))
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center">
                         <input type="checkbox"
                                checked="@subtask.IsComplete"
                                @onchange="@(async (e) => await ToggleSubTaskCompletion(subtask.SubTaskId, (bool)(e.Value ?? false)))" />
-                        &nbsp; @subtask.Title
+
+                        @if (editSubTaskId == subtask.SubTaskId)
+                        {
+                            <InputText class="form-control ms-2" style="width: 300px;"
+                                       @bind-Value="editSubTaskTitle"
+                                       @onblur="() => SaveEditedSubTask(subtask.SubTaskId)"
+                                       @onkeypress="(e => HandleEnterKey(e, subtask.SubTaskId))" />
+                        }
+                        else
+                        {
+                            <span @ondblclick="() => BeginEditSubTask(subtask.SubTaskId, subtask.Title)" style="cursor: pointer;" class="ms-2">
+                                @subtask.Title
+                                <i class="oi oi-pencil ms-1" style="opacity: 0.5;"></i>
+                            </span>
+                        }
                     </div>
-                </li>
-            }
-        </ul>
-    }
+
+                    <div class="d-flex align-items-center mt-2">
+                        <label class="me-2">Due Date:</label>
+
+                        <InputDate @bind-Value="subtask.DueDate"
+                                class="form-control"
+                                style="width: 180px; @GetDueDateColorStyle(subtask)"
+                                @onchange="@(async e => await UpdateSubTaskDueDate(subtask.SubTaskId, (DateTime?)e.Value))" />
+
+                        @if (subtask.DueDate.HasValue && !subtask.IsComplete)
+                        {
+                            var daysUntil = (subtask.DueDate.Value.Date - DateTime.Today).Days;
+                            <small class="ms-2 fst-italic" style="@GetDueDateTextColor(subtask)">
+                                @(
+                                    daysUntil < 0
+                                        ? $"Overdue by {Math.Abs(daysUntil)} day(s)"
+                                        : daysUntil == 0
+                                            ? "Due Today"
+                                            : $"Due in {daysUntil} day(s)"
+                                )
+                            </small>
+                        }
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+}
     else
     {
         <p>No SubTasks for this ticket yet.</p>
     }
 
-    <EditForm Model="@newSubTask" OnValidSubmit="@(() => AddNewSubTask())" class="mt-3">
+    <EditForm Model="@newSubTask" OnValidSubmit="AddNewSubTask" class="mt-3">
         <div class="input-group">
             <InputText class="form-control" placeholder="New SubTask Title..." @bind-Value="newSubTask.Title" />
             <div class="input-group-append">
@@ -118,8 +243,8 @@ else
     {
         @foreach (var ticketTechNote in _ticket.TicketTechNotes)
         {
-            <div class="comments">
-                <div class="username">
+            <div class="comments mb-3">
+                <div class="username font-weight-bold">
                     @ticketTechNote.TechNote?.Username
                 </div>
                 <div class="comment">
@@ -127,10 +252,10 @@ else
                         <div class="col-lg-12">
                             @if (ticketTechNote.TechNote?.ProfilePicture != null)
                             {
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(ticketTechNote.TechNote.ProfilePicture)" width="30" height="30" alt="Profile Picture" class="rounded-circle" />
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(ticketTechNote.TechNote.ProfilePicture)" width="30" height="30" class="rounded-circle" />
                             }
-                            <span>@ticketTechNote.TechNote?.FullName</span>
-                            <p>@((MarkupString?)ticketTechNote.TechNote?.Notes)</p>
+                            <span class="ml-2">@ticketTechNote.TechNote?.FullName</span>
+                            <p class="mt-2">@((MarkupString?)ticketTechNote.TechNote?.Notes)</p>
                         </div>
                     </div>
                 </div>
@@ -142,23 +267,23 @@ else
         <p>No ticket notes available.</p>
     }
 
-    <button class="btn btn-primary mt-3" @onclick="OpenModal">Add Comment</button>
+    <button class="btn btn-primary mt-3" @onclick="OpenCommentModal">Add Comment</button>
 
-    <!-- Tech Note Modal -->
-    <div class="modal fade @(showModal ? "show d-block" : "d-none")" tabindex="-1" role="dialog">
+    <!-- Add Comment Modal -->
+    <div class="modal fade @(showCommentModal ? "show d-block" : "")" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add Comment</h5>
-                    <button type="button" class="close" @onclick="CloseModal">
+                    <button type="button" class="close" @onclick="CloseCommentModal">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <TinyMCEEditor @ref="editor" UploadUrl="/api/uploads" />
+                    <TinyMCEEditor @ref="commentEditor" UploadUrl="/api/uploads" />
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CloseCommentModal">Close</button>
                     <button type="button" class="btn btn-primary" @onclick="SaveTechNotes">Save Comment</button>
                 </div>
             </div>
@@ -169,17 +294,25 @@ else if (!string.IsNullOrEmpty(message))
 {
     <div class="alert alert-info mt-3">@message</div>
 }
+@if (_ticket != null)
+{
+    <AttachmentUploader TicketId="@_ticket.TicketId" />
+}
+<AttachmentUploader TicketId="@_ticket.TicketId" />
 
 @code {
     [Parameter]
     public string TicketId { get; set; }
 
-    private Ticket _ticket;
-    private string newTechNotes = string.Empty;
-    private bool showModal = false;
-    private string message = "";
-    private SubTask newSubTask = new SubTask();
+    private Ticket _ticket = new Ticket();
     private TinyMCEEditor? editor;
+    private TinyMCEEditor? commentEditor;
+    private List<ApplicationUser> users = new();
+    private List<Company> companies = new();
+    private bool showEditModal = false;
+    private bool showCommentModal = false;
+    private SubTask newSubTask = new SubTask();
+    private string message = "";
 
     private int CompletedSubTasksCount => _ticket?.SubTasks?.Count(st => st.IsComplete) ?? 0;
     private int TotalSubTasksCount => _ticket?.SubTasks?.Count ?? 0;
@@ -187,13 +320,14 @@ else if (!string.IsNullOrEmpty(message))
 
     protected override async Task OnInitializedAsync()
     {
+        users = await userManager.Users.ToListAsync();
+        companies = await companyService.GetAllCompaniesAsync();
         await LoadTicketDetails();
     }
 
     private async Task LoadTicketDetails()
     {
         _ticket = await ticketService.GetTaskByIdAsync(TicketId, includeTechNotes: true);
-
         if (_ticket != null)
         {
             _ticket.SubTasks = await ticketService.GetSubTasksForTicketAsync(TicketId);
@@ -204,42 +338,40 @@ else if (!string.IsNullOrEmpty(message))
         }
     }
 
-    private void OpenModal()
+    private async Task UpdateTicket()
     {
-        showModal = true;
+        _ticket.Description = await editor!.GetContentAsync();
+        await ticketService.UpdateTaskAsync(_ticket);
+        CloseEditModal();
+        await LoadTicketDetails();
     }
 
-    private void CloseModal()
+    private async Task SaveSubTasks()
     {
-        showModal = false;
+        foreach (var subtask in _ticket.SubTasks)
+        {
+            await ticketService.UpdateSubTaskCompletionAsync(subtask.SubTaskId, subtask.IsComplete);
+        }
+        await LoadTicketDetails();
     }
 
     private async Task SaveTechNotes()
     {
-        if (editor != null)
-        {
-            newTechNotes = await editor.GetContentAsync();
-        }
-
-        if (!string.IsNullOrWhiteSpace(newTechNotes))
+        var content = await commentEditor!.GetContentAsync();
+        if (!string.IsNullOrWhiteSpace(content))
         {
             var userProfile = await userManager.GetUserAsync((await AuthenticationStateProvider.GetAuthenticationStateAsync()).User);
 
             var techNote = new TechNote
             {
-                Notes = newTechNotes,
+                Notes = content,
                 FullName = userProfile?.FullName,
                 ProfilePicture = userProfile?.ProfilePicture
             };
 
             await ticketService.AddTechNoteToTicketAsync(TicketId, techNote);
-            newTechNotes = string.Empty;
+            CloseCommentModal();
             await LoadTicketDetails();
-            CloseModal();
-        }
-        else
-        {
-            message = "There was an error with saving the note!";
         }
     }
 
@@ -268,5 +400,70 @@ else if (!string.IsNullOrEmpty(message))
             "high" => "bg-danger",
             _ => ""
         };
+    }
+
+    private void OpenEditModal() => showEditModal = true;
+    private void CloseEditModal() => showEditModal = false;
+    private void OpenCommentModal() => showCommentModal = true;
+    private void CloseCommentModal() => showCommentModal = false;
+
+    private int? editSubTaskId = null;
+    private string editSubTaskTitle = "";
+
+    private void BeginEditSubTask(int subTaskId, string currentTitle)
+    {
+        editSubTaskId = subTaskId;
+        editSubTaskTitle = currentTitle;
+    }
+
+    private async Task SaveEditedSubTask(int subTaskId)
+    {
+        if (!string.IsNullOrWhiteSpace(editSubTaskTitle))
+        {
+            await ticketService.UpdateSubTaskTitleAsync(subTaskId, editSubTaskTitle);
+            await LoadTicketDetails();
+        }
+        editSubTaskId = null;
+        editSubTaskTitle = "";
+    }
+
+    private async Task HandleEnterKey(KeyboardEventArgs e, int subTaskId)
+    {
+        if (e.Key == "Enter")
+        {
+            await SaveEditedSubTask(subTaskId);
+        }
+    }
+
+    private async Task UpdateSubTaskDueDate(int subTaskId, DateTime? dueDate)
+    {
+        await ticketService.UpdateSubTaskDueDateAsync(subTaskId, dueDate);
+        await LoadTicketDetails();
+    }
+
+    private string GetDueDateColorStyle(SubTask subTask)
+    {
+        if (!subTask.DueDate.HasValue || subTask.IsComplete) return "";
+
+        var daysUntil = (subTask.DueDate.Value.Date - DateTime.Today).Days;
+        if (daysUntil < 0)
+            return "border: 1px solid red;";
+        if (daysUntil <= 3)
+            return "border: 1px solid orange;";
+        
+        return "";
+    }
+
+    private string GetDueDateTextColor(SubTask subTask)
+    {
+        if (!subTask.DueDate.HasValue || subTask.IsComplete) return "";
+
+        var daysUntil = (subTask.DueDate.Value.Date - DateTime.Today).Days;
+        if (daysUntil < 0)
+            return "color: red;";
+        if (daysUntil <= 3)
+            return "color: orange;";
+        
+        return "color: green;";
     }
 }
