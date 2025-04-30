@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Treks.Data;
 
@@ -10,9 +11,11 @@ using Treks.Data;
 namespace Treks.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430151414_AddTicketChangeLog")]
+    partial class AddTicketChangeLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -136,6 +139,41 @@ namespace Treks.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("TicketChangeLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ChangeDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ChangedByUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FieldChanged")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NewValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OldValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TicketId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChangedByUserId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("TicketChangeLogs");
                 });
 
             modelBuilder.Entity("Treks.Models.ApplicationUser", b =>
@@ -500,36 +538,6 @@ namespace Treks.Migrations
                     b.ToTable("Attachments");
                 });
 
-            modelBuilder.Entity("Treks.Models.TicketChangeLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("ChangeDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ChangeDescription")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ChangedByUserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TicketId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChangedByUserId");
-
-                    b.HasIndex("TicketId");
-
-                    b.ToTable("TicketChangeLogs");
-                });
-
             modelBuilder.Entity("Treks.Models.TicketTechNote", b =>
                 {
                     b.Property<string>("TicketId")
@@ -609,6 +617,23 @@ namespace Treks.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TicketChangeLog", b =>
+                {
+                    b.HasOne("Treks.Models.ApplicationUser", "ChangedByUser")
+                        .WithMany()
+                        .HasForeignKey("ChangedByUserId");
+
+                    b.HasOne("Treks.Models.Ticket", "Ticket")
+                        .WithMany("ChangeLogs")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChangedByUser");
+
+                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("Treks.Models.ApplicationUser", b =>
@@ -701,25 +726,6 @@ namespace Treks.Migrations
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Ticket");
-                });
-
-            modelBuilder.Entity("Treks.Models.TicketChangeLog", b =>
-                {
-                    b.HasOne("Treks.Models.ApplicationUser", "ChangedByUser")
-                        .WithMany()
-                        .HasForeignKey("ChangedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Treks.Models.Ticket", "Ticket")
-                        .WithMany("ChangeLogs")
-                        .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ChangedByUser");
 
                     b.Navigation("Ticket");
                 });

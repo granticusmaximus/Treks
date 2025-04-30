@@ -30,6 +30,7 @@ namespace Treks.Models
         public virtual ICollection<TicketTechNote> TicketTechNotes { get; set; }
         public virtual ICollection<SubTask> SubTasks { get; set; }
         public ICollection<TicketAttachment>? Attachments { get; set; }
+        public virtual ICollection<TicketChangeLog> ChangeLogs { get; set; } = new List<TicketChangeLog>();
 
     }
 

@@ -66,6 +66,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, str
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<TicketTechNote> TicketTechNotes { get; set; }
     public DbSet<SubTask> SubTasks { get; set; }
+    public DbSet<TicketChangeLog> TicketChangeLogs { get; set; }
     public DbSet<TicketAttachment> Attachments { get; set; }
     public DbSet<LUT_UserRoles> LUT_UserRoles { get; set; }
     public DbSet<LUT_Comments> LUT_Comments { get; set; }
