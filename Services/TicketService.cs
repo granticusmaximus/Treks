@@ -11,10 +11,12 @@ namespace Treks.Services
     public class TicketService
     {
         private readonly ApplicationDbContext _context;
+        private readonly INotificationService _notificationService;
 
-        public TicketService(ApplicationDbContext context)
+        public TicketService(ApplicationDbContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<List<Ticket>> GetAllTasksAsync()
@@ -45,18 +47,54 @@ namespace Treks.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateTaskAsync(Ticket ticket)
+        public async Task UpdateTaskAsync(Ticket updatedTicket)
         {
-            var existingTicket = await _context.Tickets.FindAsync(ticket.TicketId);
-            if (existingTicket != null)
+            var originalTicket = await _context.Tickets
+                .Include(t => t.AssignedUser)
+                .Include(t => t.AssignedCompany)
+                .FirstOrDefaultAsync(t => t.TicketId == updatedTicket.TicketId);
+
+            if (originalTicket == null) return;
+
+            var changeLog = new TicketChangeLog
             {
-                existingTicket.isComplete = ticket.isComplete;
-                existingTicket.Title = ticket.Title;
-                existingTicket.Description = ticket.Description;
-                existingTicket.Severity = ticket.Severity;
-                existingTicket.DueDate = ticket.DueDate;
-                await _context.SaveChangesAsync();
-            }
+                TicketId = originalTicket.TicketId,
+                ChangedByUserId = updatedTicket.AssignedUser?.FullName ?? "Unknown",
+                ChangeDate = DateTime.Now,
+                ChangeDescription = GenerateChangeSummary(originalTicket, updatedTicket)
+            };
+
+            _context.TicketChangeLogs.Add(changeLog);
+
+            originalTicket.Title = updatedTicket.Title;
+            originalTicket.Description = updatedTicket.Description;
+            originalTicket.Severity = updatedTicket.Severity;
+            originalTicket.DueDate = updatedTicket.DueDate;
+            originalTicket.isComplete = updatedTicket.isComplete;
+            originalTicket.AssignedUserId = updatedTicket.AssignedUserId;
+            originalTicket.AssignedCompanyId = updatedTicket.AssignedCompanyId;
+
+            await _context.SaveChangesAsync();
+
+            await _notificationService.NotifyTicketChangedAsync(originalTicket);
+        }
+
+        private string GenerateChangeSummary(Ticket original, Ticket updated)
+        {
+            var changes = new List<string>();
+
+            if (original.Title != updated.Title)
+                changes.Add($"Title changed from '{original.Title}' to '{updated.Title}'");
+            if (original.Description != updated.Description)
+                changes.Add("Description updated");
+            if (original.Severity != updated.Severity)
+                changes.Add($"Severity changed from {original.Severity} to {updated.Severity}");
+            if (original.DueDate != updated.DueDate)
+                changes.Add($"Due date changed from {original.DueDate.ToShortDateString()} to {updated.DueDate.ToShortDateString()}");
+            if (original.isComplete != updated.isComplete)
+                changes.Add($"Completion status changed to {(updated.isComplete ? "Complete" : "Incomplete")}");
+
+            return string.Join(", ", changes);
         }
 
         public async Task DeleteTaskAsync(string ticketId)
@@ -89,14 +127,12 @@ namespace Treks.Services
 
         public async Task DeleteTechNoteAsync(int techNoteId)
         {
-            // Remove relationships in the junction table
             var ticketTechNotes = await _context.TicketTechNotes
                 .Where(ttn => ttn.TechNoteId == techNoteId)
                 .ToListAsync();
 
             _context.TicketTechNotes.RemoveRange(ticketTechNotes);
 
-            // Remove the TechNote itself
             var techNote = await _context.Notes.FindAsync(techNoteId);
             if (techNote != null)
             {
@@ -129,9 +165,9 @@ namespace Treks.Services
                 await _context.SaveChangesAsync();
             }
         }
+
         public async Task UpdateSubTaskCompletionAsync(int subTaskId, bool isComplete)
         {
-            // Logic to update the completion status of a subtask
             var subTask = await _context.SubTasks.FindAsync(subTaskId);
             if (subTask != null)
             {
@@ -140,45 +176,12 @@ namespace Treks.Services
             }
         }
 
-        public async Task UpdateSubTaskAsync(SubTask subTask)
-        {
-            var existing = await _context.SubTasks.FindAsync(subTask.SubTaskId);
-            if (existing != null)
-            {
-                existing.Title = subTask.Title;
-                existing.IsComplete = subTask.IsComplete;
-                await _context.SaveChangesAsync();
-            }
-        }
-        
         public async Task DeleteSubTaskAsync(int subTaskId)
         {
             var subTask = await _context.SubTasks.FindAsync(subTaskId);
             if (subTask != null)
             {
                 _context.SubTasks.Remove(subTask);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task<List<TicketAttachment>> GetAttachmentsForTicketAsync(string ticketId)
-        {
-            return await _context.Attachments.Where(a => a.TicketId == ticketId).ToListAsync();
-        }
-
-        public async Task AddAttachmentToTicketAsync(string ticketId, TicketAttachment attachment)
-        {
-            attachment.TicketId = ticketId;
-            _context.Attachments.Add(attachment);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAttachmentAsync(int attachmentId)
-        {
-            var attachment = await _context.Attachments.FindAsync(attachmentId);
-            if (attachment != null)
-            {
-                _context.Attachments.Remove(attachment);
                 await _context.SaveChangesAsync();
             }
         }

@@ -199,9 +199,9 @@ else
                         <label class="me-2">Due Date:</label>
 
                         <InputDate @bind-Value="subtask.DueDate"
-                                class="form-control"
-                                style="width: 180px; @GetDueDateColorStyle(subtask)"
-                                @onchange="@(async e => await UpdateSubTaskDueDate(subtask.SubTaskId, (DateTime?)e.Value))" />
+                            class="form-control"
+                            style="@($"width: 180px; {GetDueDateColorStyle(subtask)}")"
+                            @onchange="@(async e => await UpdateSubTaskDueDate(subtask.SubTaskId, (DateTime?)e.Value))" />
 
                         @if (subtask.DueDate.HasValue && !subtask.IsComplete)
                         {
