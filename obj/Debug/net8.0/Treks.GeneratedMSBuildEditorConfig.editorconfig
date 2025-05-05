@@ -96,6 +96,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVGlja2V0cy9UaW55TUNFRWRpdG9yLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Toast.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9hc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Users/Delete.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVXNlcnMvRGVsZXRlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

@@ -1,17 +1,16 @@
-using Treks.Models;
+using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.SignalR;
-using Treks.Hubs; // If you're using SignalR
-using System.Net.Mail;
-using System.Net;
+using Microsoft.Extensions.Logging;
+using Treks.Hubs;
+using Treks.Models;
 
 namespace Treks.Services
 {
     public class NotificationService : INotificationService
     {
         private readonly ILogger<NotificationService> _logger;
-        private readonly IEmailService _emailService; // Optional
+        private readonly IEmailService _emailService;
         private readonly IHubContext<NotificationHub> _hubContext;
 
         public NotificationService(
@@ -24,21 +23,57 @@ namespace Treks.Services
             _hubContext = hubContext;
         }
 
+        public async Task NotifyUserAsync(ApplicationUser recipient, string subject, string message)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(recipient.Email))
+                {
+                    await _emailService.SendEmailAsync(recipient.Email, subject, message);
+                    _logger.LogInformation("Email sent to {Email}", recipient.Email);
+                }
+
+                if (!string.IsNullOrWhiteSpace(recipient.Id))
+                {
+                    await _hubContext.Clients.User(recipient.Id)
+                        .SendAsync("ReceiveNotification", message);
+                    _logger.LogInformation("SignalR toast sent to user {UserId}", recipient.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to notify user {UserId}", recipient.Id);
+            }
+        }
+
         public async Task NotifyTicketChangedAsync(Ticket ticket)
         {
-            // Send SignalR toast notification (on-screen)
-            await _hubContext.Clients.User(ticket.AssignedUserId)
-                .SendAsync("ReceiveNotification", $"Ticket '{ticket.Title}' has been updated.");
-
-            // Send Email
-            if (!string.IsNullOrEmpty(ticket.AssignedUser?.Email))
+            if (ticket.AssignedUser == null)
             {
-                var subject = $"Ticket '{ticket.Title}' has been updated";
-                var body = $"Changes were made to ticket '{ticket.Title}'. Please review the updates.";
-                await _emailService.SendEmailAsync(ticket.AssignedUser.Email, subject, body);
+                _logger.LogWarning("Cannot notify: Ticket has no assigned user.");
+                return;
             }
 
-            _logger.LogInformation($"Notification sent for ticket '{ticket.TicketId}'");
+            string subject = $"Ticket '{ticket.Title}' Updated";
+            string body = $"Hello {ticket.AssignedUser.FullName},\n\n" +
+                          $"The ticket titled \"{ticket.Title}\" has been updated.\n" +
+                          $"Please review the changes.\n\nThanks,\nTreks Team";
+
+            await NotifyUserAsync(ticket.AssignedUser, subject, body);
+        }
+
+        public async Task ShowToastAsync(string message)
+        {
+            try
+            {
+                // Broadcasts to all connected users. Adjust to individual targeting as needed.
+                await _hubContext.Clients.All.SendAsync("ReceiveToast", message);
+                _logger.LogInformation("Global toast notification sent.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error broadcasting toast message.");
+            }
         }
     }
 }
