@@ -27,7 +27,6 @@ builder.Services.AddScoped<CompanyService>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<UploadService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 builder.Services.AddSingleton<ToastService>();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
