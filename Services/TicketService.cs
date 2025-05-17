@@ -11,12 +11,10 @@ namespace Treks.Services
     public class TicketService
     {
         private readonly ApplicationDbContext _context;
-        private readonly INotificationService _notificationService;
 
-        public TicketService(ApplicationDbContext context, INotificationService notificationService)
+        public TicketService(ApplicationDbContext context)
         {
             _context = context;
-            _notificationService = notificationService;
         }
 
         public async Task<List<Ticket>> GetAllTasksAsync()
@@ -75,8 +73,6 @@ namespace Treks.Services
             originalTicket.AssignedCompanyId = updatedTicket.AssignedCompanyId;
 
             await _context.SaveChangesAsync();
-
-            await _notificationService.NotifyTicketChangedAsync(originalTicket);
         }
 
         private string GenerateChangeSummary(Ticket original, Ticket updated)

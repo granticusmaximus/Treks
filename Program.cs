@@ -9,6 +9,7 @@ using Treks.Services;
 using Treks.Models;
 using System.Net;
 using System.Net.Mail;
+using Treks.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -26,8 +27,8 @@ builder.Services.AddScoped<CompanyService>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<UploadService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+builder.Services.AddSingleton<ToastService>();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
 
 
@@ -66,5 +67,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+app.MapHub<NotificationHub>("/notificationhub");
 
 app.Run();

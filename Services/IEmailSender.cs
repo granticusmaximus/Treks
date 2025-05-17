@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
-
-public interface IEmailSender
+namespace Treks.Services
 {
-    Task SendEmailAsync(string email, string subject, string message);
+    public interface IEmailService
+    {
+        Task SendEmailAsync(string email, string subject, string message);
+    }
 }

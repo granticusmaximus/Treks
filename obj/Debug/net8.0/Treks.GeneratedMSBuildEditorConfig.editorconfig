@@ -1,11 +1,19 @@
 is_global = true
 build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Treks
 build_property.RootNamespace = Treks
@@ -68,10 +76,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUm9sZXMvUm9sZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Tickets/AttachementUploader.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVGlja2V0cy9BdHRhY2hlbWVudFVwbG9hZGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Tickets/CreateTicket.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVGlja2V0cy9DcmVhdGVUaWNrZXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -94,6 +98,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Tickets/TinyMCEEditor.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVGlja2V0cy9UaW55TUNFRWRpdG9yLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Toast.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9hc3QucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/grantwatson/Desktop/Development/CSharp/Treks/Pages/Users/Delete.razor]

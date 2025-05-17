@@ -49,6 +49,10 @@
       "PackagePath": "staticwebassets/css/open-iconic/font/fonts/open-iconic.woff"
     },
     {
+      "Id": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/css/site 2.css",
+      "PackagePath": "staticwebassets/css/site 2.css"
+    },
+    {
       "Id": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
     },
@@ -75,6 +79,10 @@
     {
       "Id": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.snow.css",
       "PackagePath": "staticwebassets/js/texteditor/quill.snow.css"
+    },
+    {
+      "Id": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/tinymce-wrapper 2.js",
+      "PackagePath": "staticwebassets/js/tinymce-wrapper 2.js"
     },
     {
       "Id": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/tinymce-wrapper.js",
