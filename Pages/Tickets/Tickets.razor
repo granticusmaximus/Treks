@@ -6,53 +6,208 @@
 @attribute [AllowAnonymous]
 
 <style>
-    .kanban-column {
-        min-height: 400px;
-        background-color: #f8f9fa;
+    .action-buttons button {
+        padding: 0.2rem 0.4rem;
+        margin-right: 0.2rem;
+        vertical-align: middle;
+    }
+
+    .action-col {
+        width: 15%;
+    }
+
+    .action-buttons-right {
+        float: right;
     }
 </style>
 
-<div class="container mt-4">
-    <div class="text-center mb-4">
+<center>
+    <div class="col-md-6">
         <button @onclick="OpenAddNewTicketModal" class="btn btn-warning">Create New Task</button>
     </div>
+</center>
 
-    <div class="d-flex justify-content-around flex-wrap">
-        <!-- To Do Column -->
-        <div class="kanban-column border rounded p-2 m-2 flex-fill" style="min-width: 300px;">
-            <h4 class="text-center">To Do</h4>
-            @foreach (var task in tasksToBeCompleted.Where(t => !t.isComplete && t.DueDate > DateTime.Today))
-            {
-                @KanbanCard(task)
-            }
-        </div>
+<hr />
 
-        <!-- In Progress Column -->
-        <div class="kanban-column border rounded p-2 m-2 flex-fill" style="min-width: 300px;">
-            <h4 class="text-center">In Progress</h4>
-            @foreach (var task in tasksToBeCompleted.Where(t => !t.isComplete && t.DueDate <= DateTime.Today))
-            {
-                @KanbanCard(task)
-            }
-        </div>
-
-        <!-- Completed Column -->
-        <div class="kanban-column border rounded p-2 m-2 flex-fill" style="min-width: 300px;">
-            <h4 class="text-center">Completed</h4>
-            @foreach (var task in completedTasks)
-            {
-                @KanbanCard(task)
-            }
-        </div>
+<center>
+    <div class="btn-group flex-row justify-content-evenly">
+        <button @onclick="(() => SortTickets(TicketField.Severity))" class="btn btn-primary filter-button">Severity</button>
+        <button @onclick="(() => SortTickets(TicketField.DueDate))" class="btn btn-primary filter-button">Due Date</button>
+        <button @onclick="(() => SortTickets(TicketField.AssignedUserId))" class="btn btn-primary filter-button">Assigned User</button>
+        <button @onclick="(() => SortTickets(TicketField.AssignedCompanyId))" class="btn btn-primary filter-button">Assigned Company</button>
     </div>
-</div>
+</center>
 
-<!-- Ticket Modal -->
-<div class="modal fade @(showAddNewTicketModal ? "show d-block" : "")" id="addTaskModal" tabindex="-1" role="dialog">
+<!-- Tasks in Progress Section -->
+<h3>
+    <br />
+    <button class="btn btn-link" @onclick="() => showInProgressTasks = !showInProgressTasks">
+        @if (showInProgressTasks)
+        {
+            <button class="btn btn-outline-primary"><i class="oi oi-chevron-top"></i> Hide In Progress</button>
+        }
+        else
+        {
+            <button class="btn btn-outline-primary"><i class="oi oi-chevron-bottom"></i> Show In Progress</button>
+        }
+    </button>
+</h3>
+
+@if (showInProgressTasks)
+{
+    <h3>In Progress</h3>
+    <hr />
+    @if (tasksToBeCompleted == null)
+    {
+        <p>Loading tasks to be completed...</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr class="text-center">
+                    <th scope="col">Title</th>
+                    <th scope="col">Severity</th>
+                    <th scope="col">Assigned User</th>
+                    <th scope="col">Company</th>
+                    <th scope="col">Due Date</th>
+                    <th scope="col">SubTasks</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in tasksToBeCompleted)
+                {
+                    <tr style="vertical-align: middle;">
+                        <td>@task.Title</td>
+                        <td class="@GetSeverityCssClass(task.Severity.ToString()) text-uppercase text-white text-center" style="font-weight: 700">@task.Severity</td>
+                        <td class="text-center">
+                            @if (task.AssignedUser != null)
+                            {
+                                @task.AssignedUser.FullName
+                            }
+                            else
+                            {
+                                <span class="text-muted">Unassigned</span>
+                            }
+                        </td>
+                        <td><center>@(task.AssignedCompany?.Name ?? "No Company Assigned")</center></td>
+                        <td class="text-center">
+                            @task.DueDate.ToString("dd-MMM-yy")
+                            @{
+                                var daysDifference = (task.DueDate.Date - DateTime.Now.Date).Days;
+                                if (daysDifference < 0)
+                                {
+                                    <span style="color: red;"> </span>
+                                    <span style="color: red;">(@(-daysDifference) days over)</span>
+                                }
+                                else
+                                {
+                                    <span style="color: green;"> </span>
+                                }
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (task.SubTasks != null && task.SubTasks.Any())
+                            {
+                                <span class="badge bg-primary">@task.SubTasks.Count Tasks</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">0</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="action-buttons-right">
+                                <button class="btn btn-primary mb-0" @onclick="() => ViewTicketDetails(task.TicketId)">
+                                    <span class="oi oi-eye" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-warning mb-0" @onclick="() => EditTicket(task.TicketId)">
+                                    <span class="oi oi-pencil" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-danger mb-0" @onclick="() => DeleteTicket(task.TicketId)">
+                                    <span class="oi oi-trash" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+<!-- Completed Tasks Section -->
+<h3>
+    <button class="btn btn-link" @onclick="() => showCompletedTasks = !showCompletedTasks">
+        @if (showCompletedTasks)
+        {
+            <button class="btn btn-outline-primary"><i class="oi oi-chevron-top"></i> Hide Completed</button>
+        }
+        else
+        {
+            <button class="btn btn-outline-primary"><i class="oi oi-chevron-bottom"></i> Show Completed</button>
+        }
+    </button>
+</h3>
+
+@if (showCompletedTasks)
+{
+    <h3>Completed</h3>
+    <hr />
+    @if (completedTasks == null)
+    {
+        <p>Loading completed tasks...</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr class="text-center">
+                    <th scope="col">Title</th>
+                    <th scope="col">Severity</th>
+                    <th scope="col">Due Date</th>
+                    <th scope="col">SubTasks</th> <!-- 💥 Added -->
+                    <th scope="col" class="action-col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in completedTasks)
+                {
+                    <tr style="vertical-align: middle;">
+                        <td>@task.Title</td>
+                        <td class="@GetSeverityCssClass(task.Severity.ToString()) text-uppercase text-white text-center" style="font-weight: 700">@task.Severity</td>
+                        <td class="text-center">@task.DueDate.ToShortDateString()</td>
+                        <td class="text-center">
+                            @if (task.SubTasks != null && task.SubTasks.Any())
+                            {
+                                <span class="badge bg-primary">@task.SubTasks.Count SubTasks</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">0</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary mb-0" @onclick="() => ViewTicketDetails(task.TicketId)">
+                                    <span class="oi oi-eye" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+<!-- Create New Ticket Modal -->
+<div class="modal fade @(showAddNewTicketModal ? "show d-block" : "")" id="addTaskModal" tabindex="-1" role="dialog" aria-labelledby="addTaskModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add New Ticket</h5>
+                <h5 class="modal-title" id="addTaskModalLabel">Add New Ticket</h5>
                 <button type="button" class="close" @onclick="CloseAddNewTicketModal">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -163,59 +318,4 @@
             _ => ""
         };
     }
-
-    private RenderFragment KanbanCard(Ticket task) => __builder =>
-    {
-        <div class="card mb-2 shadow-sm" draggable="true" @ondragstart="e => OnDragStart(e, task.TicketId)" @ondrop="e => OnDrop(e, task.TicketId)" @ondragover="OnDragOver">
-            <div class="card-body">
-                <h5 class="card-title">@task.Title</h5>
-                <p class="card-text">
-                    <strong>Severity:</strong> @task.Severity<br />
-                    <strong>User:</strong> @task.AssignedUser?.FullName ?? "Unassigned"<br />
-                    <strong>Due:</strong> @task.DueDate.ToShortDateString()
-                </p>
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-sm btn-outline-primary me-1" @onclick="() => ViewTicketDetails(task.TicketId)">
-                        <span class="oi oi-eye"></span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-warning me-1" @onclick="() => EditTicket(task.TicketId)">
-                        <span class="oi oi-pencil"></span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteTicket(task.TicketId)">
-                        <span class="oi oi-trash"></span>
-                    </button>
-                </div>
-            </div>
-        </div>;
-    };
-
-    // Drag-and-drop handlers using JS interop for data transfer
-    [Inject] private IJSRuntime JS { get; set; } = default!;
-
-    private async void OnDragStart(DragEventArgs e, string ticketId)
-    {
-        await JS.InvokeVoidAsync("setDragData", ticketId);
-    }
-
-    private async Task OnDrop(DragEventArgs e, string targetTicketId)
-    {
-        var draggedId = await JS.InvokeAsync<string>("getDragData");
-
-        if (!string.IsNullOrEmpty(draggedId) && draggedId != targetTicketId)
-        {
-            // Perform your reordering or categorization logic here
-            // Example: You could move the ticket to a different status column
-            Console.WriteLine($"Dragged {draggedId} over {targetTicketId}");
-        }
-    }
-
-    private async Task OnDragOver(DragEventArgs e)
-    {
-        await JS.InvokeVoidAsync("preventDefaultWrapper", e.Type);
-    }
 }
-<script>
-    window.preventDefaultWrapper = function () {
-        // This does nothing in JS but satisfies interop. PreventDefault must be handled in ondrop/onover in the DOM directly.
-    };
-</script>
