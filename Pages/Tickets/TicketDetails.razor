@@ -294,6 +294,11 @@ else if (!string.IsNullOrEmpty(message))
 {
     <div class="alert alert-info mt-3">@message</div>
 }
+@if (_ticket != null)
+{
+    <AttachmentUploader TicketId="@_ticket.TicketId" />
+}
+<AttachmentUploader TicketId="@_ticket.TicketId" />
 
 @code {
     [Parameter]
