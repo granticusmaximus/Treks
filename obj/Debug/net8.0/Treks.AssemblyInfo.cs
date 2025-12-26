@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Treks")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+14195c2620fb961d540faf2203db27ed11466792")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+af2732aebd38551321beaf1bba8f50fd5d2412b8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Treks")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Treks")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

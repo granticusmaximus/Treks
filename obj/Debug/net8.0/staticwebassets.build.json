@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "YAAnLlf7AmpPVUWwcDkxQtIsUR5aZ6kroESPE7QeXJE=",
+  "Hash": "HTVATKqsO3QoNWbWUuhdhwSxIkmFyuHu5S05hwk0/gA=",
   "Source": "Treks",
   "BasePath": "_content/Treks",
   "Mode": "Default",
@@ -1739,6 +1739,27 @@
       "OriginalItemSpec": "wwwroot/js/registerDnD.js"
     },
     {
+      "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/blazored-texteditor 2.js",
+      "SourceId": "Treks",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/",
+      "BasePath": "_content/Treks",
+      "RelativePath": "js/texteditor/blazored-texteditor 2#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "lv7743vni8",
+      "Integrity": "X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/texteditor/blazored-texteditor 2.js"
+    },
+    {
       "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/blazored-texteditor.js",
       "SourceId": "Treks",
       "SourceType": "Discovered",
@@ -1758,6 +1779,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/js/texteditor/blazored-texteditor.js"
+    },
+    {
+      "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.min 2.js",
+      "SourceId": "Treks",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/",
+      "BasePath": "_content/Treks",
+      "RelativePath": "js/texteditor/quill.min 2#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "7z4y7so7e3",
+      "Integrity": "s+SsR0QzPs5T89tjHyz5z1Dn6MrmELZccAy6Y5IN03A=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/texteditor/quill.min 2.js"
     },
     {
       "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.min.js",
@@ -1781,6 +1823,27 @@
       "OriginalItemSpec": "wwwroot/js/texteditor/quill.min.js"
     },
     {
+      "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.snow 2.css",
+      "SourceId": "Treks",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/",
+      "BasePath": "_content/Treks",
+      "RelativePath": "js/texteditor/quill.snow 2#[.{fingerprint}]?.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "k03aijfrn9",
+      "Integrity": "PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/texteditor/quill.snow 2.css"
+    },
+    {
       "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.snow.css",
       "SourceId": "Treks",
       "SourceType": "Discovered",
@@ -1800,27 +1863,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/js/texteditor/quill.snow.css"
-    },
-    {
-      "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/tinymce-wrapper 2.js",
-      "SourceId": "Treks",
-      "SourceType": "Discovered",
-      "ContentRoot": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/",
-      "BasePath": "_content/Treks",
-      "RelativePath": "js/tinymce-wrapper 2#[.{fingerprint}]?.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "Fingerprint": "egk280j1wf",
-      "Integrity": "8rOI7nA5tufUNTv1oFNWmMsheC0t842D7hPAq67GRlc=",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/js/tinymce-wrapper 2.js"
     },
     {
       "Identity": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/tinymce-wrapper.js",
@@ -5579,6 +5621,88 @@
       ]
     },
     {
+      "Route": "js/texteditor/blazored-texteditor 2.js",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/blazored-texteditor 2.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "917"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:22:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4="
+        }
+      ]
+    },
+    {
+      "Route": "js/texteditor/blazored-texteditor 2.lv7743vni8.js",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/blazored-texteditor 2.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "917"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:22:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "lv7743vni8"
+        },
+        {
+          "Name": "label",
+          "Value": "js/texteditor/blazored-texteditor 2.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4="
+        }
+      ]
+    },
+    {
       "Route": "js/texteditor/blazored-texteditor.js",
       "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/blazored-texteditor.js",
       "Selectors": [],
@@ -5657,6 +5781,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-X7z3uxziqZrJ+7aDQEkgybdf5oYuJKlvff70GEkn8g4="
+        }
+      ]
+    },
+    {
+      "Route": "js/texteditor/quill.min 2.7z4y7so7e3.js",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.min 2.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "215311"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"s+SsR0QzPs5T89tjHyz5z1Dn6MrmELZccAy6Y5IN03A=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:31:43 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "7z4y7so7e3"
+        },
+        {
+          "Name": "label",
+          "Value": "js/texteditor/quill.min 2.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-s+SsR0QzPs5T89tjHyz5z1Dn6MrmELZccAy6Y5IN03A="
+        }
+      ]
+    },
+    {
+      "Route": "js/texteditor/quill.min 2.js",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.min 2.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "215311"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"s+SsR0QzPs5T89tjHyz5z1Dn6MrmELZccAy6Y5IN03A=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:31:43 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-s+SsR0QzPs5T89tjHyz5z1Dn6MrmELZccAy6Y5IN03A="
         }
       ]
     },
@@ -5743,6 +5949,88 @@
       ]
     },
     {
+      "Route": "js/texteditor/quill.snow 2.css",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.snow 2.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "26619"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:20:50 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I="
+        }
+      ]
+    },
+    {
+      "Route": "js/texteditor/quill.snow 2.k03aijfrn9.css",
+      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.snow 2.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "26619"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 22:20:50 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "k03aijfrn9"
+        },
+        {
+          "Name": "label",
+          "Value": "js/texteditor/quill.snow 2.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I="
+        }
+      ]
+    },
+    {
       "Route": "js/texteditor/quill.snow.css",
       "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/texteditor/quill.snow.css",
       "Selectors": [],
@@ -5821,88 +6109,6 @@
         {
           "Name": "integrity",
           "Value": "sha256-PKQTyrgoypmjkcSvLVRkJrryQlTBAl268KokCQjwt5I="
-        }
-      ]
-    },
-    {
-      "Route": "js/tinymce-wrapper 2.egk280j1wf.js",
-      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/tinymce-wrapper 2.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "779"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"8rOI7nA5tufUNTv1oFNWmMsheC0t842D7hPAq67GRlc=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Tue, 20 May 2025 19:25:45 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "egk280j1wf"
-        },
-        {
-          "Name": "label",
-          "Value": "js/tinymce-wrapper 2.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-8rOI7nA5tufUNTv1oFNWmMsheC0t842D7hPAq67GRlc="
-        }
-      ]
-    },
-    {
-      "Route": "js/tinymce-wrapper 2.js",
-      "AssetFile": "/Users/grantwatson/Desktop/Development/CSharp/Treks/wwwroot/js/tinymce-wrapper 2.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "779"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"8rOI7nA5tufUNTv1oFNWmMsheC0t842D7hPAq67GRlc=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Tue, 20 May 2025 19:25:45 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-8rOI7nA5tufUNTv1oFNWmMsheC0t842D7hPAq67GRlc="
         }
       ]
     },
@@ -6011,7 +6217,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 20 May 2025 19:30:52 GMT"
+          "Value": "Sat, 24 May 2025 22:06:49 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6048,7 +6254,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 20 May 2025 19:30:52 GMT"
+          "Value": "Sat, 24 May 2025 22:06:49 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6085,7 +6291,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 20 May 2025 19:30:52 GMT"
+          "Value": "Sat, 24 May 2025 22:06:49 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6130,7 +6336,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 20 May 2025 19:30:52 GMT"
+          "Value": "Sat, 24 May 2025 22:06:49 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6175,7 +6381,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 20 May 2025 19:30:52 GMT"
+          "Value": "Sat, 24 May 2025 22:06:49 GMT"
         },
         {
           "Name": "Cache-Control",
