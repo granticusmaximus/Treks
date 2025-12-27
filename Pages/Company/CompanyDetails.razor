@@ -7,6 +7,7 @@
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Identity
 @inject CompanyService companyService
+@inject CompanyFileService companyFileService
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject AccessControlService accessControlService
@@ -27,7 +28,7 @@ else
             <div class="cardHeader"><h2>@company.Name Details</h2></div>
             <div class="cardBody">
                 <strong>Contact Number:</strong> 
-                <p>@company.ContactNumber</p>
+                <p>@Formatters.FormatPhone(company.ContactNumber)</p>
                 <strong>Email:</strong> 
                 <p>@company.Email</p>
                 <strong>Location:</strong>
@@ -84,33 +85,52 @@ else
                 {
                     <div class="alert alert-info">@assignMessage</div>
                 }
-                @if (availableUsers.Any())
-                {
-                    <div class="row">
-                        @foreach (var user in availableUsers)
-                        {
-                            <div class="col-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox"
-                                           id="assign-@user.Id"
-                                           checked="@selectedUserIds.Contains(user.Id)"
-                                           @onchange="e => ToggleUserSelection(user.Id, e)" />
-                                    <label class="form-check-label" for="assign-@user.Id">
-                                        @user.FullName (@(user.Role?.Name ?? "No Role"))
-                                    </label>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                    <button class="btn btn-primary mt-2" @onclick="AssignUsersToCompany">Assign Selected Users</button>
-                }
-                else
-                {
-                    <p>No users available for assignment.</p>
-                }
+                <button class="btn btn-primary mt-2" @onclick="OpenAssignUsersModal">Select Users</button>
             </div>
         </div>
     }
+}
+
+<hr/>
+
+@if (company != null)
+{
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <h4>Company Files</h4>
+            @if (!string.IsNullOrEmpty(fileMessage))
+            {
+                <div class="alert alert-info">@fileMessage</div>
+            }
+            <div class="form-group">
+                <label for="companyFiles">Upload Files</label>
+                <InputFile id="companyFiles" OnChange="HandleCompanyFileSelected" multiple />
+            </div>
+            @if (companyFiles.Any())
+            {
+                <ul class="list-group mt-3">
+                    @foreach (var file in companyFiles)
+                    {
+                        <li class="list-group-item d-flex align-items-center">
+                            <img src="@DefaultFileIconUrl" alt="File" width="24" height="24" class="me-2" />
+                            <a href="@file.FileUrl" target="_blank" class="me-auto">@file.FileName</a>
+                            @if (accessContext.IsAdmin || accessContext.IsManager)
+                            {
+                                <button type="button" class="btn btn-sm btn-danger"
+                                        @onclick="() => DeleteCompanyFile(file.Id)">
+                                    Delete
+                                </button>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No files uploaded for this company.</p>
+            }
+        </div>
+    </div>
 }
 
 <hr/>
@@ -226,6 +246,51 @@ else
             </div>
         </div>
 
+@if (accessContext.IsAdmin || accessContext.IsManager)
+{
+    <div class="modal fade @(showAssignUsersModal ? "show d-block" : "d-none")" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Assign Users to Company</h5>
+                    <button type="button" class="close" @onclick="CloseAssignUsersModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="userSearch">Search Users</label>
+                        <InputText id="userSearch" class="form-control" @bind-Value="userSearch" />
+                    </div>
+                    @if (FilteredUsers.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var user in FilteredUsers)
+                            {
+                                <label class="list-group-item d-flex align-items-center">
+                                    <input class="form-check-input me-2" type="checkbox"
+                                           id="assign-@user.Id"
+                                           checked="@selectedUserIds.Contains(user.Id)"
+                                           @onchange="e => ToggleUserSelection(user.Id, e)" />
+                                    <span>@user.LastName, @user.FirstName (@(user.Role?.Name ?? "No Role"))</span>
+                                </label>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p>No users available for assignment.</p>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseAssignUsersModal">Close</button>
+                    <button type="button" class="btn btn-primary" @onclick="AssignUsersToCompany">Assign Selected Users</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     [Parameter]
     public string id { get; set; }
@@ -244,6 +309,11 @@ else
     private List<ApplicationUser> availableUsers = new();
     private HashSet<string> selectedUserIds = new();
     private string assignMessage = "";
+    private bool showAssignUsersModal = false;
+    private string userSearch = "";
+    private List<CompanyFile> companyFiles = new();
+    private string fileMessage = "";
+    private const string DefaultFileIconUrl = "/images/file-default.png";
 
     private void OpenCommentModal()
     {
@@ -287,6 +357,7 @@ else
 
             await LoadTickets();
             await LoadAssignableUsers();
+            await LoadCompanyFiles();
         }
         catch (Exception ex)
         {
@@ -305,6 +376,14 @@ else
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    private async Task LoadCompanyFiles()
+    {
+        if (company == null)
+            return;
+
+        companyFiles = await companyFileService.GetFilesForCompanyAsync(company.Id);
     }
 
     private void ShowTicketDetails(Ticket ticket)
@@ -328,6 +407,57 @@ else
         }
     }
 
+    private async Task HandleCompanyFileSelected(InputFileChangeEventArgs e)
+    {
+        fileMessage = "";
+        if (company == null)
+        {
+            fileMessage = "Company not loaded.";
+            return;
+        }
+
+        if (!accessContext.CanAccessCompany(company.Id))
+        {
+            fileMessage = "You are not authorized to upload files to this company.";
+            return;
+        }
+
+        try
+        {
+            foreach (var file in e.GetMultipleFiles())
+            {
+                await companyFileService.UploadCompanyFileAsync(company.Id, company.Name, file);
+            }
+
+            await LoadCompanyFiles();
+            fileMessage = "File(s) uploaded successfully.";
+        }
+        catch (Exception ex)
+        {
+            fileMessage = $"Upload failed: {ex.Message}";
+        }
+    }
+
+    private async Task DeleteCompanyFile(int fileId)
+    {
+        fileMessage = "";
+        if (company == null)
+        {
+            fileMessage = "Company not loaded.";
+            return;
+        }
+
+        if (!(accessContext.IsAdmin || accessContext.IsManager))
+        {
+            fileMessage = "You are not authorized to delete files for this company.";
+            return;
+        }
+
+        var deleted = await companyFileService.DeleteCompanyFileAsync(company.Id, fileId);
+        fileMessage = deleted ? "File deleted." : "File not found.";
+        await LoadCompanyFiles();
+    }
+
     private async Task LoadAssignableUsers()
     {
         if (!(accessContext.IsAdmin || accessContext.IsManager))
@@ -342,6 +472,24 @@ else
             availableUsers = availableUsers
                 .Where(u => u.Role?.Name == "User" || u.Role?.Name == "Developer")
                 .ToList();
+        }
+    }
+
+    private IEnumerable<ApplicationUser> FilteredUsers
+    {
+        get
+        {
+            var query = string.IsNullOrWhiteSpace(userSearch)
+                ? availableUsers
+                : availableUsers.Where(u =>
+                    (!string.IsNullOrWhiteSpace(u.FullName) && u.FullName.Contains(userSearch, StringComparison.OrdinalIgnoreCase)) ||
+                    (!string.IsNullOrWhiteSpace(u.Email) && u.Email.Contains(userSearch, StringComparison.OrdinalIgnoreCase)) ||
+                    (!string.IsNullOrWhiteSpace(u.LastName) && u.LastName.Contains(userSearch, StringComparison.OrdinalIgnoreCase)) ||
+                    (!string.IsNullOrWhiteSpace(u.FirstName) && u.FirstName.Contains(userSearch, StringComparison.OrdinalIgnoreCase)));
+
+            return query
+                .OrderBy(u => u.LastName)
+                .ThenBy(u => u.FirstName);
         }
     }
 
@@ -391,6 +539,9 @@ else
             assignMessage = $"Unable to assign users: {ex.Message}";
         }
     }
+
+    private void OpenAssignUsersModal() => showAssignUsersModal = true;
+    private void CloseAssignUsersModal() => showAssignUsersModal = false;
 
     private void NavigateToList()
     {

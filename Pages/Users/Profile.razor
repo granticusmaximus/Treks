@@ -11,7 +11,7 @@
 
 <center>
     <h3>
-        <img src="data:image/jpeg;base64,@Convert.ToBase64String(CurrentUser.ProfilePicture)" width="55"
+        <img src="@GetUserAvatarSrc()" width="55"
                             height="55" alt="Profile Picture" class="rounded-circle" />
         @CurrentUser.FullName's Profile
         <button class="btn btn-primary" @onclick="() => ShowEditProfileModal()">Edit your profile</button>
@@ -156,6 +156,7 @@
     private bool showTicketDetailsModal = false;
     private bool showEditProfileModal = false;
     private Ticket? selectedTicket = null;
+    private const string DefaultAvatarUrl = "/images/default-avatar.svg";
 
     protected override async Task OnInitializedAsync()
     {
@@ -196,6 +197,16 @@
     private void ShowEditProfileModal()
     {
         showEditProfileModal = true;
+    }
+
+    private string GetUserAvatarSrc()
+    {
+        if (CurrentUser?.ProfilePicture != null && CurrentUser.ProfilePicture.Length > 0)
+        {
+            return $"data:image/jpeg;base64,{Convert.ToBase64String(CurrentUser.ProfilePicture)}";
+        }
+
+        return DefaultAvatarUrl;
     }
 
     private string GetSeverityCssClass(string severity)
