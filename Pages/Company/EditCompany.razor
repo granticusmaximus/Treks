@@ -1,11 +1,18 @@
 @page "/company/edit/{id}"
-@attribute [Authorize]
+@attribute [Authorize(Policy = "ManagerOrAdmin")]
 @using Treks.Models
 @using Treks.Services
 @inject CompanyService companyService
 @inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AccessControlService accessControlService
 
 <h3>Edit Company</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger" role="alert">@errorMessage</div>
+}
 
 @if (isLoading)
 {
@@ -98,6 +105,8 @@ else if (saveError)
     private bool isSaving = false;
     private bool saveSuccess = false;
     private bool saveError = false;
+    private AccessContext accessContext = new AccessContext();
+    private string errorMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -108,7 +117,15 @@ else if (saveError)
     {
         try
         {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            accessContext = await accessControlService.GetAccessContextAsync(authState.User);
+
             company = await companyService.GetCompanyByIdAsync(int.Parse(Id));
+            if (!accessContext.IsAdmin && !accessContext.CanAccessCompany(company.Id))
+            {
+                errorMessage = "You are not authorized to edit this company.";
+                company = null;
+            }
             isLoading = false;
         }
         catch (Exception)

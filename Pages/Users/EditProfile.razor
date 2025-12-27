@@ -1,5 +1,5 @@
 @page "/EditProfile"
-@attribute [Authorize]
+@attribute [Authorize(Policy = "Staff")]
 @using Microsoft.AspNetCore.Identity
 @using Treks.Models
 @using Treks.Services

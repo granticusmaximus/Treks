@@ -1,5 +1,5 @@
 @page "/profile/{id:int}"
-@attribute [Authorize]
+@attribute [Authorize(Policy = "Staff")]
 
 @using Treks.Models
 @using Treks.Services

@@ -1,5 +1,5 @@
 @page "/Users"
-@attribute [Authorize]
+@attribute [Authorize(Policy = "AdminOnly")]
 @using Treks.Data
 @using Treks.Models
 @using Treks.Pages.Roles

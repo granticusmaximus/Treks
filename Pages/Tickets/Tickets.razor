@@ -3,7 +3,9 @@
 @using Treks.Services
 @inject TicketService ticketService
 @inject NavigationManager navi
-@attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AccessControlService accessControlService
+@attribute [Authorize(Policy = "Staff")]
 
 <style>
     .action-buttons button {
@@ -230,6 +232,7 @@
     private bool showAddNewTicketModal = false;
     private bool showInProgressTasks = true;
     private bool showCompletedTasks = false;
+    private AccessContext accessContext = new AccessContext();
 
     public enum TicketField
     {
@@ -242,12 +245,16 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        accessContext = await accessControlService.GetAccessContextAsync(authState.User);
         await LoadTickets();
     }
 
     private async Task LoadTickets()
     {
-        var allTasks = await ticketService.GetAllTasksAsync(); // Make sure you include SubTasks in TicketService!
+        var allTasks = accessContext.IsAdmin
+            ? await ticketService.GetAllTasksAsync()
+            : await ticketService.GetTasksForCompanyIdsAsync(accessContext.CompanyIds);
 
         completedTasks = allTasks.Where(task => task.isComplete).ToList();
         tasksToBeCompleted = allTasks.Where(task => !task.isComplete).ToList();

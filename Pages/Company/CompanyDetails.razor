@@ -1,13 +1,22 @@
 @page "/company/details/{id}"
-@attribute [Authorize]
+@attribute [Authorize(Policy = "Staff")]
 @using Treks.Models
 @using Treks.Services
 @using Treks.Pages.Company
 @using Treks.Pages.Tickets
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Identity
 @inject CompanyService companyService
 @inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AccessControlService accessControlService
+@inject UserManager<ApplicationUser> userManager
 
-@if (company == null)
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-danger" role="alert">@message</div>
+}
+else if (company == null)
 {
     <p>Loading...</p>
 }
@@ -39,6 +48,69 @@ else
             <hr/>
         </div>
     </center>
+}
+
+<hr/>
+
+@if (company != null)
+{
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <h4>Assigned Users</h4>
+            @if (company.AssignedUsers != null && company.AssignedUsers.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var assignedUser in company.AssignedUsers)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>@assignedUser.FullName (@(assignedUser.Role?.Name ?? "No Role"))</span>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No users assigned to this company.</p>
+            }
+        </div>
+    </div>
+
+    @if (accessContext.IsAdmin || accessContext.IsManager)
+    {
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <h4>Assign Users to Company</h4>
+                @if (!string.IsNullOrEmpty(assignMessage))
+                {
+                    <div class="alert alert-info">@assignMessage</div>
+                }
+                @if (availableUsers.Any())
+                {
+                    <div class="row">
+                        @foreach (var user in availableUsers)
+                        {
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                           id="assign-@user.Id"
+                                           checked="@selectedUserIds.Contains(user.Id)"
+                                           @onchange="e => ToggleUserSelection(user.Id, e)" />
+                                    <label class="form-check-label" for="assign-@user.Id">
+                                        @user.FullName (@(user.Role?.Name ?? "No Role"))
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <button class="btn btn-primary mt-2" @onclick="AssignUsersToCompany">Assign Selected Users</button>
+                }
+                else
+                {
+                    <p>No users available for assignment.</p>
+                }
+            </div>
+        </div>
+    }
 }
 
 <hr/>
@@ -167,6 +239,11 @@ else
     private Company company;
     private List<Ticket> tickets;
     private Ticket selectedTicket;
+    private AccessContext accessContext = new AccessContext();
+    private string message = "";
+    private List<ApplicationUser> availableUsers = new();
+    private HashSet<string> selectedUserIds = new();
+    private string assignMessage = "";
 
     private void OpenCommentModal()
     {
@@ -194,9 +271,22 @@ else
     {
         try
         {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            accessContext = await accessControlService.GetAccessContextAsync(authState.User);
+
             int companyID = Convert.ToInt32(id);
             company = await companyService.GetCompanyByIdAsync(companyID);
+
+            if (!accessContext.CanAccessCompany(companyID))
+            {
+                message = "You are not authorized to view this company.";
+                company = null;
+                tickets = new List<Ticket>();
+                return;
+            }
+
             await LoadTickets();
+            await LoadAssignableUsers();
         }
         catch (Exception ex)
         {
@@ -235,6 +325,70 @@ else
                 return "bg-danger";
             default:
                 return "";
+        }
+    }
+
+    private async Task LoadAssignableUsers()
+    {
+        if (!(accessContext.IsAdmin || accessContext.IsManager))
+            return;
+
+        availableUsers = await userManager.Users
+            .Include(u => u.Role)
+            .ToListAsync();
+
+        if (!accessContext.IsAdmin)
+        {
+            availableUsers = availableUsers
+                .Where(u => u.Role?.Name == "User" || u.Role?.Name == "Developer")
+                .ToList();
+        }
+    }
+
+    private void ToggleUserSelection(string userId, ChangeEventArgs e)
+    {
+        var isChecked = e.Value switch
+        {
+            bool b => b,
+            string s => string.Equals(s, "true", StringComparison.OrdinalIgnoreCase),
+            _ => false
+        };
+
+        if (isChecked)
+        {
+            selectedUserIds.Add(userId);
+        }
+        else
+        {
+            selectedUserIds.Remove(userId);
+        }
+    }
+
+    private async Task AssignUsersToCompany()
+    {
+        assignMessage = "";
+        if (company == null)
+        {
+            assignMessage = "Company not loaded.";
+            return;
+        }
+
+        if (selectedUserIds.Count == 0)
+        {
+            assignMessage = "Select at least one user.";
+            return;
+        }
+
+        try
+        {
+            await companyService.AssignUsersToCompanyAsync(company.Id, selectedUserIds.ToList());
+            selectedUserIds.Clear();
+            company = await companyService.GetCompanyByIdAsync(company.Id);
+            assignMessage = "Users assigned successfully.";
+        }
+        catch (Exception ex)
+        {
+            assignMessage = $"Unable to assign users: {ex.Message}";
         }
     }
 

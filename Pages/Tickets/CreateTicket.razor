@@ -5,7 +5,9 @@
 @inject CompanyService companyService
 @inject ApplicationUserService userService
 @inject NavigationManager navi
-@attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AccessControlService accessControlService
+@attribute [Authorize(Policy = "Staff")]
 
 <style>
     .select-caret {
@@ -88,11 +90,18 @@
     private List<ApplicationUser> users = new();
     private List<Company> companies = new();
     private string message = "";
+    private AccessContext accessContext = new AccessContext();
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        accessContext = await accessControlService.GetAccessContextAsync(authState.User);
+
         users = await userService.GetAllUsersAsync();
-        companies = await companyService.GetAllCompaniesAsync();
+        var allCompanies = await companyService.GetAllCompaniesAsync();
+        companies = accessContext.IsAdmin
+            ? allCompanies
+            : allCompanies.Where(c => accessContext.CompanyIds.Contains(c.Id)).ToList();
     }
 
     private async Task SaveTicket()
@@ -102,6 +111,12 @@
         if (string.IsNullOrWhiteSpace(_ticket.Title) || _ticket.AssignedCompanyId == 0)
         {
             message = "Please fill all required fields.";
+            return;
+        }
+
+        if (!accessContext.IsAdmin && !accessContext.CompanyIds.Contains(_ticket.AssignedCompanyId))
+        {
+            message = "You are not authorized to create tickets for this company.";
             return;
         }
 

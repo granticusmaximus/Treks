@@ -1,6 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @using Treks.Pages
 
+@inject IWebHostEnvironment Env
+
 <PageTitle>Treks</PageTitle>
 
 <div class="page">
@@ -15,7 +17,20 @@
 
         <article class="content px-4">
             <Toast />
-            @Body
+            <ErrorBoundary>
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <div class="alert alert-danger mt-3" role="alert">
+                        Something went wrong while processing this page.
+                        @if (Env.IsDevelopment())
+                        {
+                            <pre class="mt-2">@context.ToString()</pre>
+                        }
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
         </article>
     </main>
 </div>
