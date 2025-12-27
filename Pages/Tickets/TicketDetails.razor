@@ -302,9 +302,8 @@ else if (!string.IsNullOrEmpty(message))
 }
 @if (_ticket != null)
 {
-    <AttachmentUploader TicketId="@_ticket.TicketId" />
+    <TicketAttachments TicketId="@_ticket.TicketId" />
 }
-<AttachmentUploader TicketId="@_ticket.TicketId" />
 
 @code {
     [Parameter]
