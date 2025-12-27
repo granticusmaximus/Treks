@@ -47,7 +47,7 @@ else
                 <tr>
                     <td>@user.Email</td>
                     <td>@user.FullName</td>
-                    <td>@user.Cellnumber</td>
+                    <td>@Formatters.FormatPhone(user.Cellnumber)</td>
                     <td>@user.Address</td>
                     <td>@user.City</td>
                     <td>@(user.Role != null ? user.Role.Name : "N/A")</td>

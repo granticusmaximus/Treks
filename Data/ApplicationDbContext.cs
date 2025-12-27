@@ -58,6 +58,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, str
             .WithMany(t => t.SubTasks)
             .HasForeignKey(st => st.TicketId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<CompanyFile>()
+            .HasOne(cf => cf.Company)
+            .WithMany(c => c.Files)
+            .HasForeignKey(cf => cf.CompanyId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     public DbSet<ApplicationUser> ApplicationUser { get; set; }
@@ -71,5 +77,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, str
     public DbSet<LUT_Comments> LUT_Comments { get; set; }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<CompanyFile> CompanyFiles { get; set; }
 
 }

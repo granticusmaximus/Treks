@@ -33,6 +33,7 @@ builder.Services.AddScoped<ApplicationUserService>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<TicketService>();
 builder.Services.AddScoped<CompanyService>();
+builder.Services.AddScoped<CompanyFileService>();
 builder.Services.AddScoped<AccessControlService>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor()

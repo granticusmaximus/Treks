@@ -26,5 +26,6 @@ namespace Treks.Models
         public virtual ICollection<Ticket> Tickets { get; set; }    
 
         public virtual ICollection<LUT_Comments> Comments { get; set; }
+        public virtual ICollection<CompanyFile> Files { get; set; } = new List<CompanyFile>();
     }
 }

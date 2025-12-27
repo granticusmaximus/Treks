@@ -1,8 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Identity
 @using Treks.Models
+@using Treks.Services
 @using Microsoft.AspNetCore.Components.Web
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AccessControlService accessControlService
 @inject IJSRuntime JSRuntime
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -33,21 +35,27 @@
         </div>
         @if (IsAuthenticated)
         {
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="Users">
-                    <span class="oi oi-people" aria-hidden="true"></span> Users
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="Tickets">
-                    <span class="oi oi-project" aria-hidden="true"></span> Tickets
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="companies">
-                    <span class="oi oi-briefcase" aria-hidden="true"></span> Companies
-                </NavLink>
-            </div>
+            @if (CanAccessCompanyData)
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="companies">
+                        <span class="oi oi-briefcase" aria-hidden="true"></span> Companies
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Tickets">
+                        <span class="oi oi-project" aria-hidden="true"></span> Tickets
+                    </NavLink>
+                </div>
+            }
+            @if (accessContext.IsAdmin)
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Users">
+                        <span class="oi oi-people" aria-hidden="true"></span> Users
+                    </NavLink>
+                </div>
+            }
         }
     </nav>
 </div>
@@ -63,6 +71,8 @@
     }
 
     private bool IsAuthenticated { get; set; }
+    private AccessContext accessContext = new AccessContext();
+    private bool CanAccessCompanyData => accessContext.IsAdmin || accessContext.CompanyIds.Count > 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,6 +82,10 @@
     private async Task LoadAuthenticationState()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        IsAuthenticated = authState.User.Identity.IsAuthenticated;
+        IsAuthenticated = authState.User.Identity?.IsAuthenticated == true;
+        if (IsAuthenticated)
+        {
+            accessContext = await accessControlService.GetAccessContextAsync(authState.User);
+        }
     }
 }

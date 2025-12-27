@@ -15,7 +15,7 @@ namespace Treks.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
 
             modelBuilder.Entity("ApplicationUserCompany", b =>
                 {
@@ -298,6 +298,35 @@ namespace Treks.Migrations
                     b.ToTable("Companies");
                 });
 
+            modelBuilder.Entity("Treks.Models.CompanyFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(260)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileUrl")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("CompanyFiles");
+                });
+
             modelBuilder.Entity("Treks.Models.LUT_Comments", b =>
                 {
                     b.Property<int>("Id")
@@ -436,6 +465,7 @@ namespace Treks.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .HasMaxLength(4000)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DueDate")
@@ -450,6 +480,7 @@ namespace Treks.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("isComplete")
@@ -497,7 +528,7 @@ namespace Treks.Migrations
 
                     b.HasIndex("TicketId");
 
-                    b.ToTable("Attachments");
+                    b.ToTable("TicketAttachment");
                 });
 
             modelBuilder.Entity("Treks.Models.TicketChangeLog", b =>
@@ -630,6 +661,17 @@ namespace Treks.Migrations
                     b.Navigation("ParentComment");
                 });
 
+            modelBuilder.Entity("Treks.Models.CompanyFile", b =>
+                {
+                    b.HasOne("Treks.Models.Company", "Company")
+                        .WithMany("Files")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("Treks.Models.LUT_Comments", b =>
                 {
                     b.HasOne("Treks.Models.Comment", "Comment")
@@ -758,6 +800,8 @@ namespace Treks.Migrations
             modelBuilder.Entity("Treks.Models.Company", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Files");
 
                     b.Navigation("Tickets");
                 });

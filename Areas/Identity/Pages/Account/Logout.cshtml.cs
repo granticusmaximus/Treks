@@ -39,5 +39,17 @@ namespace Treks.Areas.Identity.Pages.Account
                 return RedirectToPage();
             }
         }
+
+        public async Task<IActionResult> OnGet(string returnUrl = null)
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation("User logged out.");
+            if (returnUrl != null)
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            return RedirectToPage();
+        }
     }
 }
