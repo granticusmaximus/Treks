@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Treks.Data;
 using Treks.Models;
 
@@ -11,10 +12,12 @@ namespace Treks.Services
     public class CompanyService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<CompanyService> _logger;
 
-        public CompanyService(ApplicationDbContext context)
+        public CompanyService(ApplicationDbContext context, ILogger<CompanyService> logger)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _logger = logger;
         }
 
         public async Task<List<Company>> GetAllCompaniesAsync()
@@ -26,7 +29,7 @@ namespace Treks.Services
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it appropriately
+                _logger.LogError(ex, "Error retrieving companies.");
                 throw new ApplicationException("Error occurred while retrieving companies.", ex);
             }
         }
@@ -42,6 +45,7 @@ namespace Treks.Services
 
                 if (company == null)
                 {
+                    _logger.LogWarning("Company {CompanyId} not found.", id);
                     throw new ApplicationException($"Company with ID {id} not found.");
                 }
 
@@ -49,7 +53,7 @@ namespace Treks.Services
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it appropriately
+                _logger.LogError(ex, "Error retrieving company {CompanyId}.", id);
                 throw new ApplicationException($"Error occurred while retrieving company with ID {id}.", ex);
             }
         }
@@ -67,7 +71,7 @@ namespace Treks.Services
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it appropriately
+                _logger.LogError(ex, "Error creating company.");
                 throw new ApplicationException("Error occurred while creating company.", ex);
             }
         }
@@ -85,7 +89,7 @@ namespace Treks.Services
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it appropriately
+                _logger.LogError(ex, "Error updating company {CompanyId}.", company.Id);
                 throw new ApplicationException($"Error occurred while updating company with ID {company.Id}.", ex);
             }
         }
@@ -102,7 +106,7 @@ namespace Treks.Services
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it appropriately
+                _logger.LogError(ex, "Error adding company comment.");
                 throw new ApplicationException("Error occurred while adding a comment.", ex);
             }
         }
@@ -120,7 +124,7 @@ namespace Treks.Services
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it appropriately
+                _logger.LogError(ex, "Error retrieving comments for company {CompanyId}.", companyId);
                 throw new ApplicationException($"Error occurred while retrieving comments for company ID {companyId}.", ex);
             }
         }
@@ -137,7 +141,7 @@ namespace Treks.Services
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it appropriately
+                _logger.LogError(ex, "Error retrieving active tickets for company {CompanyId}.", companyId);
                 throw new ApplicationException($"Error occurred while retrieving active tickets for company ID {companyId}.", ex);
             }
         }
@@ -156,7 +160,7 @@ namespace Treks.Services
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it appropriately
+                _logger.LogError(ex, "Error deleting company {CompanyId}.", id);
                 throw new ApplicationException($"Error occurred while deleting company with ID {id}.", ex);
             }
         }
@@ -170,6 +174,7 @@ namespace Treks.Services
 
                 if (company == null)
                 {
+                    _logger.LogWarning("Company {CompanyId} not found for user assignment.", companyId);
                     throw new ApplicationException($"Company with ID {companyId} not found.");
                 }
 
@@ -177,6 +182,7 @@ namespace Treks.Services
 
                 if (users == null || !users.Any())
                 {
+                    _logger.LogWarning("No valid users found for company assignment {CompanyId}.", companyId);
                     throw new ApplicationException("No valid users found for assignment.");
                 }
 
@@ -198,6 +204,7 @@ namespace Treks.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error assigning users to company {CompanyId}.", companyId);
                 throw new ApplicationException("Error occurred while assigning users to company.", ex);
             }
         }

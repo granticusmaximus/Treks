@@ -9,6 +9,7 @@ namespace Treks.Services
 
     public class FileUploadService : IFileUploadService
     {
+        private const long MaxFileSize = 5 * 1024 * 1024;
         private readonly IWebHostEnvironment _env;
         private readonly ILogger<FileUploadService> _logger;
 
@@ -22,6 +23,9 @@ namespace Treks.Services
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("Invalid file.");
+
+            if (file.Length > MaxFileSize)
+                throw new InvalidOperationException("File exceeds the 5 MB limit.");
 
             var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
             var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Treks.Data;
 using Treks.Models;
 
@@ -11,10 +12,12 @@ namespace Treks.Services
     public class TicketService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<TicketService> _logger;
 
-        public TicketService(ApplicationDbContext context)
+        public TicketService(ApplicationDbContext context, ILogger<TicketService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<List<Ticket>> GetAllTasksAsync()
@@ -27,6 +30,9 @@ namespace Treks.Services
 
         public async Task<Ticket> GetTaskByIdAsync(string ticketId, bool includeTechNotes = false)
         {
+            if (string.IsNullOrWhiteSpace(ticketId))
+                throw new ArgumentException("Ticket ID is required.", nameof(ticketId));
+
             IQueryable<Ticket> query = _context.Tickets;
 
             if (includeTechNotes)
@@ -35,24 +41,41 @@ namespace Treks.Services
                              .ThenInclude(ttn => ttn.TechNote);
             }
 
-            return await query.FirstOrDefaultAsync(t => t.TicketId == ticketId);
+            var ticket = await query.FirstOrDefaultAsync(t => t.TicketId == ticketId);
+            if (ticket == null)
+            {
+                _logger.LogWarning("Ticket {TicketId} not found.", ticketId);
+            }
+
+            return ticket;
         }
 
         public async Task CreateNewTaskAsync(Ticket ticket)
         {
+            if (ticket == null)
+                throw new ArgumentNullException(nameof(ticket));
+
             ticket.TimeOfCreation = DateTime.Now;
             await _context.Tickets.AddAsync(ticket);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Created ticket {TicketId}.", ticket.TicketId);
         }
 
         public async Task UpdateTaskAsync(Ticket updatedTicket)
         {
+            if (updatedTicket == null)
+                throw new ArgumentNullException(nameof(updatedTicket));
+
             var originalTicket = await _context.Tickets
                 .Include(t => t.AssignedUser)
                 .Include(t => t.AssignedCompany)
                 .FirstOrDefaultAsync(t => t.TicketId == updatedTicket.TicketId);
 
-            if (originalTicket == null) return;
+            if (originalTicket == null)
+            {
+                _logger.LogWarning("Update skipped. Ticket {TicketId} not found.", updatedTicket.TicketId);
+                return;
+            }
 
             var changeLog = new TicketChangeLog
             {
@@ -73,6 +96,7 @@ namespace Treks.Services
             originalTicket.AssignedCompanyId = updatedTicket.AssignedCompanyId;
 
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Updated ticket {TicketId}.", originalTicket.TicketId);
         }
 
         private string GenerateChangeSummary(Ticket original, Ticket updated)
@@ -95,11 +119,19 @@ namespace Treks.Services
 
         public async Task DeleteTaskAsync(string ticketId)
         {
+            if (string.IsNullOrWhiteSpace(ticketId))
+                throw new ArgumentException("Ticket ID is required.", nameof(ticketId));
+
             var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == ticketId);
             if (ticket != null)
             {
                 _context.Tickets.Remove(ticket);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Deleted ticket {TicketId}.", ticketId);
+            }
+            else
+            {
+                _logger.LogWarning("Delete skipped. Ticket {TicketId} not found.", ticketId);
             }
         }
 

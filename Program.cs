@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Treks.Areas.Identity;
 using Treks.Data;
 using Treks.Services;
@@ -31,15 +32,31 @@ builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 builder.Services.AddSingleton<ToastService>();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
 
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 
 // Add EmailSender service
 builder.Services.AddScoped<IEmailSender, EmailSender>();
-builder.Services.AddSingleton(new SmtpClient
+builder.Services.AddSingleton(sp =>
 {
-    Host = "smtp.gmail.com",
-    Port = 587,
-    Credentials = new NetworkCredential("gwatson117@gmail.com", "skudplate-pimppe6-Electron0721"),
-    EnableSsl = true
+    var settings = sp.GetRequiredService<IOptions<SmtpSettings>>().Value;
+    if (string.IsNullOrWhiteSpace(settings.Host))
+    {
+        throw new InvalidOperationException("SmtpSettings:Host is required.");
+    }
+
+    var client = new SmtpClient
+    {
+        Host = settings.Host,
+        Port = settings.Port,
+        EnableSsl = settings.EnableSsl
+    };
+
+    if (!string.IsNullOrWhiteSpace(settings.UserName))
+    {
+        client.Credentials = new NetworkCredential(settings.UserName, settings.Password);
+    }
+
+    return client;
 });
 
 var app = builder.Build();

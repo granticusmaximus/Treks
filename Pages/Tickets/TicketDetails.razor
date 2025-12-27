@@ -8,7 +8,7 @@
 @inject NavigationManager navi
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager
-@attribute [AllowAnonymous]
+@attribute [Authorize]
 
 <NavLink href="/tickets" class="btn btn-secondary mb-3">
     <span aria-hidden="true">&larr;</span> Back to Tickets
@@ -97,10 +97,13 @@ else
                     </button>
                 </div>
                 <EditForm Model="@_ticket" OnValidSubmit="UpdateTicket">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="title">Title</label>
                             <InputText id="title" class="form-control" @bind-Value="_ticket.Title" />
+                            <ValidationMessage For="@(() => _ticket.Title)" />
                         </div>
 
                         <div class="form-group">
@@ -121,6 +124,7 @@ else
                                     <option value="@severity">@severity</option>
                                 }
                             </InputSelect>
+                            <ValidationMessage For="@(() => _ticket.Severity)" />
                         </div>
 
                         <div class="form-group">
@@ -141,6 +145,7 @@ else
                                     <option value="@company.Id">@company.Name</option>
                                 }
                             </InputSelect>
+                            <ValidationMessage For="@(() => _ticket.AssignedCompanyId)" />
                         </div>
 
                         <div class="form-group">
