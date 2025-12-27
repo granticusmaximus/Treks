@@ -1,13 +1,18 @@
 @page "/companies"
-@attribute [Authorize]
+@attribute [Authorize(Policy = "Staff")]
 @using Treks.Models
 @using Treks.Services
 @inject NavigationManager navi
 @inject CompanyService companyService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AccessControlService accessControlService
 
 <h3>Company List</h3>
 <div class="col-md-6">
-    <button @onclick="OpenAddNewCompanyModal" class="btn btn-warning">Create New Company</button>
+    @if (accessContext.IsAdmin || accessContext.IsManager)
+    {
+        <button @onclick="OpenAddNewCompanyModal" class="btn btn-warning">Create New Company</button>
+    }
 </div>
 
 @if (companies == null || companies.Count == 0)
@@ -76,6 +81,7 @@ else
 @code {
     private List<Company> companies;
     private bool showAddNewCompanyModal = false;
+    private AccessContext accessContext = new AccessContext();
 
     private void OpenAddNewCompanyModal()
     {
@@ -90,6 +96,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        accessContext = await accessControlService.GetAccessContextAsync(authState.User);
         await LoadCompanies();
     }
 
@@ -98,6 +106,10 @@ else
         try
         {
             companies = await companyService.GetAllCompaniesAsync();
+            if (!accessContext.IsAdmin)
+            {
+                companies = companies.Where(c => accessContext.CompanyIds.Contains(c.Id)).ToList();
+            }
         }
         catch (Exception ex)
         {

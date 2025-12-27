@@ -1,5 +1,5 @@
 @page "/Roles"
-@attribute [Authorize]
+@attribute [Authorize(Policy = "AdminOnly")]
 @using Treks.Models
 @using Treks.Services
 @inject RoleService roleService

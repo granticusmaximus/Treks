@@ -41,6 +41,8 @@ namespace Treks.Services
                 // Include comments when fetching a specific company
                 var company = await _context.Companies
                     .Include(c => c.Comments)
+                    .Include(c => c.AssignedUsers)
+                        .ThenInclude(u => u.Role)
                     .FirstOrDefaultAsync(c => c.Id == id);
 
                 if (company == null)

@@ -8,7 +8,8 @@
 @inject NavigationManager navi
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager
-@attribute [Authorize]
+@inject AccessControlService accessControlService
+@attribute [Authorize(Policy = "Staff")]
 
 <NavLink href="/tickets" class="btn btn-secondary mb-3">
     <span aria-hidden="true">&larr;</span> Back to Tickets
@@ -307,7 +308,7 @@ else if (!string.IsNullOrEmpty(message))
 
 @code {
     [Parameter]
-    public string TicketId { get; set; }
+    public string? TicketId { get; set; }
 
     private Ticket _ticket = new Ticket();
     private TinyMCEEditor? editor;
@@ -318,6 +319,7 @@ else if (!string.IsNullOrEmpty(message))
     private bool showCommentModal = false;
     private SubTask newSubTask = new SubTask();
     private string message = "";
+    private AccessContext accessContext = new AccessContext();
 
     private int CompletedSubTasksCount => _ticket?.SubTasks?.Count(st => st.IsComplete) ?? 0;
     private int TotalSubTasksCount => _ticket?.SubTasks?.Count ?? 0;
@@ -325,26 +327,58 @@ else if (!string.IsNullOrEmpty(message))
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        accessContext = await accessControlService.GetAccessContextAsync(authState.User);
+
         users = await userManager.Users.ToListAsync();
-        companies = await companyService.GetAllCompaniesAsync();
+        var allCompanies = await companyService.GetAllCompaniesAsync();
+        companies = accessContext.IsAdmin
+            ? allCompanies
+            : allCompanies.Where(c => accessContext.CompanyIds.Contains(c.Id)).ToList();
         await LoadTicketDetails();
     }
 
     private async Task LoadTicketDetails()
     {
-        _ticket = await ticketService.GetTaskByIdAsync(TicketId, includeTechNotes: true);
-        if (_ticket != null)
+        if (string.IsNullOrWhiteSpace(TicketId))
         {
-            _ticket.SubTasks = await ticketService.GetSubTasksForTicketAsync(TicketId);
+            message = "Missing ticket id.";
+            return;
         }
-        else
+
+        try
         {
-            message = "There was an error with retrieving the ticket!";
+            _ticket = await ticketService.GetTaskByIdAsync(TicketId, includeTechNotes: true);
+            if (_ticket != null)
+            {
+                if (!accessContext.CanAccessCompany(_ticket.AssignedCompanyId))
+                {
+                    message = "You are not authorized to view this ticket.";
+                    _ticket = new Ticket();
+                    return;
+                }
+
+                _ticket.SubTasks = await ticketService.GetSubTasksForTicketAsync(TicketId);
+            }
+            else
+            {
+                message = "There was an error with retrieving the ticket!";
+            }
+        }
+        catch
+        {
+            message = "There was an error with retrieving the ticket.";
         }
     }
 
     private async Task UpdateTicket()
     {
+        if (!accessContext.CanAccessCompany(_ticket.AssignedCompanyId))
+        {
+            message = "You are not authorized to update this ticket.";
+            return;
+        }
+
         _ticket.Description = await editor!.GetContentAsync();
         await ticketService.UpdateTaskAsync(_ticket);
         CloseEditModal();
@@ -362,6 +396,18 @@ else if (!string.IsNullOrEmpty(message))
 
     private async Task SaveTechNotes()
     {
+        if (string.IsNullOrWhiteSpace(TicketId))
+        {
+            message = "Missing ticket id.";
+            return;
+        }
+
+        if (!accessContext.CanAccessCompany(_ticket.AssignedCompanyId))
+        {
+            message = "You are not authorized to add notes to this ticket.";
+            return;
+        }
+
         var content = await commentEditor!.GetContentAsync();
         if (!string.IsNullOrWhiteSpace(content))
         {
@@ -382,6 +428,18 @@ else if (!string.IsNullOrEmpty(message))
 
     private async Task AddNewSubTask()
     {
+        if (string.IsNullOrWhiteSpace(TicketId))
+        {
+            message = "Missing ticket id.";
+            return;
+        }
+
+        if (!accessContext.CanAccessCompany(_ticket.AssignedCompanyId))
+        {
+            message = "You are not authorized to add sub tasks to this ticket.";
+            return;
+        }
+
         if (!string.IsNullOrWhiteSpace(newSubTask.Title))
         {
             await ticketService.AddSubTaskAsync(TicketId, newSubTask);
@@ -392,6 +450,18 @@ else if (!string.IsNullOrEmpty(message))
 
     private async Task ToggleSubTaskCompletion(int subTaskId, bool isComplete)
     {
+        if (string.IsNullOrWhiteSpace(TicketId))
+        {
+            message = "Missing ticket id.";
+            return;
+        }
+
+        if (!accessContext.CanAccessCompany(_ticket.AssignedCompanyId))
+        {
+            message = "You are not authorized to update sub tasks for this ticket.";
+            return;
+        }
+
         await ticketService.UpdateSubTaskCompletionAsync(subTaskId, isComplete);
         await LoadTicketDetails();
     }

@@ -28,6 +28,21 @@ namespace Treks.Services
                 .ToListAsync();
         }
 
+        public async Task<List<Ticket>> GetTasksForCompanyIdsAsync(IEnumerable<int> companyIds)
+        {
+            var ids = companyIds?.Distinct().ToList() ?? new List<int>();
+            if (ids.Count == 0)
+            {
+                return new List<Ticket>();
+            }
+
+            return await _context.Tickets
+                .Where(t => ids.Contains(t.AssignedCompanyId))
+                .Include(t => t.AssignedUser)
+                .Include(t => t.AssignedCompany)
+                .ToListAsync();
+        }
+
         public async Task<Ticket> GetTaskByIdAsync(string ticketId, bool includeTechNotes = false)
         {
             if (string.IsNullOrWhiteSpace(ticketId))

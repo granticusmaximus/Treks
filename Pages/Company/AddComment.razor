@@ -1,10 +1,11 @@
 @page "/company/{id}/add-comment"
-@attribute [Authorize]
+@attribute [Authorize(Policy = "Staff")]
 @using Treks.Services
 @using Treks.Models
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager
 @inject CompanyService service
+@inject AccessControlService accessControlService
 
 <div class="row">
     <div class="col-md-12">
@@ -39,11 +40,21 @@
     private Comment comment = new Comment { TheComment = "" };
     private string message = "";
     private string newCompanyComment = string.Empty;
+    private AccessContext accessContext = new AccessContext();
 
     private async Task AddNewComment()
     {
         try
         {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            accessContext = await accessControlService.GetAccessContextAsync(authState.User);
+
+            if (!accessContext.CanAccessCompany(this.CompanyId))
+            {
+                message = "You are not authorized to add comments to this company.";
+                return;
+            }
+
             if (!string.IsNullOrWhiteSpace(newCompanyComment))
             {
                 var userProfile = await userManager.GetUserAsync((await AuthenticationStateProvider.GetAuthenticationStateAsync()).User);

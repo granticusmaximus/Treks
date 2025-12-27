@@ -5,7 +5,9 @@
 @inject TicketService ticketService
 @inject ApplicationUserService applicationUserService
 @inject NavigationManager navi
-@attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AccessControlService accessControlService
+@attribute [Authorize(Policy = "Staff")]
 
 <style>
     .select-caret {
@@ -108,17 +110,40 @@
     private List<Company> companies = new();
     private bool showWarning = false;
     private string errorMessage = "";
+    private AccessContext accessContext = new AccessContext();
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        accessContext = await accessControlService.GetAccessContextAsync(authState.User);
+
         if (!string.IsNullOrEmpty(TicketId))
         {
-            ticket = await ticketService.GetTaskByIdAsync(TicketId);
-            initialContent = ticket?.Description ?? string.Empty;
+            try
+            {
+                ticket = await ticketService.GetTaskByIdAsync(TicketId);
+                initialContent = ticket?.Description ?? string.Empty;
+            }
+            catch
+            {
+                errorMessage = "Unable to load ticket details.";
+            }
+        }
+        else
+        {
+            errorMessage = "Missing ticket id.";
         }
 
         users = await applicationUserService.GetAllUsersAsync();
-        companies = await companyService.GetAllCompaniesAsync();
+        var allCompanies = await companyService.GetAllCompaniesAsync();
+        companies = accessContext.IsAdmin
+            ? allCompanies
+            : allCompanies.Where(c => accessContext.CompanyIds.Contains(c.Id)).ToList();
+
+        if (ticket != null && !accessContext.CanAccessCompany(ticket.AssignedCompanyId))
+        {
+            errorMessage = "You are not authorized to edit this ticket.";
+        }
     }
 
     private async Task UpdateTicket()
@@ -136,6 +161,12 @@
             ticket.DueDate == default || string.IsNullOrEmpty(ticket.Severity.ToString()))
         {
             showWarning = true;
+            return;
+        }
+
+        if (!accessContext.IsAdmin && !accessContext.CompanyIds.Contains(ticket.AssignedCompanyId))
+        {
+            errorMessage = "You are not authorized to update this ticket.";
             return;
         }
 

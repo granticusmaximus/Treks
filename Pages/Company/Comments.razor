@@ -1,10 +1,16 @@
 @page "/company/comments/{id}"
-@attribute [Authorize]
+@attribute [Authorize(Policy = "Staff")]
 @using Treks.Models
 @using Treks.Services
 @inject CompanyService service
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AccessControlService accessControlService
 
-@if (comments != null && comments.Any())
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-danger" role="alert">@message</div>
+}
+else if (comments != null && comments.Any())
 {
     foreach (var comment in comments)
     {
@@ -34,10 +40,21 @@ else
     public string id { get; set; }
 
     private List<Comment> comments;
+    private AccessContext accessContext = new AccessContext();
+    private string message = "";
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        accessContext = await accessControlService.GetAccessContextAsync(authState.User);
+
         int companyID = Convert.ToInt32(id); // Assuming id is the CompanyId as string
+        if (!accessContext.CanAccessCompany(companyID))
+        {
+            message = "You are not authorized to view these comments.";
+            comments = new List<Comment>();
+            return;
+        }
         comments = await service.GetCommentsByCompanyIdAsync(companyID);
     }
 }
