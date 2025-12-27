@@ -8,7 +8,9 @@ namespace Treks.Models
         [Key]
         public string TicketId { get; set; }
         [Required]
+        [StringLength(200)]
         public string Title { get; set; }
+        [StringLength(4000)]
         public string? Description { get; set; }
         [Required]
         public TicketSeverity Severity { get; set; }
@@ -25,6 +27,7 @@ namespace Treks.Models
         public virtual ApplicationUser AssignedUser { get; set; } // Navigation property
 
         [ForeignKey("CompanyId")]
+        [Range(1, int.MaxValue, ErrorMessage = "Assigned company is required.")]
         public int AssignedCompanyId { get; set; }
         public virtual Company AssignedCompany { get; set; }
         public virtual ICollection<TicketTechNote> TicketTechNotes { get; set; }

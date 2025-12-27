@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Treks.Services;
 
 namespace Treks.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UploadsController : ControllerBase
     {
         private readonly IFileUploadService _uploadService;
